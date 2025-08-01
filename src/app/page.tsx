@@ -651,8 +651,25 @@ export default function HomePage() {
         setItemToDeleteConfirm(null);
     };
 
+    const [theme, setTheme] = React.useState("dark");
+    
+    React.useEffect(() => {
+        // Cargar el tema desde localStorage al iniciar
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
+    }, []);
+    
+    React.useEffect(() => {
+        // Guardar el tema en localStorage cuando cambie
+        localStorage.setItem('theme', theme);
+        // Aplicar la clase dark al elemento html
+        document.documentElement.classList.toggle("dark", theme === "dark");
+    }, [theme]);
+    
     return (
-        <main className='flex min-h-screen flex-col items-center bg-black p-4 text-white md:p-8 lg:p-12'>
+        <main className='flex flex-col items-center w-full max-w-5xl mx-auto px-4 py-8 space-y-6'>
             <PasswordDialog
                 isOpen={isPasswordDialogOpen}
                 onOpenChange={setIsPasswordDialogOpen}
@@ -664,10 +681,17 @@ export default function HomePage() {
                         : 'Set a password to use for API requests.'
                 }
             />
-            <div className='w-full max-w-7xl space-y-6'>
+            <button 
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
+                className="absolute top-4 right-4 bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-800 px-3 py-1 rounded-md text-sm"
+                style={{ transition: 'none' }}
+            >
+                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+            </button>
+            <div className='w-full space-y-6'>
                 <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
-                    <div className='relative flex h-[70vh] min-h-[600px] flex-col lg:col-span-1'>
-                        <div className="block h-full w-full">
+                    <div className='relative flex flex-col lg:col-span-1'>
+                        <div className="block w-full">
                             <EditingForm
                                 onSubmit={handleApiCall}
                                 isLoading={isLoading || isSendingToEdit}
@@ -704,10 +728,10 @@ export default function HomePage() {
                             />
                         </div>
                     </div>
-                    <div className='flex h-[70vh] min-h-[600px] flex-col lg:col-span-1'>
+                    <div className='flex flex-col lg:col-span-1'>
                         {error && (
-                            <Alert variant='destructive' className='mb-4 border-red-500/50 bg-red-900/20 text-red-300'>
-                                <AlertTitle className='text-red-200'>Error</AlertTitle>
+                            <Alert variant='destructive' className='mb-4 border-red-500/50 bg-red-900/20 text-red-300 dark:border-red-500/50 dark:bg-red-900/20 dark:text-red-300'>
+                                <AlertTitle className='text-red-200 dark:text-red-200'>Error</AlertTitle>
                                 <AlertDescription>{error}</AlertDescription>
                             </Alert>
                         )}
@@ -724,7 +748,7 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                <div className='min-h-[450px]'>
+                <div className='w-full'>
                     <HistoryPanel
                         history={history}
                         onSelectImage={handleHistorySelect}

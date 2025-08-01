@@ -98,10 +98,10 @@ export function HistoryPanel({
     };
 
     return (
-        <Card className='flex h-full w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-black'>
-            <CardHeader className='flex flex-row items-center justify-between gap-4 border-b border-white/10 px-4 py-3'>
+        <Card className='flex w-full flex-col rounded-lg border border-gray-200 bg-white dark:bg-black dark:border-white/10'>
+            <CardHeader className='flex flex-row items-center justify-between gap-4 border-b border-gray-200 px-4 py-3 dark:border-white/10'>
                 <div className='flex items-center gap-2'>
-                    <CardTitle className='text-lg font-medium text-white'>History</CardTitle>
+                    <CardTitle className='text-lg font-medium text-gray-900 dark:text-white'>History</CardTitle>
                     {totalCost > 0 && (
                         <Dialog open={isTotalCostDialogOpen} onOpenChange={setIsTotalCostDialogOpen}>
                             <DialogTrigger asChild>
@@ -160,14 +160,15 @@ export function HistoryPanel({
                         variant='ghost'
                         size='sm'
                         onClick={onClearHistory}
-                        className='h-auto rounded-md px-2 py-1 text-white/60 hover:bg-white/10 hover:text-white'>
+                        className='h-auto rounded-md px-2 py-1 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white'
+                        style={{ transition: 'none' }}>
                         Clear
                     </Button>
                 )}
             </CardHeader>
-            <CardContent className='flex-grow overflow-y-auto p-4'>
+            <CardContent className='w-full p-4'>
                 {history.length === 0 ? (
-                    <div className='flex h-full items-center justify-center text-white/40'>
+                    <div className='flex h-full items-center justify-center text-gray-500 dark:text-white/40'>
                         <p>Edited images will appear here.</p>
                     </div>
                 ) : (
@@ -194,7 +195,8 @@ export function HistoryPanel({
                                     <div className='group relative'>
                                         <button
                                             onClick={() => onSelectImage(item)}
-                                            className='relative block aspect-square w-full overflow-hidden rounded-t-md border border-white/20 transition-all duration-150 group-hover:border-white/40 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black focus:outline-none'
+                                            className='relative block aspect-square w-full overflow-hidden rounded-t-md border border-gray-300 dark:border-white/20 group-hover:border-gray-400 dark:group-hover:border-white/40 focus:ring-2 focus:ring-blue-500 dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black focus:outline-none'
+                                            style={{ transition: 'none' }}
                                             aria-label={`View image batch from ${new Date(item.timestamp).toLocaleString()}`}>
                                             {thumbnailUrl ? (
                                                 <Image
@@ -255,7 +257,7 @@ export function HistoryPanel({
                                                             e.stopPropagation();
                                                             setOpenCostDialogTimestamp(itemKey);
                                                         }}
-                                                        className='absolute top-1 right-1 z-20 flex items-center gap-0.5 rounded-full bg-green-600/80 px-1.5 py-0.5 text-[11px] text-white transition-colors hover:bg-green-500/90'
+                                                        className='absolute top-1 right-1 z-20 flex items-center gap-0.5 rounded-full bg-green-600/80 px-1.5 py-0.5 text-[11px] text-white hover:bg-green-500/90'
                                                         aria-label='Show cost breakdown'>
                                                         <DollarSign size={12} />
                                                         {item.costDetails.estimated_cost_usd.toFixed(4)}
@@ -339,19 +341,16 @@ export function HistoryPanel({
                                         )}
                                     </div>
 
-                                    <div className='space-y-1 rounded-b-md border border-t-0 border-neutral-700 bg-black p-2 text-xs text-white/60'>
+                                    <div className='space-y-1 rounded-b-md border border-t-0 border-gray-300 dark:border-neutral-700 bg-white dark:bg-black p-2 text-xs text-gray-700 dark:text-white/60' style={{ transition: 'none' }}>
                                         <p title={`Edited on: ${new Date(item.timestamp).toLocaleString()}`}>
-                                            <span className='font-medium text-white/80'>Time:</span>{' '}
+                                            <span className='font-medium text-gray-900 dark:text-white/80'>Time:</span>{' '}
                                             {formatDuration(item.durationMs)}
                                         </p>
                                         <p>
-                                            <span className='font-medium text-white/80'>Quality:</span> {item.quality}
+                                            <span className='font-medium text-gray-900 dark:text-white/80'>Quality:</span> {item.quality}
                                         </p>
                                         <p>
-                                            <span className='font-medium text-white/80'>BG:</span> {item.background}
-                                        </p>
-                                        <p>
-                                            <span className='font-medium text-white/80'>Mod:</span> {item.moderation}
+                                            <span className='font-medium text-gray-900 dark:text-white/80'>Mod:</span> {item.moderation}
                                         </p>
                                         <div className='mt-2 flex items-center gap-1'>
                                             <Dialog
@@ -363,7 +362,8 @@ export function HistoryPanel({
                                                     <Button
                                                         variant='outline'
                                                         size='sm'
-                                                        className='h-6 flex-grow border-white/20 px-2 py-1 text-xs text-white/70 hover:bg-white/10 hover:text-white'
+                                                        className='h-6 flex-grow border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:border-white/20 dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white'
+                                                        style={{ transition: 'none' }}
                                                         onClick={() => setOpenPromptDialogTimestamp(itemKey)}>
                                                         Show Prompt
                                                     </Button>

@@ -1,3 +1,6 @@
+// Autenticación por password hash comentada para desarrollo local
+// En desarrollo local se usa solo modo 'fs' (filesystem)
+
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
@@ -29,6 +32,7 @@ export async function POST(request: NextRequest) {
         const clonedRequest = request.clone();
         const tempBodyForAuth = await clonedRequest.json();
 
+        // Autenticación por password comentada para desarrollo local
         if (process.env.APP_PASSWORD) {
             const clientPasswordHash = tempBodyForAuth.passwordHash as string | null;
 

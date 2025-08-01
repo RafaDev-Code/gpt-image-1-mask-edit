@@ -1,3 +1,6 @@
+// Autenticación por password hash y Dual storage comentado para desarrollo local
+// En desarrollo local se usa solo modo 'fs' (filesystem)
+
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
@@ -85,6 +88,7 @@ export async function POST(request: NextRequest) {
 
         const formData = await request.formData();
 
+        // Autenticación por password comentada para desarrollo local
         if (process.env.APP_PASSWORD) {
             const clientPasswordHash = formData.get('passwordHash') as string | null;
             if (!clientPasswordHash) {

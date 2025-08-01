@@ -24,7 +24,9 @@ import {
     ScanEye,
     UploadCloud,
     Lock,
-    LockOpen
+    LockOpen,
+    Circle,
+    Eye
 } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';
@@ -94,10 +96,10 @@ const RadioItemWithIcon = ({
         <RadioGroupItem
             value={value}
             id={id}
-            className='border-white/40 text-white data-[state=checked]:border-white data-[state=checked]:text-white'
+            className='border-gray-400 text-gray-800 data-[state=checked]:border-gray-800 data-[state=checked]:text-gray-800 dark:border-white/40 dark:text-white dark:data-[state=checked]:border-white dark:data-[state=checked]:text-white'
         />
-        <Label htmlFor={id} className='flex cursor-pointer items-center gap-2 text-base text-white/80'>
-            <Icon className='h-5 w-5 text-white/60' />
+        <Label htmlFor={id} className='flex cursor-pointer items-center gap-2 text-base text-gray-700 dark:text-white/80'>
+            <Icon className='h-5 w-5 text-gray-500 dark:text-white/60' />
             {label}
         </Label>
     </div>
@@ -447,11 +449,11 @@ export function EditingForm({
     };
 
     return (
-        <Card className='flex h-full w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-black'>
-            <CardHeader className='flex items-start justify-between border-b border-white/10 pb-4'>
+        <Card className='flex h-full w-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-white/10 dark:bg-black'>
+            <CardHeader className='flex items-start justify-between border-b border-gray-200 dark:border-white/10 pb-4'>
                 <div>
                     <div className='flex items-center'>
-                        <CardTitle className='py-1 text-lg font-medium text-white'>Edit Image</CardTitle>
+                        <CardTitle className='py-1 text-lg font-medium text-gray-900 dark:text-white' style={{ transition: 'none' }}>Edit Image</CardTitle>
                         {isPasswordRequiredByBackend && (
                             <Button
                                 variant='ghost'
@@ -463,14 +465,14 @@ export function EditingForm({
                             </Button>
                         )}
                     </div>
-                    <CardDescription className='mt-1 text-white/60'>Modify an image using gpt-image-1.</CardDescription>
+                    <CardDescription className='mt-1 text-gray-600 dark:text-white/60' style={{ transition: 'none' }}>Modify an image using gpt-image-1.</CardDescription>
                 </div>
 
             </CardHeader>
-            <form onSubmit={handleSubmit} className='flex h-full flex-1 flex-col overflow-hidden'>
-                <CardContent className='flex-1 space-y-5 overflow-y-auto p-4'>
+            <form onSubmit={handleSubmit} className='flex w-full flex-col'>
+                <CardContent className='w-full space-y-5 p-4'>
                     <div className='space-y-1.5'>
-                        <Label htmlFor='edit-prompt' className='text-white'>
+                        <Label htmlFor='edit-prompt' className='text-gray-900 dark:text-white' style={{ transition: 'none' }}>
                             Prompt
                         </Label>
                         <Textarea
@@ -480,17 +482,17 @@ export function EditingForm({
                             onChange={(e) => setEditPrompt(e.target.value)}
                             required
                             disabled={isLoading}
-                            className='min-h-[80px] rounded-md border border-white/20 bg-black text-white placeholder:text-white/40 focus:border-white/50 focus:ring-white/50'
+                            className='min-h-[80px] rounded-md border border-gray-300 bg-white text-gray-900 dark:border-white/20 dark:bg-black dark:text-white dark:placeholder:text-white/40 dark:focus:border-white/50 dark:focus:ring-white/50'
                         />
                     </div>
 
                     <div className='space-y-2'>
-                        <Label className='text-white'>Source Image(s) [Max: 10]</Label>
+                        <Label className='text-gray-900 dark:text-white' style={{ transition: 'none' }}>Source Image(s) [Max: 10]</Label>
                         <Label
                             htmlFor='image-files-input'
-                            className='flex h-10 w-full cursor-pointer items-center justify-between rounded-md border border-white/20 bg-black px-3 py-2 text-sm transition-colors hover:bg-white/5'>
-                            <span className='truncate pr-2 text-white/60'>{displayFileNames(imageFiles)}</span>
-                            <span className='flex shrink-0 items-center gap-1.5 rounded-md bg-white/10 px-3 py-1 text-xs font-medium text-white/80 hover:bg-white/20'>
+                            className='flex h-10 w-full cursor-pointer items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:bg-gray-100 dark:border-white/20 dark:bg-black dark:hover:bg-white/5'>
+                            <span className='truncate pr-2 text-gray-500 dark:text-white/60'>{displayFileNames(imageFiles)}</span>
+                            <span className='flex shrink-0 items-center gap-1.5 rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-white/80 dark:hover:bg-white/20' style={{ transition: 'none' }}>
                                 <Upload className='h-3 w-3' /> Browse...
                             </span>
                         </Label>
@@ -504,15 +506,16 @@ export function EditingForm({
                             className='sr-only'
                         />
                         {sourceImagePreviewUrls.length > 0 && (
-                            <div className='flex space-x-2 overflow-x-auto pt-2'>
+                            <div className='flex flex-wrap gap-2 pt-2' style={{ transition: 'none' }}>
                                 {sourceImagePreviewUrls.map((url, index) => (
-                                    <div key={url} className='relative shrink-0'>
+                                    <div key={url} className='relative shrink-0' style={{ transition: 'none' }}>
                                         <Image
                                             src={url}
                                             alt={`Source preview ${index + 1}`}
                                             width={80}
                                             height={80}
-                                            className='rounded border border-white/10 object-cover'
+                                            className='rounded border border-gray-200 dark:border-white/10 object-cover'
+                                            style={{ transition: 'none' }}
                                             unoptimized
                                         />
                                         <Button
@@ -531,14 +534,15 @@ export function EditingForm({
                     </div>
 
                     <div className='space-y-3'>
-                        <Label className='block text-white'>Mask</Label>
+                        <Label className='block text-gray-900 dark:text-white' style={{ transition: 'none' }}>Mask</Label>
                         <Button
                             type='button'
                             variant='outline'
                             size='sm'
                             onClick={() => setEditShowMaskEditor(!editShowMaskEditor)}
                             disabled={isLoading || !editOriginalImageSize}
-                            className='w-full justify-start border-white/20 px-3 text-white/80 hover:bg-white/10 hover:text-white'>
+                            className='w-full justify-start border-gray-300 px-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:border-white/20 dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white'
+                            style={{ transition: 'none' }}>
                             {editShowMaskEditor
                                 ? 'Close Mask Editor'
                                 : editGeneratedMaskFile
@@ -551,16 +555,17 @@ export function EditingForm({
                         </Button>
 
                         {editShowMaskEditor && firstImagePreviewUrl && editOriginalImageSize && (
-                            <div className='space-y-3 rounded-md border border-white/20 bg-black p-3'>
-                                <p className='text-xs text-white/60'>
+                            <div className='space-y-3 rounded-md border border-gray-300 bg-white p-3 dark:border-white/20 dark:bg-black' style={{ transition: 'none' }}>
+                                <p className='text-xs text-gray-500 dark:text-white/60'>
                                     Draw on the image below to mark areas for editing (drawn areas become transparent in
                                     the mask).
                                 </p>
                                 <div
-                                    className='relative mx-auto w-full overflow-hidden rounded border border-white/10'
+                                     className='relative mx-auto w-full rounded border border-gray-300 dark:border-white/20'
                                     style={{
                                         maxWidth: `min(100%, ${editOriginalImageSize.width}px)`,
-                                        aspectRatio: `${editOriginalImageSize.width} / ${editOriginalImageSize.height}`
+                                        aspectRatio: `${editOriginalImageSize.width} / ${editOriginalImageSize.height}`,
+                                        transition: 'none'
                                     }}>
                                     <Image
                                         src={firstImagePreviewUrl}
@@ -608,7 +613,7 @@ export function EditingForm({
                                         size='sm'
                                         onClick={() => maskInputRef.current?.click()}
                                         disabled={isLoading || !editOriginalImageSize}
-                                        className='mr-auto border-white/20 text-white/80 hover:bg-white/10 hover:text-white'>
+                                        className='mr-auto border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:border-white/20 dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white'>
                                         <UploadCloud className='mr-1.5 h-4 w-4' /> Upload Mask
                                     </Button>
                                     <Input
@@ -626,7 +631,7 @@ export function EditingForm({
                                             size='sm'
                                             onClick={handleClearMask}
                                             disabled={isLoading}
-                                            className='border-white/20 text-white/80 hover:bg-white/10 hover:text-white'>
+                                            className='border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:border-white/20 dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white'>
                                             <Eraser className='mr-1.5 h-4 w-4' /> Clear
                                         </Button>
                                         <Button
@@ -641,18 +646,18 @@ export function EditingForm({
                                     </div>
                                 </div>
                                 {editMaskPreviewUrl && (
-                                    <div className='mt-3 border-t border-white/10 pt-3 text-center'>
-                                        <Label className='mb-1.5 block text-sm text-white'>
+                                    <div className='mt-3 border-t border-gray-300 pt-3 text-center dark:border-white/20' style={{ transition: 'none' }}>
+                                        <Label className='mb-1.5 block text-sm text-gray-700 dark:text-white'>
                                             Generated Mask Preview:
                                         </Label>
-                                        <div className='inline-block rounded border border-gray-300 bg-white p-1'>
+                                        <div className='inline-block rounded border border-gray-300 bg-white p-1 dark:border-white/20 dark:bg-black' style={{ transition: 'none' }}>
                                             <Image
                                                 src={editMaskPreviewUrl}
                                                 alt='Generated mask preview'
                                                 width={0}
                                                 height={134}
                                                 className='block max-w-full'
-                                                style={{ width: 'auto', height: '134px' }}
+                                                style={{ width: 'auto', height: '134px', transition: 'none' }}
                                                 unoptimized
                                             />
                                         </div>
@@ -674,7 +679,7 @@ export function EditingForm({
                     </div>
 
                     <div className='space-y-3'>
-                        <Label className='block text-white'>Size</Label>
+                        <Label className='block text-gray-800 dark:text-white'>Size</Label>
                         <RadioGroup
                             value={editSize}
                             onValueChange={(value) => setEditSize(value as EditingFormData['size'])}
@@ -698,7 +703,7 @@ export function EditingForm({
                     </div>
 
                     <div className='space-y-3'>
-                        <Label className='block text-white'>Quality</Label>
+                        <Label className='block text-gray-800 dark:text-white'>Quality</Label>
                         <RadioGroup
                             value={editQuality}
                             onValueChange={(value) => setEditQuality(value as EditingFormData['quality'])}
@@ -711,8 +716,10 @@ export function EditingForm({
                         </RadioGroup>
                     </div>
 
+
+
                     <div className='space-y-2'>
-                        <Label htmlFor='edit-n-slider' className='text-white'>
+                        <Label htmlFor='edit-n-slider' className='text-gray-800 dark:text-white'>
                             Number of Images: {editN[0]}
                         </Label>
                         <Slider
@@ -727,11 +734,12 @@ export function EditingForm({
                         />
                     </div>
                 </CardContent>
-                <CardFooter className='border-t border-white/10 p-4'>
+                <CardFooter className='border-t border-gray-300 p-4 dark:border-white/20' style={{ transition: 'none' }}>
                     <Button
                         type='submit'
                         disabled={isLoading || !editPrompt || imageFiles.length === 0}
-                        className='flex w-full items-center justify-center gap-2 rounded-md bg-white text-black hover:bg-white/90 disabled:bg-white/10 disabled:text-white/40'>
+                        className='flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 dark:bg-white dark:text-black dark:hover:bg-white/90 disabled:bg-gray-300 disabled:text-gray-500 dark:disabled:bg-white/10 dark:disabled:text-white/40'
+                        style={{ transition: 'none' }}>
                         {isLoading && <Loader2 className='h-4 w-4 animate-spin' />}
                         {isLoading ? 'Editing...' : 'Edit Image'}
                     </Button>
