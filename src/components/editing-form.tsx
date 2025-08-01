@@ -730,7 +730,7 @@ export function EditingForm({
                             value={editN}
                             onValueChange={setEditN}
                             disabled={isLoading}
-                            className='mt-3 [&>button]:border-black [&>button]:bg-white [&>button]:ring-offset-black [&>span:first-child]:h-1 [&>span:first-child>span]:bg-white'
+                            className='mt-3 [&>button]:border-gray-600 [&>button]:bg-white [&>button]:ring-offset-white dark:[&>button]:border-white dark:[&>button]:bg-gray-800 dark:[&>button]:ring-offset-black [&>span:first-child]:h-1 [&>span:first-child>span]:bg-gray-600 dark:[&>span:first-child>span]:bg-white'
                         />
                     </div>
                 </CardContent>

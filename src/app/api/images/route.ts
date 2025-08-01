@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
             const params: OpenAI.Images.ImageEditParams = {
                 model,
                 prompt,
-                image: imageFiles,
+                image: imageFiles[0], // OpenAI API expects a single file, not an array
                 n: Math.max(1, Math.min(n || 1, 10)),
                 size: size === 'auto' ? undefined : size,
                 quality: quality === 'auto' ? undefined : quality

@@ -24,7 +24,8 @@ import {
     HardDrive,
     Database,
     FileImage,
-    Trash2
+    Trash2,
+    Sparkles
 } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';
@@ -172,7 +173,7 @@ export function HistoryPanel({
                         <p>Edited images will appear here.</p>
                     </div>
                 ) : (
-                    <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
+                    <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                         {[...history].map((item) => {
                             const firstImage = item.images?.[0];
                             const imageCount = item.images?.length ?? 0;
@@ -220,7 +221,7 @@ export function HistoryPanel({
                                                 {item.mode === 'edit' ? (
                                                     <Pencil size={12} />
                                                 ) : (
-                                                    <SparklesIcon size={12} />
+                                                    <Sparkles size={12} />
                                                 )}
                                                 {item.mode === 'edit' ? 'Edit' : 'Create'}
                                             </div>
