@@ -9,7 +9,9 @@ import path from 'path';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
-    baseURL: process.env.OPENAI_API_BASE_URL
+    baseURL: process.env.OPENAI_API_BASE_URL,
+    timeout: 60000, // 60 seconds timeout
+    maxRetries: 0 // We'll handle retries manually
 });
 
 const outputDir = path.resolve(process.cwd(), 'generated-images');
@@ -55,6 +57,64 @@ async function ensureOutputDirExists() {
 
 function sha256(data: string): string {
     return crypto.createHash('sha256').update(data).digest('hex');
+}
+
+// Retry function with exponential backoff for connection errors
+async function retryWithBackoff<T>(
+    fn: () => Promise<T>,
+    maxRetries: number = 3,
+    baseDelay: number = 1000
+): Promise<T> {
+    let lastError: Error;
+    
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (error) {
+            lastError = error as Error;
+            
+            // Check if it's a retryable error
+            const isConnectionError = 
+                error instanceof Error && (
+                    error.message.includes('ECONNRESET') ||
+                    error.message.includes('Connection error') ||
+                    error.message.includes('ENOTFOUND') ||
+                    error.message.includes('ETIMEDOUT') ||
+                    error.message.includes('socket hang up')
+                );
+            
+            // Check if it's a rate limit error (429)
+            const isRateLimitError = 
+                error instanceof Error && (
+                    error.message.includes('429') ||
+                    error.message.includes('rate limit') ||
+                    error.message.includes('exceeded the rate limit')
+                ) || 
+                // Handle OpenAI API error objects
+                (error as any)?.status === 429 ||
+                (error as any)?.code === 'rate_limit_exceeded';
+            
+            const isRetryableError = isConnectionError || isRateLimitError;
+            
+            if (!isRetryableError || attempt === maxRetries) {
+                throw error;
+            }
+            
+            // For rate limit errors, use longer delays
+            let delay;
+            if (isRateLimitError) {
+                delay = Math.max(5000, baseDelay * Math.pow(3, attempt)); // Minimum 5 seconds, exponential with base 3
+                console.log(`Rate limit exceeded (attempt ${attempt + 1}). Waiting ${delay}ms before retry...`);
+            } else {
+                delay = baseDelay * Math.pow(2, attempt);
+                console.log(`Connection error (attempt ${attempt + 1}): ${error.message}. Retrying in ${delay}ms...`);
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+    
+    throw lastError!;
 }
 
 export async function POST(request: NextRequest) {
@@ -149,7 +209,13 @@ export async function POST(request: NextRequest) {
                 image: `[${imageFiles.map((f) => f.name).join(', ')}]`,
                 mask: maskFile ? maskFile.name : 'N/A'
             });
-            result = await openai.images.edit(params);
+            
+            // Use retry mechanism for OpenAI API call
+            result = await retryWithBackoff(
+                () => openai.images.edit(params),
+                3, // max 3 retries
+                2000 // start with 2 second delay
+            );
 
         console.log('OpenAI API call successful.');
 
