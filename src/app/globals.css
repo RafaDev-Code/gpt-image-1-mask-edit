@@ -80,38 +80,38 @@
 }
 
 .dark {
-  /* Paleta personalizada - Modo oscuro */
-  --background: oklch(0.11 0 0); /* #111827 */
-  --foreground: oklch(0.98 0 0); /* #f9fafb */
-  --card: oklch(0.15 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.15 0 0);
-  --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.7 0.25 290); /* #a855f7 */
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.35 0.15 280); /* #4c1d95 hover */
-  --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.25 0 0); /* #374151 bordes suaves */
-  --input: oklch(0.25 0 0);
-  --ring: oklch(0.7 0.25 290);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Nueva paleta personalizada - Modo oscuro */
+  --background: #111827; /* Fondo base - Azul oscuro carbón */
+  --foreground: #f1f5f9; /* Texto primario - Gris casi blanco (90%) */
+  --card: #1f2937; /* Fondo tarjetas - Gris azulado (contraste sutil) */
+  --card-foreground: #f1f5f9; /* Texto primario */
+  --popover: #1f2937; /* Fondo tarjetas */
+  --popover-foreground: #f1f5f9; /* Texto primario */
+  --primary: #7c3aed; /* Color primario (brand) - Violeta elegante */
+  --primary-foreground: #f1f5f9; /* Texto primario */
+  --secondary: #334155; /* Bordes/separadores - Gris azulado */
+  --secondary-foreground: #f1f5f9; /* Texto primario */
+  --muted: #1f2937; /* Fondo tarjetas */
+  --muted-foreground: #cbd5e1; /* Texto secundario - Gris claro sin molestar */
+  --accent: #a855f7; /* Hover primario - Más vibrante pero sobrio */
+  --accent-foreground: #f1f5f9; /* Texto primario */
+  --destructive: #ef4444; /* Error - Rojo coral apagado */
+  --border: #334155; /* Bordes/separadores - Gris azulado */
+  --input: #0f172a; /* Fondo input - Azul petróleo opaco */
+  --ring: #7c3aed; /* Color primario */
+  --chart-1: #22c55e; /* Éxito - Verde "check" */
+  --chart-2: #7c3aed; /* Color primario */
+  --chart-3: #a855f7; /* Hover primario */
+  --chart-4: #ef4444; /* Error */
+  --chart-5: #cbd5e1; /* Texto secundario */
+  --sidebar: #1f2937; /* Fondo tarjetas */
+  --sidebar-foreground: #f1f5f9; /* Texto primario */
+  --sidebar-primary: #7c3aed; /* Color primario */
+  --sidebar-primary-foreground: #f1f5f9; /* Texto primario */
+  --sidebar-accent: #334155; /* Bordes/separadores */
+  --sidebar-accent-foreground: #f1f5f9; /* Texto primario */
+  --sidebar-border: #334155; /* Bordes/separadores */
+  --sidebar-ring: #7c3aed; /* Color primario */
 }
 
 @layer base {
