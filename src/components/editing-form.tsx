@@ -591,7 +591,7 @@ export function EditingForm({
                                 </div>
                                 <div className='grid grid-cols-1 gap-4 pt-2'>
                                     <div className='space-y-2'>
-                                        <Label htmlFor='brush-size-slider' className='text-sm text-white'>
+                                        <Label htmlFor='brush-size-slider' className='text-sm text-gray-900 dark:text-white'>
                                             Brush Size: {editBrushSize[0]}px
                                         </Label>
                                         <Slider
@@ -602,7 +602,7 @@ export function EditingForm({
                                             value={editBrushSize}
                                             onValueChange={setEditBrushSize}
                                             disabled={isLoading}
-                                            className='mt-1 [&>button]:border-black [&>button]:bg-white [&>button]:ring-offset-black [&>span:first-child]:h-1 [&>span:first-child>span]:bg-white'
+                                            className='mt-1 [&>button]:border-gray-800 [&>button]:bg-white [&>button]:ring-offset-gray-800 dark:[&>button]:border-white dark:[&>button]:bg-gray-800 dark:[&>button]:ring-offset-white [&>span:first-child]:h-1 [&>span:first-child>span]:bg-gray-800 dark:[&>span:first-child>span]:bg-white'
                                         />
                                     </div>
                                 </div>
@@ -650,7 +650,7 @@ export function EditingForm({
                                         <Label className='mb-1.5 block text-sm text-gray-700 dark:text-white'>
                                             Generated Mask Preview:
                                         </Label>
-                                        <div className='inline-block rounded border border-gray-300 bg-white p-1 dark:border-white/20 dark:bg-black' style={{ transition: 'none' }}>
+                                        <div className='inline-block rounded border border-gray-300 bg-gray-100 p-1 dark:border-white/20 dark:bg-gray-800' style={{ transition: 'none' }}>
                                             <Image
                                                 src={editMaskPreviewUrl}
                                                 alt='Generated mask preview'
