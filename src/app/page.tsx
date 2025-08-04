@@ -681,14 +681,18 @@ export default function HomePage() {
                         : 'Set a password to use for API requests.'
                 }
             />
-            <button 
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
-                className="fixed top-4 right-4 z-50 bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-800 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm shadow-lg"
-                style={{ transition: 'none' }}
-            >
-                <span className="hidden sm:inline">{theme === "dark" ? "☀️ Light" : "🌙 Dark"}</span>
-                <span className="sm:hidden">{theme === "dark" ? "☀️" : "🌙"}</span>
-            </button>
+            <div className='w-full pt-4'>
+                <div className='flex justify-center mb-6'>
+                    <button 
+                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
+                        className="bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-800 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm shadow-lg"
+                        style={{ transition: 'none' }}
+                    >
+                        <span className="hidden sm:inline">{theme === "dark" ? "☀️ Light" : "🌙 Dark"}</span>
+                        <span className="sm:hidden">{theme === "dark" ? "☀️" : "🌙"}</span>
+                    </button>
+                </div>
+            </div>
             <div className='w-full space-y-6'>
                 <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
                     <div className='relative flex flex-col lg:col-span-1'>
