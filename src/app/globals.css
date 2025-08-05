@@ -45,38 +45,38 @@
 
 :root {
   --radius: 0.625rem;
-  /* Paleta personalizada - Modo claro */
-  --background: oklch(0.97 0 0); /* #f7f7f7 */
-  --foreground: oklch(0.07 0 0); /* #111111 */
-  --card: oklch(0.97 0 0);
-  --card-foreground: oklch(0.07 0 0);
-  --popover: oklch(0.97 0 0);
-  --popover-foreground: oklch(0.07 0 0);
-  --primary: oklch(0.55 0.22 280); /* #7c3aed */
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.95 0 0);
-  --secondary-foreground: oklch(0.07 0 0);
-  --muted: oklch(0.95 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.92 0.05 280); /* #e0e7ff hover */
-  --accent-foreground: oklch(0.07 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.83 0 0); /* #d1d5db bordes suaves */
-  --input: oklch(0.83 0 0);
-  --ring: oklch(0.55 0.22 280);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.97 0 0);
-  --sidebar-foreground: oklch(0.07 0 0);
-  --sidebar-primary: oklch(0.55 0.22 280);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.95 0 0);
-  --sidebar-accent-foreground: oklch(0.07 0 0);
-  --sidebar-border: oklch(0.83 0 0);
-  --sidebar-ring: oklch(0.55 0.22 280);
+  /* Nueva paleta personalizada - Modo claro */
+  --background: #f8fafc; /* Fondo base - Gris pálido con toque celeste */
+  --foreground: #0f172a; /* Texto primario - Azul petróleo oscuro */
+  --card: #e2e8f0; /* Fondo tarjetas - Gris frío claro */
+  --card-foreground: #0f172a; /* Texto primario */
+  --popover: #e2e8f0; /* Fondo tarjetas */
+  --popover-foreground: #0f172a; /* Texto primario */
+  --primary: #7c3aed; /* Color primario (brand) - Mismo violeta que en dark */
+  --primary-foreground: #f8fafc; /* Fondo base */
+  --secondary: #cbd5e1; /* Bordes/separadores - Gris suave */
+  --secondary-foreground: #0f172a; /* Texto primario */
+  --muted: #e2e8f0; /* Fondo tarjetas */
+  --muted-foreground: #475569; /* Texto secundario - Gris opaco para no saturar */
+  --accent: #6d28d9; /* Hover primario - Violeta más oscuro */
+  --accent-foreground: #f8fafc; /* Fondo base */
+  --destructive: #dc2626; /* Error - Rojo elegante sin ser agresivo */
+  --border: #cbd5e1; /* Bordes/separadores - Gris suave */
+  --input: #f1f5f9; /* Fondo input - Gris azulado claro */
+  --ring: #7c3aed; /* Color primario */
+  --chart-1: #16a34a; /* Éxito - Verde esmeralda sobrio */
+  --chart-2: #7c3aed; /* Color primario */
+  --chart-3: #6d28d9; /* Hover primario */
+  --chart-4: #dc2626; /* Error */
+  --chart-5: #475569; /* Texto secundario */
+  --sidebar: #e2e8f0; /* Fondo tarjetas */
+  --sidebar-foreground: #0f172a; /* Texto primario */
+  --sidebar-primary: #7c3aed; /* Color primario */
+  --sidebar-primary-foreground: #f8fafc; /* Fondo base */
+  --sidebar-accent: #cbd5e1; /* Bordes/separadores */
+  --sidebar-accent-foreground: #0f172a; /* Texto primario */
+  --sidebar-border: #cbd5e1; /* Bordes/separadores */
+  --sidebar-ring: #7c3aed; /* Color primario */
 }
 
 .dark {

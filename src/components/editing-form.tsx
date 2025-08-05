@@ -490,9 +490,9 @@ export function EditingForm({
                         <Label className='text-foreground dark:text-foreground' style={{ transition: 'none' }}>Source Image(s) [Max: 10]</Label>
                         <Label
                             htmlFor='image-files-input'
-                            className='flex h-10 w-full cursor-pointer items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent dark:border-input dark:bg-background dark:hover:bg-accent'>
-                            <span className='truncate pr-2 text-muted-foreground dark:text-muted-foreground'>{displayFileNames(imageFiles)}</span>
-                            <span className='flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-muted/80 dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted/80' style={{ transition: 'none' }}>
+                            className='group flex h-10 w-full cursor-pointer items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-background dark:hover:bg-accent dark:hover:text-accent-foreground'>
+                            <span className='truncate pr-2 text-muted-foreground group-hover:text-accent-foreground dark:text-muted-foreground dark:group-hover:text-accent-foreground'>{displayFileNames(imageFiles)}</span>
+                            <span className='flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-3 py-1 text-xs font-medium text-muted-foreground group-hover:text-accent-foreground dark:bg-muted dark:text-muted-foreground dark:group-hover:text-accent-foreground' style={{ transition: 'none' }}>
                                 <Upload className='h-3 w-3' /> Browse...
                             </span>
                         </Label>

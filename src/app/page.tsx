@@ -685,7 +685,7 @@ export default function HomePage() {
                 <div className='flex justify-center mb-6'>
                     <button 
                         onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
-                        className="bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-800 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm shadow-lg"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm shadow-lg"
                         style={{ transition: 'none' }}
                     >
                         <span className="hidden sm:inline">{theme === "dark" ? "☀️ Light" : "🌙 Dark"}</span>

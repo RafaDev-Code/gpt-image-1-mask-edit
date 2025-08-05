@@ -147,7 +147,7 @@ export function HistoryPanel({
                                             type='button'
                                             variant='secondary'
                                             size='sm'
-                                            className='bg-neutral-700 text-neutral-200 hover:bg-neutral-600'>
+                                            className='bg-secondary text-secondary-foreground hover:bg-secondary/80'>
                                             Close
                                         </Button>
                                     </DialogClose>
