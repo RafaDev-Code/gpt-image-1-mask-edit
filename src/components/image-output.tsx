@@ -109,7 +109,7 @@ export function ImageOutput({
                     )
                 ) : (
                     <div className='text-center text-muted-foreground dark:text-muted-foreground'>
-                        <p>Your generated image will appear here.</p>
+                        <p>Upload an image to start editing.</p>
                     </div>
                 )}
             </div>
