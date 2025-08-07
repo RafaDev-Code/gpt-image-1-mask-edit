@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../styles/design-tokens.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -43,76 +44,81 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* COMENTADO: Ahora las variables legacy se definen en design-tokens.css a través del bridge */
+/* Las variables --dt-* son la fuente de verdad y se mapean automáticamente a las legacy */
+/*
 :root {
   --radius: 0.625rem;
-  /* Nueva paleta personalizada - Modo claro */
-  --background: #f8fafc; /* Fondo base - Gris pálido con toque celeste */
-  --foreground: #0f172a; /* Texto primario - Azul petróleo oscuro */
-  --card: #e2e8f0; /* Fondo tarjetas - Gris frío claro */
-  --card-foreground: #0f172a; /* Texto primario */
-  --popover: #e2e8f0; /* Fondo tarjetas */
-  --popover-foreground: #0f172a; /* Texto primario */
-  --primary: #7c3aed; /* Color primario (brand) - Mismo violeta que en dark */
-  --primary-foreground: #f8fafc; /* Fondo base */
-  --secondary: #cbd5e1; /* Bordes/separadores - Gris suave */
-  --secondary-foreground: #0f172a; /* Texto primario */
-  --muted: #e2e8f0; /* Fondo tarjetas */
-  --muted-foreground: #475569; /* Texto secundario - Gris opaco para no saturar */
-  --accent: #6d28d9; /* Hover primario - Violeta más oscuro */
-  --accent-foreground: #f8fafc; /* Fondo base */
-  --destructive: #dc2626; /* Error - Rojo elegante sin ser agresivo */
-  --border: #cbd5e1; /* Bordes/separadores - Gris suave */
-  --input: #f1f5f9; /* Fondo input - Gris azulado claro */
-  --ring: #7c3aed; /* Color primario */
-  --chart-1: #16a34a; /* Éxito - Verde esmeralda sobrio */
-  --chart-2: #7c3aed; /* Color primario */
-  --chart-3: #6d28d9; /* Hover primario */
-  --chart-4: #dc2626; /* Error */
-  --chart-5: #475569; /* Texto secundario */
-  --sidebar: #e2e8f0; /* Fondo tarjetas */
-  --sidebar-foreground: #0f172a; /* Texto primario */
-  --sidebar-primary: #7c3aed; /* Color primario */
-  --sidebar-primary-foreground: #f8fafc; /* Fondo base */
-  --sidebar-accent: #cbd5e1; /* Bordes/separadores */
-  --sidebar-accent-foreground: #0f172a; /* Texto primario */
-  --sidebar-border: #cbd5e1; /* Bordes/separadores */
-  --sidebar-ring: #7c3aed; /* Color primario */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #e2e8f0;
+  --card-foreground: #0f172a;
+  --popover: #e2e8f0;
+  --popover-foreground: #0f172a;
+  --primary: #7c3aed;
+  --primary-foreground: #f8fafc;
+  --secondary: #cbd5e1;
+  --secondary-foreground: #0f172a;
+  --muted: #e2e8f0;
+  --muted-foreground: #475569;
+  --accent: #6d28d9;
+  --accent-foreground: #f8fafc;
+  --destructive: #dc2626;
+  --border: #cbd5e1;
+  --input: #f1f5f9;
+  --ring: #7c3aed;
+  --chart-1: #16a34a;
+  --chart-2: #7c3aed;
+  --chart-3: #6d28d9;
+  --chart-4: #dc2626;
+  --chart-5: #475569;
+  --sidebar: #e2e8f0;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #7c3aed;
+  --sidebar-primary-foreground: #f8fafc;
+  --sidebar-accent: #cbd5e1;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #cbd5e1;
+  --sidebar-ring: #7c3aed;
 }
+*/
 
+/* COMENTADO: Ahora los temas se manejan con data-theme en design-tokens.css */
+/*
 .dark {
-  /* Nueva paleta personalizada - Modo oscuro */
-  --background: #111827; /* Fondo base - Azul oscuro carbón */
-  --foreground: #f1f5f9; /* Texto primario - Gris casi blanco (90%) */
-  --card: #1f2937; /* Fondo tarjetas - Gris azulado (contraste sutil) */
-  --card-foreground: #f1f5f9; /* Texto primario */
-  --popover: #1f2937; /* Fondo tarjetas */
-  --popover-foreground: #f1f5f9; /* Texto primario */
-  --primary: #7c3aed; /* Color primario (brand) - Violeta elegante */
-  --primary-foreground: #f1f5f9; /* Texto primario */
-  --secondary: #334155; /* Bordes/separadores - Gris azulado */
-  --secondary-foreground: #f1f5f9; /* Texto primario */
-  --muted: #1f2937; /* Fondo tarjetas */
-  --muted-foreground: #cbd5e1; /* Texto secundario - Gris claro sin molestar */
-  --accent: #a855f7; /* Hover primario - Más vibrante pero sobrio */
-  --accent-foreground: #f1f5f9; /* Texto primario */
-  --destructive: #ef4444; /* Error - Rojo coral apagado */
-  --border: #334155; /* Bordes/separadores - Gris azulado */
-  --input: #0f172a; /* Fondo input - Azul petróleo opaco */
-  --ring: #7c3aed; /* Color primario */
-  --chart-1: #22c55e; /* Éxito - Verde "check" */
-  --chart-2: #7c3aed; /* Color primario */
-  --chart-3: #a855f7; /* Hover primario */
-  --chart-4: #ef4444; /* Error */
-  --chart-5: #cbd5e1; /* Texto secundario */
-  --sidebar: #1f2937; /* Fondo tarjetas */
-  --sidebar-foreground: #f1f5f9; /* Texto primario */
-  --sidebar-primary: #7c3aed; /* Color primario */
-  --sidebar-primary-foreground: #f1f5f9; /* Texto primario */
-  --sidebar-accent: #334155; /* Bordes/separadores */
-  --sidebar-accent-foreground: #f1f5f9; /* Texto primario */
-  --sidebar-border: #334155; /* Bordes/separadores */
-  --sidebar-ring: #7c3aed; /* Color primario */
+  --background: #111827;
+  --foreground: #f1f5f9;
+  --card: #1f2937;
+  --card-foreground: #f1f5f9;
+  --popover: #1f2937;
+  --popover-foreground: #f1f5f9;
+  --primary: #7c3aed;
+  --primary-foreground: #f1f5f9;
+  --secondary: #334155;
+  --secondary-foreground: #f1f5f9;
+  --muted: #1f2937;
+  --muted-foreground: #cbd5e1;
+  --accent: #a855f7;
+  --accent-foreground: #f1f5f9;
+  --destructive: #ef4444;
+  --border: #334155;
+  --input: #0f172a;
+  --ring: #7c3aed;
+  --chart-1: #22c55e;
+  --chart-2: #7c3aed;
+  --chart-3: #a855f7;
+  --chart-4: #ef4444;
+  --chart-5: #cbd5e1;
+  --sidebar: #1f2937;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #7c3aed;
+  --sidebar-primary-foreground: #f1f5f9;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #f1f5f9;
+  --sidebar-border: #334155;
+  --sidebar-ring: #7c3aed;
 }
+*/
 
 @layer base {
   * {

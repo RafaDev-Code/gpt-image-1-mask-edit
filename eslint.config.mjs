@@ -1,6 +1,7 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
+import noHardcodedColors from "./eslint-rules/no-hardcoded-colors.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,6 +12,18 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    plugins: {
+      "custom": {
+        rules: {
+          "no-hardcoded-colors": noHardcodedColors,
+        },
+      },
+    },
+    rules: {
+      "custom/no-hardcoded-colors": "error",
+    },
+  },
 ];
 
 export default eslintConfig;

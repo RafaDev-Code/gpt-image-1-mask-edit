@@ -1,0 +1,355 @@
+/* Design Tokens - Fase 0: Variables semánticas mapeadas a colores actuales */
+/* Garantiza pixel-parity con el diseño existente */
+
+:root {
+  /* === COLORES BASE === */
+  --dt-background: #f8fafc; /* Fondo base - Gris pálido con toque celeste */
+  --dt-foreground: #0f172a; /* Texto primario - Azul petróleo oscuro */
+  
+  /* === SUPERFICIES === */
+  --dt-card: #e2e8f0; /* Fondo tarjetas - Gris frío claro */
+  --dt-card-foreground: #0f172a; /* Texto en tarjetas */
+  --dt-popover: #e2e8f0; /* Fondo popovers */
+  --dt-popover-foreground: #0f172a; /* Texto en popovers */
+  
+  /* === COLORES PRIMARIOS === */
+  --dt-primary: #7c3aed; /* Color primario (brand) - Violeta */
+  --dt-primary-foreground: #f8fafc; /* Texto sobre primario */
+  
+  /* === COLORES SECUNDARIOS === */
+  --dt-secondary: #cbd5e1; /* Bordes/separadores - Gris suave */
+  --dt-secondary-foreground: #0f172a; /* Texto sobre secundario */
+  
+  /* === ESTADOS NEUTROS === */
+  --dt-muted: #e2e8f0; /* Fondos apagados */
+  --dt-muted-foreground: #475569; /* Texto secundario - Gris opaco */
+  
+  /* === ESTADOS INTERACTIVOS === */
+  --dt-accent: #6d28d9; /* Hover primario - Violeta más oscuro */
+  --dt-accent-foreground: #f8fafc; /* Texto sobre accent */
+  
+  /* === ESTADOS DE ERROR === */
+  --dt-destructive: #dc2626; /* Error - Rojo elegante */
+  --dt-destructive-foreground: #f8fafc; /* Texto sobre destructive */
+  
+  /* === BORDES Y CONTROLES === */
+  --dt-border: #cbd5e1; /* Bordes/separadores - Gris suave */
+  --dt-input: #f1f5f9; /* Fondo input - Gris azulado claro */
+  --dt-ring: #7c3aed; /* Focus ring - Color primario */
+  
+  /* === GRÁFICOS Y CHARTS === */
+  --dt-chart-1: #16a34a; /* Éxito - Verde esmeralda sobrio */
+  --dt-chart-2: #7c3aed; /* Color primario */
+  --dt-chart-3: #6d28d9; /* Hover primario */
+  --dt-chart-4: #dc2626; /* Error */
+  --dt-chart-5: #475569; /* Texto secundario */
+  
+  /* === SIDEBAR === */
+  --dt-sidebar: #e2e8f0; /* Fondo sidebar */
+  --dt-sidebar-foreground: #0f172a; /* Texto sidebar */
+  --dt-sidebar-primary: #7c3aed; /* Primario sidebar */
+  --dt-sidebar-primary-foreground: #f8fafc; /* Texto sobre primario sidebar */
+  --dt-sidebar-accent: #cbd5e1; /* Accent sidebar */
+  --dt-sidebar-accent-foreground: #0f172a; /* Texto sobre accent sidebar */
+  --dt-sidebar-border: #cbd5e1; /* Bordes sidebar */
+  --dt-sidebar-ring: #7c3aed; /* Focus ring sidebar */
+  
+  /* === ESTADOS SUAVES (para reemplazar /20 opacity) === */
+  --state-success-soft: rgba(22, 163, 74, 0.15); /* Verde con 15% opacidad */
+  --state-warning-soft: rgba(245, 158, 11, 0.15); /* Amarillo con 15% opacidad */
+  --state-error-soft: rgba(220, 38, 38, 0.15); /* Rojo con 15% opacidad */
+  --state-info-soft: rgba(59, 130, 246, 0.15); /* Azul con 15% opacidad */
+  
+  /* === COLORES DE ESTADO === */
+  --success: #16a34a; /* Verde éxito */
+  --success-foreground: #f8fafc; /* Texto sobre éxito */
+  --warning: #f59e0b; /* Amarillo advertencia */
+  --warning-foreground: #0f172a; /* Texto sobre advertencia */
+  --error: #dc2626; /* Rojo error */
+  --error-foreground: #f8fafc; /* Texto sobre error */
+  --info: #3b82f6; /* Azul información */
+  --info-foreground: #f8fafc; /* Texto sobre información */
+  
+  /* === OVERLAYS === */
+  --overlay-backdrop: rgba(0, 0, 0, 0.5); /* Fondo de diálogos */
+  
+  /* === CANVAS === */
+  --canvas-ink: #000000; /* Tinta de canvas - negro en light */
+  
+  /* === COLORES DE ESTADO ADICIONALES === */
+  --success: #16a34a; /* Verde éxito */
+  --success-foreground: #f8fafc; /* Texto sobre éxito */
+  --warning: #f59e0b; /* Amarillo advertencia */
+  --warning-foreground: #0f172a; /* Texto sobre advertencia */
+  --error: #dc2626; /* Rojo error */
+  --error-foreground: #f8fafc; /* Texto sobre error */
+  --info: #3b82f6; /* Azul información */
+  --info-foreground: #f8fafc; /* Texto sobre información */
+  
+  /* === RADIO DE BORDES === */
+  --dt-radius: 0.625rem;
+  --dt-radius-sm: calc(var(--dt-radius) - 4px);
+  --dt-radius-md: calc(var(--dt-radius) - 2px);
+  --dt-radius-lg: var(--dt-radius);
+  --dt-radius-xl: calc(var(--dt-radius) + 4px);
+
+  /* === BRIDGE: Mapeo de tokens legacy a variables dinámicas === */
+  /* Una sola fuente de verdad - los componentes usan estas variables legacy */
+  --background: var(--dt-background);
+  --foreground: var(--dt-foreground);
+  --card: var(--dt-card);
+  --card-foreground: var(--dt-card-foreground);
+  --popover: var(--dt-popover);
+  --popover-foreground: var(--dt-popover-foreground);
+  --primary: var(--dt-primary);
+  --primary-foreground: var(--dt-primary-foreground);
+  --secondary: var(--dt-secondary);
+  --secondary-foreground: var(--dt-secondary-foreground);
+  --muted: var(--dt-muted);
+  --muted-foreground: var(--dt-muted-foreground);
+  --accent: var(--dt-accent);
+  --accent-foreground: var(--dt-accent-foreground);
+  --destructive: var(--dt-destructive);
+  --destructive-foreground: var(--dt-destructive-foreground);
+  --border: var(--dt-border);
+  --input: var(--dt-input);
+  --ring: var(--dt-ring);
+  --chart-1: var(--dt-chart-1);
+  --chart-2: var(--dt-chart-2);
+  --chart-3: var(--dt-chart-3);
+  --chart-4: var(--dt-chart-4);
+  --chart-5: var(--dt-chart-5);
+  --sidebar: var(--dt-sidebar);
+  --sidebar-foreground: var(--dt-sidebar-foreground);
+  --sidebar-primary: var(--dt-sidebar-primary);
+  --sidebar-primary-foreground: var(--dt-sidebar-primary-foreground);
+  --sidebar-accent: var(--dt-sidebar-accent);
+  --sidebar-accent-foreground: var(--dt-sidebar-accent-foreground);
+  --sidebar-border: var(--dt-sidebar-border);
+  --sidebar-ring: var(--dt-sidebar-ring);
+  --radius: var(--dt-radius);
+}
+
+/* === TEMAS ADICIONALES (Placeholders para Fase 1) === */
+
+[data-theme="dark"] {
+  /* === COLORES BASE === */
+  --dt-background: #0a0a0a;
+  --dt-foreground: #fafafa;
+  
+  /* === SUPERFICIES === */
+  --dt-card: #1a1a1a;
+  --dt-card-foreground: #fafafa;
+  --dt-popover: #1a1a1a;
+  --dt-popover-foreground: #fafafa;
+  
+  /* === COLORES PRIMARIOS === */
+  --dt-primary: #fafafa;
+  --dt-primary-foreground: #0a0a0a;
+  
+  /* === COLORES SECUNDARIOS === */
+  --dt-secondary: #262626;
+  --dt-secondary-foreground: #fafafa;
+  
+  /* === ESTADOS NEUTROS === */
+  --dt-muted: #262626;
+  --dt-muted-foreground: #a1a1aa;
+  --dt-accent: #262626;
+  --dt-accent-foreground: #fafafa;
+  
+  /* === ESTADOS INTERACTIVOS === */
+    --dt-destructive: #dc2626;
+    --dt-destructive-foreground: #fafafa;
+  
+  /* === BORDES === */
+  --dt-border: #262626;
+  --dt-input: #262626;
+  --dt-ring: #d4d4d8;
+  
+  /* === COLORES DE GRÁFICOS === */
+  --dt-chart-1: #e11d48;
+  --dt-chart-2: #f97316;
+  --dt-chart-3: #eab308;
+  --dt-chart-4: #22c55e;
+  --dt-chart-5: #3b82f6;
+  
+  /* === SIDEBAR === */
+  --dt-sidebar: #0a0a0a;
+  --dt-sidebar-foreground: #a1a1aa;
+  --dt-sidebar-primary: #fafafa;
+  --dt-sidebar-primary-foreground: #0a0a0a;
+  --dt-sidebar-accent: #262626;
+  --dt-sidebar-accent-foreground: #fafafa;
+  --dt-sidebar-border: #262626;
+  --dt-sidebar-ring: #d4d4d8;
+  
+  /* === ESTADOS SOFT === */
+  --state-success-soft: rgba(34, 197, 94, 0.15);
+  --state-warning-soft: rgba(245, 158, 11, 0.15);
+  --state-error-soft: rgba(239, 68, 68, 0.15);
+  --state-info-soft: rgba(59, 130, 246, 0.15);
+  
+  /* === OVERLAY === */
+  --overlay-backdrop: rgba(0, 0, 0, 0.8);
+  
+  /* === CANVAS === */
+  --canvas-ink: #f1f5f9;
+  
+  /* === COLORES DE ESTADO ADICIONALES === */
+  --success: #22c55e;
+  --success-foreground: #0a0a0a;
+  --warning: #f59e0b;
+  --warning-foreground: #0a0a0a;
+  --error: #ef4444;
+  --error-foreground: #fafafa;
+  --info: #3b82f6;
+  --info-foreground: #fafafa;
+}
+
+[data-theme="green"] {
+  /* === COLORES BASE === */
+  --dt-background: #f0fdf4;
+  --dt-foreground: #14532d;
+  
+  /* === SUPERFICIES === */
+  --dt-card: #dcfce7;
+  --dt-card-foreground: #14532d;
+  --dt-popover: #dcfce7;
+  --dt-popover-foreground: #14532d;
+  
+  /* === COLORES PRIMARIOS === */
+    --dt-primary: #15803d;
+    --dt-primary-foreground: #f0fdf4;
+  
+  /* === COLORES SECUNDARIOS === */
+  --dt-secondary: #bbf7d0;
+  --dt-secondary-foreground: #14532d;
+  
+  /* === ESTADOS NEUTROS === */
+  --dt-muted: #dcfce7;
+  --dt-muted-foreground: #15803d;
+  --dt-accent: #15803d;
+  --dt-accent-foreground: #f0fdf4;
+  
+  /* === ESTADOS INTERACTIVOS === */
+  --dt-destructive: #dc2626;
+  --dt-destructive-foreground: #f0fdf4;
+  
+  /* === BORDES === */
+  --dt-border: #bbf7d0;
+  --dt-input: #ecfdf5;
+  --dt-ring: #16a34a;
+  
+  /* === COLORES DE GRÁFICOS === */
+  --dt-chart-1: #16a34a;
+  --dt-chart-2: #15803d;
+  --dt-chart-3: #166534;
+  --dt-chart-4: #14532d;
+  --dt-chart-5: #052e16;
+  
+  /* === SIDEBAR === */
+  --dt-sidebar: #dcfce7;
+  --dt-sidebar-foreground: #14532d;
+  --dt-sidebar-primary: #16a34a;
+  --dt-sidebar-primary-foreground: #f0fdf4;
+  --dt-sidebar-accent: #bbf7d0;
+  --dt-sidebar-accent-foreground: #14532d;
+  --dt-sidebar-border: #bbf7d0;
+  --dt-sidebar-ring: #16a34a;
+  
+  /* === ESTADOS SOFT === */
+  --state-success-soft: rgba(22, 163, 74, 0.15);
+  --state-warning-soft: rgba(245, 158, 11, 0.15);
+  --state-error-soft: rgba(220, 38, 38, 0.15);
+  --state-info-soft: rgba(34, 197, 94, 0.15);
+  
+  /* === OVERLAY === */
+  --overlay-backdrop: rgba(20, 83, 45, 0.5);
+  
+  /* === CANVAS === */
+  --canvas-ink: #14532d;
+  
+  /* === COLORES DE ESTADO ADICIONALES === */
+  --success: #16a34a;
+  --success-foreground: #f0fdf4;
+  --warning: #f59e0b;
+  --warning-foreground: #14532d;
+  --error: #dc2626;
+  --error-foreground: #f0fdf4;
+  --info: #22c55e;
+  --info-foreground: #f0fdf4;
+}
+
+[data-theme="retro"] {
+  /* === COLORES BASE === */
+  --dt-background: #fef3c7;
+  --dt-foreground: #451a03;
+  
+  /* === SUPERFICIES === */
+  --dt-card: #fde68a;
+  --dt-card-foreground: #451a03;
+  --dt-popover: #fde68a;
+  --dt-popover-foreground: #451a03;
+  
+  /* === COLORES PRIMARIOS === */
+    --dt-primary: #92400e;
+    --dt-primary-foreground: #fef3c7;
+    
+    /* === COLORES SECUNDARIOS === */
+    --dt-secondary: #fed7aa;
+    --dt-secondary-foreground: #451a03;
+    
+    /* === ESTADOS NEUTROS === */
+    --dt-muted: #fde68a;
+    --dt-muted-foreground: #92400e;
+    --dt-accent: #92400e;
+    --dt-accent-foreground: #fef3c7;
+    
+    /* === ESTADOS INTERACTIVOS === */
+    --dt-destructive: #b91c1c;
+    --dt-destructive-foreground: #fef3c7;
+  
+  /* === BORDES === */
+  --dt-border: #fed7aa;
+  --dt-input: #fef7ed;
+  --dt-ring: #d97706;
+  
+  /* === COLORES DE GRÁFICOS === */
+  --dt-chart-1: #dc2626;
+  --dt-chart-2: #d97706;
+  --dt-chart-3: #ea580c;
+  --dt-chart-4: #f59e0b;
+  --dt-chart-5: #92400e;
+  
+  /* === SIDEBAR === */
+  --dt-sidebar: #fde68a;
+  --dt-sidebar-foreground: #451a03;
+  --dt-sidebar-primary: #d97706;
+  --dt-sidebar-primary-foreground: #fef3c7;
+  --dt-sidebar-accent: #fed7aa;
+  --dt-sidebar-accent-foreground: #451a03;
+  --dt-sidebar-border: #fed7aa;
+  --dt-sidebar-ring: #d97706;
+  
+  /* === ESTADOS SOFT === */
+  --state-success-soft: rgba(34, 197, 94, 0.15);
+  --state-warning-soft: rgba(245, 158, 11, 0.15);
+  --state-error-soft: rgba(220, 38, 38, 0.15);
+  --state-info-soft: rgba(217, 119, 6, 0.15);
+  
+  /* === OVERLAY === */
+  --overlay-backdrop: rgba(69, 26, 3, 0.5);
+  
+  /* === CANVAS === */
+  --canvas-ink: #451a03;
+  
+  /* === COLORES DE ESTADO ADICIONALES === */
+  --success: #16a34a;
+  --success-foreground: #fef3c7;
+  --warning: #f59e0b;
+  --warning-foreground: #451a03;
+  --error: #dc2626;
+  --error-foreground: #fef3c7;
+  --info: #d97706;
+  --info-foreground: #fef3c7;
+}

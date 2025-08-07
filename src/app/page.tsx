@@ -5,6 +5,7 @@ import { HistoryPanel } from '@/components/history-panel';
 import { ImageOutput } from '@/components/image-output';
 import { PasswordDialog } from '@/components/password-dialog';
 import { LanguageSelector } from '@/components/language-selector';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { calculateApiCost, type CostDetails } from '@/lib/cost-utils';
 import { db, type ImageRecord } from '@/lib/db';
@@ -663,22 +664,7 @@ export default function HomePage() {
         setItemToDeleteConfirm(null);
     };
 
-    const [theme, setTheme] = React.useState("dark");
-    
-    React.useEffect(() => {
-        // Cargar el tema desde localStorage al iniciar
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            setTheme(savedTheme);
-        }
-    }, []);
-    
-    React.useEffect(() => {
-        // Guardar el tema en localStorage cuando cambie
-        localStorage.setItem('theme', theme);
-        // Aplicar la clase dark al elemento html
-        document.documentElement.classList.toggle("dark", theme === "dark");
-    }, [theme]);
+
     
     return (
         <main className='flex flex-col items-center w-full max-w-5xl mx-auto px-4 py-8 space-y-6'>
@@ -696,14 +682,7 @@ export default function HomePage() {
             <div className='w-full pt-4'>
                 <div className='flex justify-center items-center gap-4 mb-6'>
                     <LanguageSelector />
-                    <button 
-                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm shadow-lg"
-                        style={{ transition: 'none' }}
-                    >
-                        <span className="hidden sm:inline">{theme === "dark" ? getText('common:themeToggle.light', '☀️ Light') : getText('common:themeToggle.dark', '🌙 Dark')}</span>
-                        <span className="sm:hidden">{theme === "dark" ? getText('common:themeToggle.lightIcon', '☀️') : getText('common:themeToggle.darkIcon', '🌙')}</span>
-                    </button>
+                    <ThemeSwitcher />
                 </div>
             </div>
             <div className='w-full space-y-6'>
@@ -748,8 +727,8 @@ export default function HomePage() {
                     </div>
                     <div className='flex flex-col lg:col-span-1'>
                         {error && (
-                            <Alert variant='destructive' className='mb-4 border-red-500/50 bg-red-900/20 text-red-300 dark:border-red-500/50 dark:bg-red-900/20 dark:text-red-300'>
-                                <AlertTitle className='text-red-200 dark:text-red-200'>{t('common:messages.error')}</AlertTitle>
+                            <Alert variant='destructive' className='mb-4 border-destructive bg-[var(--state-error-soft)] text-destructive-foreground'>
+                    <AlertTitle className='text-destructive-foreground'>{t('common:messages.error')}</AlertTitle>
                                 <AlertDescription>{error}</AlertDescription>
                             </Alert>
                         )}

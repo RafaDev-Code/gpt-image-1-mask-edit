@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:colors": "next lint",
+    "validate:contrast": "tsx src/lib/validate-themes.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "i18n:extract": "npx i18next-parser"
   },
@@ -33,7 +35,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.6.1",
-    "tailwind-merge": "^3.2.0"
+    "tailwind-merge": "^3.2.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -47,8 +50,9 @@
     "eslint-config-next": "15.3.1",
     "i18next-parser": "^9.3.0",
     "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "stylelint-declaration-block-no-ignored-properties": "^2.8.0",
     "tailwindcss": "^4.1.4",
+    "tsx": "^4.20.3",
     "tw-animate-css": "^1.2.8",
     "typescript": "^5"
   },

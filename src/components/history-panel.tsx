@@ -120,20 +120,20 @@ export function HistoryPanel({
                         <Dialog open={isTotalCostDialogOpen} onOpenChange={setIsTotalCostDialogOpen}>
                             <DialogTrigger asChild>
                                 <button
-                                    className='mt-0.5 flex items-center gap-1 rounded-full bg-green-600/80 px-1.5 py-0.5 text-[12px] text-white transition-colors hover:bg-green-500/90'
+                                    className='mt-0.5 flex items-center gap-1 rounded-full bg-[var(--state-success-soft)] px-1.5 py-0.5 text-[12px] text-success-foreground transition-colors hover:bg-success'
                                     aria-label='Show total cost summary'>
                                     {getText('editor:history.totalCost', 'Total Cost:')} ${totalCost.toFixed(4)}
                                 </button>
                             </DialogTrigger>
-                            <DialogContent className='border-neutral-700 bg-neutral-900 text-white sm:max-w-[450px]'>
+                            <DialogContent className='border-border bg-card text-card-foreground sm:max-w-[450px]'>
                                 <DialogHeader>
-                                    <DialogTitle className='text-white'>{getText('editor:history.totalCostSummary', 'Total Cost Summary')}</DialogTitle>
+                                    <DialogTitle className='text-foreground'>{getText('editor:history.totalCostSummary', 'Total Cost Summary')}</DialogTitle>
                                     {/* Add sr-only description for accessibility */}
                                     <DialogDescription className='sr-only'>
                                         A summary of the total estimated cost for all edited images in the history.
                                     </DialogDescription>
                                 </DialogHeader>
-                                <div className='space-y-1 pt-1 text-xs text-neutral-400'>
+                                <div className='space-y-1 pt-1 text-xs text-muted-foreground'>
                                     <p>Pricing for gpt-image-1:</p>
                                     <ul className='list-disc pl-4'>
                                         <li>Text Input: $5 / 1M tokens</li>
@@ -141,15 +141,15 @@ export function HistoryPanel({
                                         <li>Image Output: $40 / 1M tokens</li>
                                     </ul>
                                 </div>
-                                <div className='space-y-2 py-4 text-sm text-neutral-300'>
+                                <div className='space-y-2 py-4 text-sm text-muted-foreground'>
                                     <div className='flex justify-between'>
                                         <span>{getText('editor:history.totalImagesEdited', 'Total Images Edited:')}</span> <span>{totalImages.toLocaleString()}</span>
                                     </div>
                                     <div className='flex justify-between'>
                                         <span>{getText('editor:history.averageCostPerImage', 'Average Cost Per Image:')}</span> <span>${averageCost.toFixed(4)}</span>
                                     </div>
-                                    <hr className='my-2 border-neutral-700' />
-                                    <div className='flex justify-between font-medium text-white'>
+                                    <hr className='my-2 border-border' />
+                            <div className='flex justify-between font-medium text-foreground'>
                                         <span>{getText('editor:history.totalEstimatedCost', 'Total Estimated Cost:')}</span>
                                         <span>${totalCost.toFixed(4)}</span>
                                     </div>
@@ -229,7 +229,7 @@ export function HistoryPanel({
                                             <div
                                                 className={cn(
                                                     'pointer-events-none absolute top-1 left-1 z-10 flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] text-white',
-                                                    item.mode === 'edit' ? 'bg-orange-600/80' : 'bg-blue-600/80'
+                                                    item.mode === 'edit' ? 'bg-[var(--state-warning-soft)]' : 'bg-[var(--state-info-soft)]'
                                                 )}>
                                                 {item.mode === 'edit' ? (
                                                     <Pencil size={12} />
@@ -239,23 +239,23 @@ export function HistoryPanel({
                                                 {item.mode === 'edit' ? 'Edit' : 'Create'}
                                             </div>
                                             {isMultiImage && (
-                                                <div className='pointer-events-none absolute right-1 bottom-1 z-10 flex items-center gap-1 rounded-full bg-black/70 px-1.5 py-0.5 text-[12px] text-white'>
+                                                <div className='pointer-events-none absolute right-1 bottom-1 z-10 flex items-center gap-1 rounded-full bg-[var(--overlay-backdrop)] px-1.5 py-0.5 text-[12px] text-primary-foreground'>
                                                     <Layers size={16} />
                                                     {imageCount}
                                                 </div>
                                             )}
                                             <div className='pointer-events-none absolute bottom-1 left-1 z-10 flex items-center gap-1'>
-                                                <div className='flex items-center gap-1 rounded-full border border-white/10 bg-neutral-900/80 px-1 py-0.5 text-[11px] text-white/70'>
+                                                <div className='flex items-center gap-1 rounded-full border border-border bg-card px-1 py-0.5 text-[11px] text-muted-foreground'>
                                                     {originalStorageMode === 'fs' ? (
-                                                        <HardDrive size={12} className='text-neutral-400' />
+                                                        <HardDrive size={12} className='text-muted-foreground' />
                                                     ) : (
-                                                        <Database size={12} className='text-blue-400' />
+                                                        <Database size={12} className='text-info' />
                                                     )}
                                                     <span>{originalStorageMode === 'fs' ? 'file' : 'db'}</span>
                                                 </div>
                                                 {item.output_format && (
-                                                    <div className='flex items-center gap-1 rounded-full border border-white/10 bg-neutral-900/80 px-1 py-0.5 text-[11px] text-white/70'>
-                                                        <FileImage size={12} className='text-neutral-400' />
+                                                    <div className='flex items-center gap-1 rounded-full border border-border bg-card px-1 py-0.5 text-[11px] text-muted-foreground'>
+                                                        <FileImage size={12} className='text-muted-foreground' />
                                                         <span>{outputFormat.toUpperCase()}</span>
                                                     </div>
                                                 )}
@@ -271,7 +271,7 @@ export function HistoryPanel({
                                                             e.stopPropagation();
                                                             setOpenCostDialogTimestamp(itemKey);
                                                         }}
-                                                        className='absolute top-1 right-1 z-20 flex items-center gap-0.5 rounded-full bg-green-600/80 px-1.5 py-0.5 text-[11px] text-white hover:bg-green-500/90'
+                                                        className='absolute top-1 right-1 z-20 flex items-center gap-0.5 rounded-full bg-[var(--state-success-soft)] px-1.5 py-0.5 text-[11px] text-success-foreground hover:bg-success'
                                                         aria-label='Show cost breakdown'>
                                                         <DollarSign size={12} />
                                                         {item.costDetails.estimated_cost_usd.toFixed(4)}
@@ -279,7 +279,7 @@ export function HistoryPanel({
                                                 </DialogTrigger>
                                                 <DialogContent className='border-border bg-card text-foreground sm:max-w-[450px]'>
                                                     <DialogHeader>
-                                                        <DialogTitle className='text-white'>{getText('editor:history.costBreakdown', 'Cost Breakdown')}</DialogTitle>
+                                                        <DialogTitle className='text-foreground'>{getText('editor:history.costBreakdown', 'Cost Breakdown')}</DialogTitle>
                                                         <DialogDescription className='sr-only'>
                                             Estimated cost breakdown for this image editing.
                                         </DialogDescription>
@@ -399,7 +399,7 @@ export function HistoryPanel({
                                                             onClick={() => handleCopy(item.prompt, itemKey)}
                                                             className='border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground'>
                                                             {copiedTimestamp === itemKey ? (
-                                                                <Check className='mr-2 h-4 w-4 text-green-400' />
+                                                                <Check className='mr-2 h-4 w-4 text-success' />
                                                             ) : (
                                                                 <Copy className='mr-2 h-4 w-4' />
                                                             )}

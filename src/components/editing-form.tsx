@@ -306,7 +306,7 @@ export function EditingForm({
 
         if (!offscreenCtx) return;
 
-        offscreenCtx.fillStyle = '#000000';
+        offscreenCtx.fillStyle = 'var(--canvas-ink)';
         offscreenCtx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
         offscreenCtx.globalCompositeOperation = 'destination-out';
         editDrawnPoints.forEach((point) => {
@@ -561,7 +561,7 @@ export function EditingForm({
                                   ? getText('editor:form.mask.editor.editSaved', 'Edit Saved Mask')
                                   : getText('editor:form.mask.editor.create', 'Create Mask')}
                             {editIsMaskSaved && !editShowMaskEditor && (
-                                <span className='ml-auto text-xs text-green-600 dark:text-green-400'>{getText('editor:form.mask.editor.saved', '(Saved)')}</span>
+                                <span className='ml-auto text-xs text-success'>{getText('editor:form.mask.editor.saved', '(Saved)')}</span>
                             )}
                             <ScanEye className='mt-0.5' />
                         </Button>
@@ -675,17 +675,17 @@ export function EditingForm({
                                     </div>
                                 )}
                                 {editIsMaskSaved && !editMaskPreviewUrl && (
-                                    <p className='pt-1 text-center text-xs text-yellow-600 dark:text-yellow-400'>
+                                    <p className='pt-1 text-center text-xs text-warning'>
                                         {getText('editor:form.mask.generatingMaskPreview', 'Generating mask preview...')}
                                     </p>
                                 )}
                                 {editIsMaskSaved && editMaskPreviewUrl && (
-                                    <p className='pt-1 text-center text-xs text-green-600 dark:text-green-400'>{getText('editor:form.mask.maskSavedSuccessfully', 'Mask saved successfully!')}</p>
+                                    <p className='pt-1 text-center text-xs text-success'>{getText('editor:form.mask.maskSavedSuccessfully', 'Mask saved successfully!')}</p>
                                 )}
                             </div>
                         )}
                         {!editShowMaskEditor && editGeneratedMaskFile && (
-                            <p className='pt-1 text-xs text-green-600 dark:text-green-400'>{getText('editor:form.mask.maskApplied', 'Mask applied:')} {editGeneratedMaskFile.name}</p>
+                            <p className='pt-1 text-xs text-success'>{getText('editor:form.mask.maskApplied', 'Mask applied:')} {editGeneratedMaskFile.name}</p>
                         )}
                     </div>
 
