@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Loader2, Send, Grid } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 
 type ImageInfo = {
     path: string;
@@ -38,6 +40,16 @@ export function ImageOutput({
     currentMode,
     baseImagePreviewUrl
 }: ImageOutputProps) {
+    const { t } = useTranslation('editor');
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const getText = (key: string, fallback: string) => {
+        return mounted ? t(key) : fallback;
+    };
     const handleSendClick = () => {
         // Send to edit only works when a single image is selected
         if (typeof viewMode === 'number' && imageBatch && imageBatch[viewMode]) {
@@ -65,13 +77,13 @@ export function ImageOutput({
                             />
                             <div className='absolute inset-0 flex flex-col items-center justify-center bg-muted/80 text-foreground dark:bg-background/50 dark:text-foreground'>
                                 <Loader2 className='mb-2 h-8 w-8 animate-spin' />
-                                <p>Editing image...</p>
+                                <p>{getText('output.editingImage', 'Editing image...')}</p>
                             </div>
                         </div>
                     ) : (
                         <div className='flex flex-col items-center justify-center text-muted-foreground dark:text-muted-foreground'>
                             <Loader2 className='mb-2 h-8 w-8 animate-spin' />
-                            <p>Generating image...</p>
+                            <p>{getText('output.generatingImage', 'Generating image...')}</p>
                         </div>
                     )
                 ) : imageBatch && imageBatch.length > 0 ? (
@@ -104,12 +116,12 @@ export function ImageOutput({
                         />
                     ) : (
                         <div className='text-center text-muted-foreground dark:text-muted-foreground'>
-                            <p>Error displaying image.</p>
+                            <p>{getText('output.errorDisplaying', 'Error displaying image.')}</p>
                         </div>
                     )
                 ) : (
                     <div className='text-center text-muted-foreground dark:text-muted-foreground'>
-                        <p>Upload an image to start editing.</p>
+                        <p>{getText('editor:output.uploadToStart', 'Upload an image to start editing.')}</p>
                     </div>
                 )}
             </div>
@@ -168,7 +180,7 @@ export function ImageOutput({
                     )}
                     style={{ transition: 'none' }}>
                     <Send className='mr-2 h-4 w-4' />
-                    Send to Edit
+                    {getText('editor:output.sendToEdit', 'Send to Edit')}
                 </Button>
             </div>
         </div>

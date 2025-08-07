@@ -1,6 +1,7 @@
 'use client';
 
-
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -139,7 +140,18 @@ export function EditingForm({
     editMaskPreviewUrl,
     setEditMaskPreviewUrl
 }: EditingFormProps) {
+    const { t } = useTranslation(['common', 'editor']);
+    const [mounted, setMounted] = useState(false);
     const [firstImagePreviewUrl, setFirstImagePreviewUrl] = React.useState<string | null>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Helper function to prevent hydration mismatch
+    const getText = (key: string, fallback: string) => {
+        return mounted ? t(key) : fallback;
+    };
 
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const visualFeedbackCanvasRef = React.useRef<HTMLCanvasElement | null>(null);
@@ -443,9 +455,9 @@ export function EditingForm({
     };
 
     const displayFileNames = (files: File[]) => {
-        if (files.length === 0) return 'No file selected.';
+        if (files.length === 0) return getText('editor:form.noFileSelected', 'No file selected.');
         if (files.length === 1) return files[0].name;
-        return `${files.length} files selected`;
+        return `${files.length} ${getText('editor:form.filesSelected', 'files selected')}`;
     };
 
     return (
@@ -453,7 +465,7 @@ export function EditingForm({
             <CardHeader className='flex items-start justify-between border-b border-border dark:border-border pb-4'>
                 <div>
                     <div className='flex items-center'>
-                        <CardTitle className='py-1 text-lg font-medium text-foreground dark:text-foreground' style={{ transition: 'none' }}>Edit Image</CardTitle>
+                        <CardTitle className='py-1 text-lg font-medium text-foreground dark:text-foreground' style={{ transition: 'none' }}>{getText('editor:form.title', 'Edit Image')}</CardTitle>
                         {isPasswordRequiredByBackend && (
                             <Button
                                 variant='ghost'
@@ -465,7 +477,7 @@ export function EditingForm({
                             </Button>
                         )}
                     </div>
-                    <CardDescription className='mt-1 text-muted-foreground dark:text-muted-foreground' style={{ transition: 'none' }}>Modify an image using gpt-image-1.</CardDescription>
+                    <CardDescription className='mt-1 text-muted-foreground dark:text-muted-foreground' style={{ transition: 'none' }}>{getText('editor:form.description', 'Modify an image using gpt-image-1.')}</CardDescription>
                 </div>
 
             </CardHeader>
@@ -473,11 +485,11 @@ export function EditingForm({
                 <CardContent className='w-full space-y-5 p-4'>
                     <div className='space-y-1.5'>
                         <Label htmlFor='edit-prompt' className='text-foreground dark:text-foreground' style={{ transition: 'none' }}>
-                            Prompt
+                            {getText('editor:form.prompt.label', 'Prompt')}
                         </Label>
                         <Textarea
                             id='edit-prompt'
-                            placeholder='e.g., Add a party hat to the main subject'
+                            placeholder={getText('editor:form.prompt.placeholder', 'e.g., Add a party hat to the main subject')}
                             value={editPrompt}
                             onChange={(e) => setEditPrompt(e.target.value)}
                             required
@@ -487,13 +499,13 @@ export function EditingForm({
                     </div>
 
                     <div className='space-y-2'>
-                        <Label className='text-foreground dark:text-foreground' style={{ transition: 'none' }}>Source Image(s) [Max: 10]</Label>
+                        <Label className='text-foreground dark:text-foreground' style={{ transition: 'none' }}>{getText('editor:form.sourceImages.label', 'Source Image(s) [Max: 10]')}</Label>
                         <Label
                             htmlFor='image-files-input'
                             className='group flex h-10 w-full cursor-pointer items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-background dark:hover:bg-accent dark:hover:text-accent-foreground'>
                             <span className='truncate pr-2 text-muted-foreground group-hover:text-accent-foreground dark:text-muted-foreground dark:group-hover:text-accent-foreground'>{displayFileNames(imageFiles)}</span>
                             <span className='flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-3 py-1 text-xs font-medium text-muted-foreground group-hover:text-accent-foreground dark:bg-muted dark:text-muted-foreground dark:group-hover:text-accent-foreground' style={{ transition: 'none' }}>
-                                <Upload className='h-3 w-3' /> Browse...
+                                <Upload className='h-3 w-3' /> {getText('editor:form.sourceImages.browse', 'Browse...')}
                             </span>
                         </Label>
                         <Input
@@ -534,7 +546,7 @@ export function EditingForm({
                     </div>
 
                     <div className='space-y-3'>
-                        <Label className='block text-foreground dark:text-foreground' style={{ transition: 'none' }}>Mask</Label>
+                        <Label className='block text-foreground dark:text-foreground' style={{ transition: 'none' }}>{getText('editor:form.mask.title', 'Mask')}</Label>
                         <Button
                             type='button'
                             variant='outline'
@@ -544,12 +556,12 @@ export function EditingForm({
                             className='w-full justify-start border-input px-3 text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'
                             style={{ transition: 'none' }}>
                             {editShowMaskEditor
-                                ? 'Close Mask Editor'
+                                ? getText('editor:form.mask.editor.close', 'Close Mask Editor')
                                 : editGeneratedMaskFile
-                                  ? 'Edit Saved Mask'
-                                  : 'Create Mask'}
+                                  ? getText('editor:form.mask.editor.editSaved', 'Edit Saved Mask')
+                                  : getText('editor:form.mask.editor.create', 'Create Mask')}
                             {editIsMaskSaved && !editShowMaskEditor && (
-                                <span className='ml-auto text-xs text-green-600 dark:text-green-400'>(Saved)</span>
+                                <span className='ml-auto text-xs text-green-600 dark:text-green-400'>{getText('editor:form.mask.editor.saved', '(Saved)')}</span>
                             )}
                             <ScanEye className='mt-0.5' />
                         </Button>
@@ -557,8 +569,7 @@ export function EditingForm({
                         {editShowMaskEditor && firstImagePreviewUrl && editOriginalImageSize && (
                             <div className='space-y-3 rounded-md border border-border bg-card p-3 dark:border-border dark:bg-card' style={{ transition: 'none' }}>
                                 <p className='text-xs text-muted-foreground dark:text-muted-foreground'>
-                                    Draw on the image below to mark areas for editing (drawn areas become transparent in
-                                    the mask).
+                                    {getText('editor:form.mask.editor.instruction', 'Draw on the image to create a mask. The red areas will be edited.')}
                                 </p>
                                 <div
                                      className='relative mx-auto w-full rounded border border-border dark:border-border'
@@ -592,7 +603,7 @@ export function EditingForm({
                                 <div className='grid grid-cols-1 gap-4 pt-2'>
                                     <div className='space-y-2'>
                                         <Label htmlFor='brush-size-slider' className='text-sm text-foreground dark:text-foreground'>
-                                            Brush Size: {editBrushSize[0]}px
+                                            {getText('editor:form.mask.brushSizeLabel', 'Brush Size')}: {editBrushSize[0]}px
                                         </Label>
                                         <Slider
                                             id='brush-size-slider'
@@ -614,7 +625,7 @@ export function EditingForm({
                                         onClick={() => maskInputRef.current?.click()}
                                         disabled={isLoading || !editOriginalImageSize}
                                         className='mr-auto border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'>
-                                        <UploadCloud className='mr-1.5 h-4 w-4' /> Upload Mask
+                                        <UploadCloud className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.uploadMask', 'Upload Mask')}
                                     </Button>
                                     <Input
                                         ref={maskInputRef}
@@ -632,7 +643,7 @@ export function EditingForm({
                                             onClick={handleClearMask}
                                             disabled={isLoading}
                                             className='border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'>
-                                            <Eraser className='mr-1.5 h-4 w-4' /> Clear
+                                            <Eraser className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.clear', 'Clear')}
                                         </Button>
                                         <Button
                                             type='button'
@@ -641,14 +652,14 @@ export function EditingForm({
                                             onClick={generateAndSaveMask}
                                             disabled={isLoading || editDrawnPoints.length === 0}
                                             className='bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50'>
-                                            <Save className='mr-1.5 h-4 w-4' /> Save Mask
+                                            <Save className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.saveMask', 'Save Mask')}
                                         </Button>
                                     </div>
                                 </div>
                                 {editMaskPreviewUrl && (
                                     <div className='mt-3 border-t border-border pt-3 text-center dark:border-border' style={{ transition: 'none' }}>
                                         <Label className='mb-1.5 block text-sm text-foreground dark:text-foreground'>
-                                            Generated Mask Preview:
+                                            {getText('editor:form.mask.generatedMaskPreviewLabel', 'Generated Mask Preview:')}
                                         </Label>
                                         <div className='inline-block rounded border border-border bg-muted p-1 dark:border-border dark:bg-muted' style={{ transition: 'none' }}>
                                             <Image
@@ -665,54 +676,54 @@ export function EditingForm({
                                 )}
                                 {editIsMaskSaved && !editMaskPreviewUrl && (
                                     <p className='pt-1 text-center text-xs text-yellow-600 dark:text-yellow-400'>
-                                        Generating mask preview...
+                                        {getText('editor:form.mask.generatingMaskPreview', 'Generating mask preview...')}
                                     </p>
                                 )}
                                 {editIsMaskSaved && editMaskPreviewUrl && (
-                                    <p className='pt-1 text-center text-xs text-green-600 dark:text-green-400'>Mask saved successfully!</p>
+                                    <p className='pt-1 text-center text-xs text-green-600 dark:text-green-400'>{getText('editor:form.mask.maskSavedSuccessfully', 'Mask saved successfully!')}</p>
                                 )}
                             </div>
                         )}
                         {!editShowMaskEditor && editGeneratedMaskFile && (
-                            <p className='pt-1 text-xs text-green-600 dark:text-green-400'>Mask applied: {editGeneratedMaskFile.name}</p>
+                            <p className='pt-1 text-xs text-green-600 dark:text-green-400'>{getText('editor:form.mask.maskApplied', 'Mask applied:')} {editGeneratedMaskFile.name}</p>
                         )}
                     </div>
 
                     <div className='space-y-3'>
-                        <Label className='block text-foreground dark:text-foreground'>Size</Label>
+                        <Label className='block text-foreground dark:text-foreground'>{getText('editor:form.settings.sizeLabel', 'Size')}</Label>
                         <RadioGroup
                             value={editSize}
                             onValueChange={(value) => setEditSize(value as EditingFormData['size'])}
                             disabled={isLoading}
                             className='flex flex-wrap gap-x-5 gap-y-3'>
-                            <RadioItemWithIcon value='auto' id='edit-size-auto' label='Auto' Icon={Sparkles} />
-                            <RadioItemWithIcon value='1024x1024' id='edit-size-square' label='Square' Icon={Square} />
+                            <RadioItemWithIcon value='auto' id='edit-size-auto' label={getText('editor:form.settings.sizeLabels.auto', 'Auto')} Icon={Sparkles} />
+                            <RadioItemWithIcon value='1024x1024' id='edit-size-square' label={getText('editor:form.settings.sizeLabels.square', 'Square')} Icon={Square} />
                             <RadioItemWithIcon
                                 value='1536x1024'
                                 id='edit-size-landscape'
-                                label='Landscape'
+                                label={getText('editor:form.settings.sizeLabels.landscape', 'Landscape')}
                                 Icon={RectangleHorizontal}
                             />
                             <RadioItemWithIcon
                                 value='1024x1536'
                                 id='edit-size-portrait'
-                                label='Portrait'
+                                label={getText('editor:form.settings.sizeLabels.portrait', 'Portrait')}
                                 Icon={RectangleVertical}
                             />
                         </RadioGroup>
                     </div>
 
                     <div className='space-y-3'>
-                        <Label className='block text-foreground dark:text-foreground'>Quality</Label>
+                        <Label className='block text-foreground dark:text-foreground'>{getText('editor:form.settings.qualityLabel', 'Quality')}</Label>
                         <RadioGroup
                             value={editQuality}
                             onValueChange={(value) => setEditQuality(value as EditingFormData['quality'])}
                             disabled={isLoading}
                             className='flex flex-wrap gap-x-5 gap-y-3'>
-                            <RadioItemWithIcon value='auto' id='edit-quality-auto' label='Auto' Icon={Sparkles} />
-                            <RadioItemWithIcon value='low' id='edit-quality-low' label='Low' Icon={Tally1} />
-                            <RadioItemWithIcon value='medium' id='edit-quality-medium' label='Medium' Icon={Tally2} />
-                            <RadioItemWithIcon value='high' id='edit-quality-high' label='High' Icon={Tally3} />
+                            <RadioItemWithIcon value='auto' id='edit-quality-auto' label={getText('editor:form.settings.qualityLabels.auto', 'Auto')} Icon={Sparkles} />
+                            <RadioItemWithIcon value='low' id='edit-quality-low' label={getText('editor:form.settings.qualityLabels.low', 'Low')} Icon={Tally1} />
+                            <RadioItemWithIcon value='medium' id='edit-quality-medium' label={getText('editor:form.settings.qualityLabels.medium', 'Medium')} Icon={Tally2} />
+                            <RadioItemWithIcon value='high' id='edit-quality-high' label={getText('editor:form.settings.qualityLabels.high', 'High')} Icon={Tally3} />
                         </RadioGroup>
                     </div>
 
@@ -720,7 +731,7 @@ export function EditingForm({
 
                     <div className='space-y-2'>
                         <Label htmlFor='edit-n-slider' className='text-foreground dark:text-foreground'>
-                            Number of Images: {editN[0]}
+                            {getText('editor:form.settings.numberOfImagesLabel', 'Number of Images')}: {editN[0]}
                         </Label>
                         <Slider
                             id='edit-n-slider'
@@ -741,7 +752,7 @@ export function EditingForm({
                         className='flex w-full items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground dark:disabled:bg-muted dark:disabled:text-muted-foreground'
                         style={{ transition: 'none' }}>
                         {isLoading && <Loader2 className='h-4 w-4 animate-spin' />}
-                        {isLoading ? 'Editing...' : 'Edit Image'}
+                        {isLoading ? getText('editor:form.submit.editing', 'Editing...') : getText('editor:form.submit.editImage', 'Edit Image')}
                     </Button>
                 </CardFooter>
             </form>

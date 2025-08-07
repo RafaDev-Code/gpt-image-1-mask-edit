@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 
 interface PasswordDialogProps {
     isOpen: boolean;
@@ -30,8 +32,18 @@ export function PasswordDialog({
     title = 'Configure Password',
     description
 }: PasswordDialogProps) {
+    const { t } = useTranslation('common');
+    const [mounted, setMounted] = useState(false);
     const [currentPassword, setCurrentPassword] = React.useState('');
     const inputRef = React.useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const getText = (key: string, fallback: string) => {
+        return mounted ? t(key) : fallback;
+    };
 
     const handleSave = () => {
         inputRef.current?.blur();
@@ -60,7 +72,7 @@ export function PasswordDialog({
                             ref={inputRef}
                             id='password-input'
                             type='password'
-                            placeholder='Enter your password'
+                            placeholder={getText('passwordInput.placeholder', 'Enter your password')}
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
                             className='col-span-1 border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:ring-gray-400 dark:border-white/20 dark:bg-black dark:text-white dark:placeholder:text-white/40 dark:focus:border-white/50 dark:focus:ring-white/50'
@@ -79,7 +91,7 @@ export function PasswordDialog({
                         onClick={handleSave}
                         disabled={!currentPassword.trim()}
                         className='bg-primary px-6 text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground'>
-                        Save
+                        {getText('passwordInput.saveButton', 'Save')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

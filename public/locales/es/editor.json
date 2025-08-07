@@ -1,0 +1,136 @@
+{
+  "title": "Editor de Imágenes",
+  "subtitle": "Edita tus imágenes con IA",
+  "form": {
+    "prompt": {
+      "label": "Prompt",
+      "placeholder": "ej., Agregar un sombrero de fiesta al sujeto principal"
+    },
+    "sourceImages": {
+      "label": "Imagen(es) Fuente [Máx: 10]",
+      "browse": "Examinar...",
+      "remove": "Eliminar"
+    },
+    "mask": {
+      "title": "Máscara",
+      "description": "Dibuja en las áreas a editar o sube un archivo de máscara",
+      "uploadLabel": "Subir Archivo de Máscara (Opcional)",
+      "browse": "Examinar...",
+      "drawingMode": "Modo de Dibujo",
+      "brushSize": "Tamaño del Pincel",
+      "brushSizeLabel": "Tamaño del Pincel",
+      "generatedMaskPreviewLabel": "Vista previa de máscara generada:",
+      "maskSavedSuccessfully": "¡Máscara guardada exitosamente!",
+      "generatingMaskPreview": "Generando vista previa de máscara...",
+      "maskApplied": "Máscara aplicada:",
+      "editor": {
+        "close": "Cerrar Editor de Máscara",
+        "editSaved": "Editar Máscara Guardada",
+        "create": "Crear Máscara",
+        "saved": "(Guardada)",
+        "instruction": "Dibuja en la imagen de abajo para marcar las áreas a editar (las áreas dibujadas se vuelven transparentes en la máscara)."
+      },
+      "actions": {
+        "clear": "Limpiar",
+        "save": "Guardar",
+        "load": "Cargar",
+        "visibility": "Alternar Visibilidad",
+        "lock": "Bloquear/Desbloquear",
+        "uploadMask": "Subir Máscara",
+        "saveMask": "Guardar Máscara"
+      }
+    },
+    "settings": {
+      "numberOfImages": "Número de Imágenes",
+      "imageSize": "Tamaño de Imagen",
+      "quality": "Calidad",
+      "sizeLabel": "Tamaño",
+      "qualityLabel": "Calidad",
+      "numberOfImagesLabel": "Número de Imágenes",
+      "sizes": {
+        "square": "Cuadrada (1024x1024)",
+        "landscape": "Horizontal (1536x1024)",
+        "portrait": "Vertical (1024x1536)",
+        "auto": "Auto (coincidir fuente)"
+      },
+      "sizeLabels": {
+        "square": "Cuadrada",
+        "landscape": "Horizontal",
+        "portrait": "Vertical",
+        "auto": "Auto"
+      },
+      "qualities": {
+        "low": "Baja (más rápida)",
+        "medium": "Media",
+        "high": "Alta (más lenta)",
+        "auto": "Auto"
+      },
+      "qualityLabels": {
+        "low": "Baja",
+        "medium": "Media",
+        "high": "Alta",
+        "auto": "Auto"
+      }
+    },
+    "submit": {
+      "editing": "Editando...",
+      "editImage": "Editar Imagen"
+    },
+    "title": "Editar Imagen",
+    "description": "Modifica una imagen usando gpt-image-1.",
+    "noFileSelected": "Ningún archivo seleccionado.",
+    "filesSelected": "archivos seleccionados"
+  },
+  "upload": {
+    "title": "Subir Imagen",
+    "description": "Selecciona una imagen para editar",
+    "button": "Elegir Archivo",
+    "dragDrop": "Arrastra y suelta tu imagen aquí"
+  },
+  "results": {
+    "title": "Resultados",
+    "download": "Descargar",
+    "sendToEdit": "Enviar a Editar"
+  },
+  "output": {
+    "editingImage": "Editando imagen...",
+    "generatingImage": "Generando imagen...",
+    "errorDisplaying": "Error al mostrar la imagen.",
+    "uploadToStart": "Sube una imagen para comenzar a editar.",
+    "sendToEdit": "Enviar a Editar"
+  },
+  "history": {
+    "title": "Historial",
+    "emptyMessage": "Las imágenes editadas aparecerán aquí.",
+    "totalCost": "Costo Total:",
+    "totalCostSummary": "Resumen de Costo Total",
+    "showPrompt": "Mostrar Prompt",
+    "prompt": "Prompt",
+    "promptDescription": "El prompt completo utilizado para generar este lote de imágenes.",
+    "noPromptRecorded": "No se registró ningún prompt.",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "close": "Cerrar",
+    "clear": "Limpiar",
+    "confirmDeletion": "Confirmar Eliminación",
+    "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar esta entrada del historial? Esto eliminará",
+    "deleteConfirmImages": "imagen(es). Esta acción no se puede deshacer.",
+    "dontAskAgain": "No preguntar de nuevo",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "time": "Tiempo:",
+    "quality": "Calidad:",
+    "mod": "Mod:",
+    "costBreakdown": "Desglose de Costos",
+    "pricingInfo": "Precios para gpt-image-1:",
+    "textInput": "Entrada de Texto:",
+    "imageInput": "Entrada de Imagen:",
+    "imageOutput": "Salida de Imagen:",
+    "textInputTokens": "Tokens de Entrada de Texto:",
+    "imageInputTokens": "Tokens de Entrada de Imagen:",
+    "imageOutputTokens": "Tokens de Salida de Imagen:",
+    "totalEstimatedCost": "Costo Total Estimado:",
+    "totalImagesEdited": "Total de Imágenes Editadas:",
+    "averageCostPerImage": "Costo Promedio por Imagen:"
+  }
+}

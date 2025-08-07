@@ -4,10 +4,12 @@ import { EditingForm, type EditingFormData } from '@/components/editing-form';
 import { HistoryPanel } from '@/components/history-panel';
 import { ImageOutput } from '@/components/image-output';
 import { PasswordDialog } from '@/components/password-dialog';
+import { LanguageSelector } from '@/components/language-selector';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { calculateApiCost, type CostDetails } from '@/lib/cost-utils';
 import { db, type ImageRecord } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useTranslation } from 'react-i18next';
 import * as React from 'react';
 
 type HistoryImage = {
@@ -62,6 +64,16 @@ type ApiImageResponseItem = {
 };
 
 export default function HomePage() {
+    const { t } = useTranslation(['common', 'editor']);
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const getText = (key: string, fallback: string) => {
+        return mounted ? t(key) : fallback;
+    };
     const [mode] = React.useState<'edit'>('edit');
     const [isPasswordRequiredByBackend, setIsPasswordRequiredByBackend] = React.useState<boolean | null>(null);
     const [clientPasswordHash, setClientPasswordHash] = React.useState<string | null>(null);
@@ -674,22 +686,23 @@ export default function HomePage() {
                 isOpen={isPasswordDialogOpen}
                 onOpenChange={setIsPasswordDialogOpen}
                 onSave={handleSavePassword}
-                title={passwordDialogContext === 'retry' ? 'Password Required' : 'Configure Password'}
+                title={passwordDialogContext === 'retry' ? getText('common:passwordDialog.titleRequired', 'Password Required') : getText('common:passwordDialog.titleConfigure', 'Configure Password')}
                 description={
                     passwordDialogContext === 'retry'
-                        ? 'The server requires a password, or the previous one was incorrect. Please enter it to continue.'
-                        : 'Set a password to use for API requests.'
+                        ? getText('common:passwordDialog.descriptionRequired', 'The server requires a password, or the previous one was incorrect. Please enter it to continue.')
+                        : getText('common:passwordDialog.descriptionConfigure', 'Set a password to use for API requests.')
                 }
             />
             <div className='w-full pt-4'>
-                <div className='flex justify-center mb-6'>
+                <div className='flex justify-center items-center gap-4 mb-6'>
+                    <LanguageSelector />
                     <button 
                         onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
                         className="bg-primary text-primary-foreground hover:bg-primary/90 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm shadow-lg"
                         style={{ transition: 'none' }}
                     >
-                        <span className="hidden sm:inline">{theme === "dark" ? "☀️ Light" : "🌙 Dark"}</span>
-                        <span className="sm:hidden">{theme === "dark" ? "☀️" : "🌙"}</span>
+                        <span className="hidden sm:inline">{theme === "dark" ? getText('common:themeToggle.light', '☀️ Light') : getText('common:themeToggle.dark', '🌙 Dark')}</span>
+                        <span className="sm:hidden">{theme === "dark" ? getText('common:themeToggle.lightIcon', '☀️') : getText('common:themeToggle.darkIcon', '🌙')}</span>
                     </button>
                 </div>
             </div>
@@ -736,7 +749,7 @@ export default function HomePage() {
                     <div className='flex flex-col lg:col-span-1'>
                         {error && (
                             <Alert variant='destructive' className='mb-4 border-red-500/50 bg-red-900/20 text-red-300 dark:border-red-500/50 dark:bg-red-900/20 dark:text-red-300'>
-                                <AlertTitle className='text-red-200 dark:text-red-200'>Error</AlertTitle>
+                                <AlertTitle className='text-red-200 dark:text-red-200'>{t('common:messages.error')}</AlertTitle>
                                 <AlertDescription>{error}</AlertDescription>
                             </Alert>
                         )}

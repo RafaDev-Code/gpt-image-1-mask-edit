@@ -1,0 +1,22 @@
+{
+  "messages": {
+    "error": "An error occurred"
+  },
+  "passwordDialog": {
+    "titleConfigure": "Configure Password",
+    "titleRequired": "Password Required",
+    "descriptionConfigure": "Set a password to use for API requests.",
+    "descriptionRequired": "The server requires a password, or the previous one was incorrect. Please enter it to continue."
+  },
+  "themeToggle": {
+    "light": "☀️ Light",
+    "dark": "🌙 Dark",
+    "lightIcon": "☀️",
+    "darkIcon": "🌙"
+  },
+  "passwordInput": {
+    "placeholder": "Enter your password",
+    "saveButton": "Save"
+  }
+}
+}

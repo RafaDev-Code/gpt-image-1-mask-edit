@@ -4,6 +4,8 @@ import type { HistoryMetadata } from '@/app/page';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -67,6 +69,17 @@ export function HistoryPanel({
     deletePreferenceDialogValue,
     onDeletePreferenceDialogChange
 }: HistoryPanelProps) {
+    const { t } = useTranslation(['common', 'editor']);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Helper function to prevent hydration mismatch
+    const getText = (key: string, fallback: string) => {
+        return mounted ? t(key) : fallback;
+    };
     const [openPromptDialogTimestamp, setOpenPromptDialogTimestamp] = React.useState<number | null>(null);
     const [openCostDialogTimestamp, setOpenCostDialogTimestamp] = React.useState<number | null>(null);
     const [isTotalCostDialogOpen, setIsTotalCostDialogOpen] = React.useState(false);
@@ -102,19 +115,19 @@ export function HistoryPanel({
         <Card className='flex w-full flex-col rounded-lg border border-border bg-card dark:bg-card dark:border-border'>
             <CardHeader className='flex flex-row items-center justify-between gap-4 border-b border-border px-4 py-3 dark:border-border'>
                 <div className='flex items-center gap-2'>
-                    <CardTitle className='text-lg font-medium text-foreground dark:text-foreground'>History</CardTitle>
+                    <CardTitle className='text-lg font-medium text-foreground dark:text-foreground'>{getText('editor:history.title', 'History')}</CardTitle>
                     {totalCost > 0 && (
                         <Dialog open={isTotalCostDialogOpen} onOpenChange={setIsTotalCostDialogOpen}>
                             <DialogTrigger asChild>
                                 <button
                                     className='mt-0.5 flex items-center gap-1 rounded-full bg-green-600/80 px-1.5 py-0.5 text-[12px] text-white transition-colors hover:bg-green-500/90'
                                     aria-label='Show total cost summary'>
-                                    Total Cost: ${totalCost.toFixed(4)}
+                                    {getText('editor:history.totalCost', 'Total Cost:')} ${totalCost.toFixed(4)}
                                 </button>
                             </DialogTrigger>
                             <DialogContent className='border-neutral-700 bg-neutral-900 text-white sm:max-w-[450px]'>
                                 <DialogHeader>
-                                    <DialogTitle className='text-white'>Total Cost Summary</DialogTitle>
+                                    <DialogTitle className='text-white'>{getText('editor:history.totalCostSummary', 'Total Cost Summary')}</DialogTitle>
                                     {/* Add sr-only description for accessibility */}
                                     <DialogDescription className='sr-only'>
                                         A summary of the total estimated cost for all edited images in the history.
@@ -130,14 +143,14 @@ export function HistoryPanel({
                                 </div>
                                 <div className='space-y-2 py-4 text-sm text-neutral-300'>
                                     <div className='flex justify-between'>
-                                        <span>Total Images Edited:</span> <span>{totalImages.toLocaleString()}</span>
+                                        <span>{getText('editor:history.totalImagesEdited', 'Total Images Edited:')}</span> <span>{totalImages.toLocaleString()}</span>
                                     </div>
                                     <div className='flex justify-between'>
-                                        <span>Average Cost Per Image:</span> <span>${averageCost.toFixed(4)}</span>
+                                        <span>{getText('editor:history.averageCostPerImage', 'Average Cost Per Image:')}</span> <span>${averageCost.toFixed(4)}</span>
                                     </div>
                                     <hr className='my-2 border-neutral-700' />
                                     <div className='flex justify-between font-medium text-white'>
-                                        <span>Total Estimated Cost:</span>
+                                        <span>{getText('editor:history.totalEstimatedCost', 'Total Estimated Cost:')}</span>
                                         <span>${totalCost.toFixed(4)}</span>
                                     </div>
                                 </div>
@@ -163,14 +176,14 @@ export function HistoryPanel({
                         onClick={onClearHistory}
                         className='h-auto rounded-md px-2 py-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:text-muted-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'
                         style={{ transition: 'none' }}>
-                        Clear
+                        {getText('editor:history.clear', 'Clear')}
                     </Button>
                 )}
             </CardHeader>
             <CardContent className='w-full p-4'>
                 {history.length === 0 ? (
                     <div className='flex h-full items-center justify-center text-muted-foreground dark:text-muted-foreground'>
-                        <p>Edited images will appear here.</p>
+                        <p>{getText('editor:history.emptyMessage', 'Edited images will appear here.')}</p>
                     </div>
                 ) : (
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
@@ -266,13 +279,13 @@ export function HistoryPanel({
                                                 </DialogTrigger>
                                                 <DialogContent className='border-border bg-card text-foreground sm:max-w-[450px]'>
                                                     <DialogHeader>
-                                                        <DialogTitle className='text-white'>Cost Breakdown</DialogTitle>
+                                                        <DialogTitle className='text-white'>{getText('editor:history.costBreakdown', 'Cost Breakdown')}</DialogTitle>
                                                         <DialogDescription className='sr-only'>
                                             Estimated cost breakdown for this image editing.
                                         </DialogDescription>
                                                     </DialogHeader>
                                                     <div className='space-y-1 pt-1 text-xs text-muted-foreground'>
-                                                        <p>Pricing for gpt-image-1:</p>
+                                                        <p>{getText('editor:history.pricingInfo', 'Pricing for gpt-image-1:')}:</p>
                                                         <ul className='list-disc pl-4'>
                                                             <li>Text Input: $5 / 1M tokens</li>
                                                             <li>Image Input: $10 / 1M tokens</li>
@@ -281,7 +294,7 @@ export function HistoryPanel({
                                                     </div>
                                                     <div className='space-y-2 py-4 text-sm text-muted-foreground'>
                                                         <div className='flex justify-between'>
-                                                            <span>Text Input Tokens:</span>{' '}
+                                                            <span>{getText('editor:history.textInputTokens', 'Text Input Tokens:')}</span>{' '}
                                                             <span>
                                                                 {item.costDetails.text_input_tokens.toLocaleString()}{' '}
                                                                 (~$
@@ -294,7 +307,7 @@ export function HistoryPanel({
                                                         </div>
                                                         {item.costDetails.image_input_tokens > 0 && (
                                                             <div className='flex justify-between'>
-                                                                <span>Image Input Tokens:</span>{' '}
+                                                                <span>{getText('editor:history.imageInputTokens', 'Image Input Tokens:')}</span>{' '}
                                                                 <span>
                                                                     {item.costDetails.image_input_tokens.toLocaleString()}{' '}
                                                                     (~$
@@ -307,7 +320,7 @@ export function HistoryPanel({
                                                             </div>
                                                         )}
                                                         <div className='flex justify-between'>
-                                                            <span>Image Output Tokens:</span>{' '}
+                                                            <span>{getText('editor:history.imageOutputTokens', 'Image Output Tokens:')}</span>{' '}
                                                             <span>
                                                                 {item.costDetails.image_output_tokens.toLocaleString()}{' '}
                                                                 (~$
@@ -320,7 +333,7 @@ export function HistoryPanel({
                                                         </div>
                                                         <hr className='my-2 border-border' />
                                                         <div className='flex justify-between font-medium text-foreground'>
-                                                            <span>Total Estimated Cost:</span>
+                                                            <span>{getText('editor:history.totalEstimatedCost', 'Total Estimated Cost:')}</span>
                                                             <span>
                                                                 ${item.costDetails.estimated_cost_usd.toFixed(4)}
                                                             </span>
@@ -333,7 +346,7 @@ export function HistoryPanel({
                                                                 variant='secondary'
                                                                 size='sm'
                                                                 className='bg-secondary text-secondary-foreground hover:bg-secondary/80'>
-                                                                Close
+                                                                {getText('editor:history.close', 'Close')}
                                                             </Button>
                                                         </DialogClose>
                                                     </DialogFooter>
@@ -344,14 +357,14 @@ export function HistoryPanel({
 
                                     <div className='space-y-1 rounded-b-md border border-t-0 border-border dark:border-border bg-card dark:bg-card p-2 text-xs text-muted-foreground dark:text-muted-foreground' style={{ transition: 'none' }}>
                                         <p title={`Edited on: ${new Date(item.timestamp).toLocaleString()}`}>
-                                            <span className='font-medium text-foreground dark:text-foreground'>Time:</span>{' '}
+                                            <span className='font-medium text-foreground dark:text-foreground'>{getText('editor:history.time', 'Time:')}:</span>{' '}
                                             {formatDuration(item.durationMs)}
                                         </p>
                                         <p>
-                                            <span className='font-medium text-foreground dark:text-foreground'>Quality:</span> {item.quality}
+                                            <span className='font-medium text-foreground dark:text-foreground'>{getText('editor:history.quality', 'Quality:')}:</span> {item.quality}
                                         </p>
                                         <p>
-                                            <span className='font-medium text-foreground dark:text-foreground'>Mod:</span> {item.moderation}
+                                            <span className='font-medium text-foreground dark:text-foreground'>{getText('editor:history.mod', 'Mod:')}:</span> {item.moderation}
                                         </p>
                                         <div className='mt-2 flex items-center gap-1'>
                                             <Dialog
@@ -361,23 +374,23 @@ export function HistoryPanel({
                                                 }>
                                                 <DialogTrigger asChild>
                                                     <Button
-                                                        variant='outline'
-                                                        size='sm'
-                                                        className='h-6 flex-grow border-border px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:border-border dark:text-muted-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'
-                                                        style={{ transition: 'none' }}
-                                                        onClick={() => setOpenPromptDialogTimestamp(itemKey)}>
-                                                        Show Prompt
-                                                    </Button>
+                                                    variant='outline'
+                                                    size='sm'
+                                                    className='h-6 flex-grow border-border px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:border-border dark:text-muted-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'
+                                                    style={{ transition: 'none' }}
+                                                    onClick={() => setOpenPromptDialogTimestamp(itemKey)}>
+                                                    {getText('editor:history.showPrompt', 'Show Prompt')}
+                                                </Button>
                                                 </DialogTrigger>
                                                 <DialogContent className='border-border bg-card text-foreground sm:max-w-[625px]'>
                                                     <DialogHeader>
-                                                        <DialogTitle className='text-white'>Prompt</DialogTitle>
+                                                        <DialogTitle className='text-white'>{getText('editor:history.prompt', 'Prompt')}</DialogTitle>
                                                         <DialogDescription className='sr-only'>
-                                                            The full prompt used to generate this image batch.
+                                                            {getText('editor:history.promptDescription', 'The full prompt used to generate this image batch.')}
                                                         </DialogDescription>
                                                     </DialogHeader>
                                                     <div className='max-h-[400px] overflow-y-auto rounded-md border border-border bg-muted p-3 py-4 text-sm text-muted-foreground'>
-                                                        {item.prompt || 'No prompt recorded.'}
+                                                        {item.prompt || getText('editor:history.noPromptRecorded', 'No prompt recorded.')}
                                                     </div>
                                                     <DialogFooter>
                                                         <Button
@@ -390,7 +403,7 @@ export function HistoryPanel({
                                                             ) : (
                                                                 <Copy className='mr-2 h-4 w-4' />
                                                             )}
-                                                            {copiedTimestamp === itemKey ? 'Copied!' : 'Copy'}
+                                                            {copiedTimestamp === itemKey ? getText('editor:history.copied', 'Copied!') : getText('editor:history.copy', 'Copy')}
                                                         </Button>
                                                         <DialogClose asChild>
                                                             <Button
@@ -423,13 +436,11 @@ export function HistoryPanel({
                                                 <DialogContent className='border-border bg-card text-foreground sm:max-w-md'>
                                                     <DialogHeader>
                                                         <DialogTitle className='text-white'>
-                                                            Confirm Deletion
-                                                        </DialogTitle>
+                                            {getText('editor:history.confirmDeletion', 'Confirm Deletion')}
+                                        </DialogTitle>
                                                         <DialogDescription className='pt-2 text-muted-foreground'>
-                                                            Are you sure you want to delete this history entry? This
-                                                            will remove {item.images.length} image(s). This action
-                                                            cannot be undone.
-                                                        </DialogDescription>
+                                            {getText('editor:history.deleteConfirmMessage', 'Are you sure you want to delete this history entry? This will remove')} {item.images.length} {getText('editor:history.deleteConfirmImages', 'image(s). This action cannot be undone.')}
+                                        </DialogDescription>
                                                     </DialogHeader>
                                                     <div className='flex items-center space-x-2 py-2'>
                                                         <Checkbox
@@ -441,28 +452,28 @@ export function HistoryPanel({
                                                             className='border-input bg-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground'
                                                         />
                                                         <label
-                                                            htmlFor={`dont-ask-${item.timestamp}`}
-                                                            className='text-sm leading-none font-medium text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                                                            Don&apos;t ask me again
-                                                        </label>
+                                            htmlFor={`dont-ask-${item.timestamp}`}
+                                            className='text-sm leading-none font-medium text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+                                            {getText('editor:history.dontAskAgain', "Don't ask me again")}
+                                        </label>
                                                     </div>
                                                     <DialogFooter className='gap-2 sm:justify-end'>
                                                         <Button
-                                                            type='button'
-                                                            variant='outline'
-                                                            size='sm'
-                                                            onClick={onCancelDeletion}
-                                                            className='border-border text-foreground hover:bg-accent hover:text-accent-foreground'>
-                                                            Cancel
-                                                        </Button>
-                                                        <Button
-                                                            type='button'
-                                                            variant='destructive'
-                                                            size='sm'
-                                                            onClick={onConfirmDeletion}
-                                                            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'>
-                                                            Delete
-                                                        </Button>
+                                            type='button'
+                                            variant='outline'
+                                            size='sm'
+                                            onClick={onCancelDeletion}
+                                            className='border-border text-foreground hover:bg-accent hover:text-accent-foreground'>
+                                            {getText('editor:history.cancel', 'Cancel')}
+                                        </Button>
+                                        <Button
+                                            type='button'
+                                            variant='destructive'
+                                            size='sm'
+                                            onClick={onConfirmDeletion}
+                                            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'>
+                                            {getText('editor:history.delete', 'Delete')}
+                                        </Button>
                                                     </DialogFooter>
                                                 </DialogContent>
                                             </Dialog>

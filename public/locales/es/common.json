@@ -1,0 +1,22 @@
+{
+  "messages": {
+    "error": "Ocurrió un error"
+  },
+  "passwordDialog": {
+    "titleConfigure": "Configurar Contraseña",
+    "titleRequired": "Contraseña Requerida",
+    "descriptionConfigure": "Establece una contraseña para usar en las solicitudes de API.",
+    "descriptionRequired": "El servidor requiere una contraseña, o la anterior era incorrecta. Por favor ingrésala para continuar."
+  },
+  "themeToggle": {
+    "light": "☀️ Claro",
+    "dark": "🌙 Oscuro",
+    "lightIcon": "☀️",
+    "darkIcon": "🌙"
+  },
+  "passwordInput": {
+    "placeholder": "Ingresa tu contraseña",
+    "saveButton": "Guardar"
+  }
+}
+}
