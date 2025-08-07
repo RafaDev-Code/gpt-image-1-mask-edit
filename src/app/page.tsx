@@ -667,7 +667,7 @@ export default function HomePage() {
 
     
     return (
-        <main className='flex flex-col items-center w-full max-w-5xl mx-auto px-4 py-8 space-y-6'>
+        <>
             <PasswordDialog
                 isOpen={isPasswordDialogOpen}
                 onOpenChange={setIsPasswordDialogOpen}
@@ -679,14 +679,27 @@ export default function HomePage() {
                         : getText('common:passwordDialog.descriptionConfigure', 'Set a password to use for API requests.')
                 }
             />
-            <div className='w-full pt-4'>
-                <div className='flex justify-center items-center gap-4 mb-6'>
-                    <LanguageSelector />
-                    <ThemeSwitcher />
+            
+            {/* Header */}
+            <div className="w-full border-b border-border">
+                <div className="mx-auto max-w-7xl px-6">
+                    <div className="grid grid-cols-[1fr_auto_1fr] items-center py-4">
+                        <div className="justify-self-start">
+                            <LanguageSelector />
+                        </div>
+                        <div className="justify-self-center">
+                            <ThemeSwitcher />
+                        </div>
+                        <div />
+                    </div>
                 </div>
             </div>
-            <div className='w-full space-y-6'>
-                <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
+            
+            {/* Main content */}
+            <div className="w-full">
+                <div className="mx-auto max-w-7xl px-6">
+                    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-80px)] gap-6 py-6">
+                        <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
                     <div className='relative flex flex-col lg:col-span-1'>
                         <div className="block w-full">
                             <EditingForm
@@ -743,9 +756,14 @@ export default function HomePage() {
                             baseImagePreviewUrl={editSourceImagePreviewUrls[0] || null}
                         />
                     </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div className='w-full'>
+            </div>
+            
+            {/* History */}
+            <div className="w-full">
+                <div className="mx-auto max-w-7xl px-6">
                     <HistoryPanel
                         history={history}
                         onSelectImage={handleHistorySelect}
@@ -760,6 +778,6 @@ export default function HomePage() {
                     />
                 </div>
             </div>
-        </main>
+        </>
     );
 }
