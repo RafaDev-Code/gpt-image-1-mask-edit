@@ -34,8 +34,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     if (!mounted) return;
     
-    const html = document.documentElement;
-    html.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(STORAGE_KEY, theme);
   }, [theme, mounted]);
 
@@ -58,9 +57,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return <div suppressHydrationWarning>{children}</div>;
   }
 
+  // Clonar el elemento HTML y aplicar data-theme
+  const htmlElement = React.Children.only(children) as React.ReactElement;
+  const htmlWithTheme = React.cloneElement(htmlElement, {
+    'data-theme': theme,
+    ...htmlElement.props
+  });
+
   return (
     <ThemeContext.Provider value={value}>
-      {children}
+      {htmlWithTheme}
     </ThemeContext.Provider>
   );
 }
