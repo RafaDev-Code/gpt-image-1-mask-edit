@@ -23,13 +23,14 @@ export const metadata: Metadata = {
     }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   // Read theme from cookie on server
-  const themeCookie = cookies().get('theme')?.value;
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get('theme')?.value;
   const validThemes = ['light', 'dark', 'green', 'retro'] as const;
   const initialTheme = validThemes.includes(themeCookie as any) 
     ? (themeCookie as 'light' | 'dark' | 'green' | 'retro')
