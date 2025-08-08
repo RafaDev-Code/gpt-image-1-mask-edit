@@ -38,6 +38,17 @@ A specialized image editing tool powered by OpenAI's `gpt-image-1` model.
   <img src="./readme-images/cost-breakdown.jpg" alt="Cost Breakdown" width="350"/>
 </p>
 
+## 📋 Requirements
+
+- **Node.js:** >= 20.0.0
+- **Package Manager:** npm (recommended) or pnpm
+- **OpenAI API Key:** Required for image editing functionality
+
+> **Note for CI/CD:** This project is configured for Vercel deployment with the following scripts:
+> - `build`: Creates optimized production build
+> - `start`: Starts production server (not used in Vercel)
+> - `dev`: Development server with Turbopack
+
 ## 🏗️ Project Structure
 
 ```
@@ -206,6 +217,17 @@ This application is optimized for deployment on Vercel:
    - Use `NEXT_PUBLIC_IMAGE_STORAGE_MODE=indexeddb` for serverless compatibility
    - Set `VERCEL=1` and `NEXT_PUBLIC_VERCEL_ENV` automatically
    - Configure Node.js runtime for API routes
+
+### CI/CD Requirements
+
+**Node.js Version:** This project requires Node.js ≥20.0.0 (configured in `package.json` engines)
+
+**Package Manager:** Compatible with npm, yarn, pnpm, or bun. Uses standard npm scripts:
+- `npm run build` - Production build (Vercel compatible)
+- `npm run dev` - Development server
+- `npm run lint` - Code linting
+
+**Build Process:** The project uses Next.js 15 with standard build configuration. No special CI setup required.
 
 ### Health Check
 

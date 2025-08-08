@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { getCookieValue, setCookieValue } from '@/lib/cookie-utils';
 
-type Theme = 'light' | 'dark' | 'green' | 'retro';
+export type Theme = 'light' | 'dark' | 'green' | 'retro';
 
 interface ThemeContextType {
   theme: Theme;
@@ -24,7 +24,7 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children, initialTheme = DEFAULT_THEME }: ThemeProviderProps) {
   const [theme, setThemeState] = React.useState<Theme>(initialTheme);
-  const [mounted, setMounted] = React.useState(false);
+  const [, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
@@ -52,7 +52,7 @@ export function ThemeProvider({ children, initialTheme = DEFAULT_THEME }: ThemeP
         setThemeState(finalTheme);
       }
     }
-  }, []);
+  }, [theme]);
 
   const setTheme = React.useCallback((newTheme: Theme) => {
     setThemeState(newTheme);

@@ -93,8 +93,8 @@ async function retryWithBackoff<T>(
                     error.message.includes('exceeded the rate limit')
                 ) || 
                 // Handle OpenAI API error objects
-                (error as any)?.status === 429 ||
-                (error as any)?.code === 'rate_limit_exceeded';
+                (error as Record<string, unknown>)?.status === 429 ||
+                (error as Record<string, unknown>)?.code === 'rate_limit_exceeded';
             
             const isRetryableError = isConnectionError || isRateLimitError;
             
@@ -109,7 +109,8 @@ async function retryWithBackoff<T>(
                 console.log(`Rate limit exceeded (attempt ${attempt + 1}). Waiting ${delay}ms before retry...`);
             } else {
                 delay = baseDelay * Math.pow(2, attempt);
-                console.log(`Connection error (attempt ${attempt + 1}): ${error.message}. Retrying in ${delay}ms...`);
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                console.log(`Connection error (attempt ${attempt + 1}): ${errorMessage}. Retrying in ${delay}ms...`);
             }
             
             await new Promise(resolve => setTimeout(resolve, delay));
@@ -172,7 +173,6 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Missing required parameter: prompt' }, { status: 400 });
         }
 
-        let result: OpenAI.Images.ImagesResponse;
         const model = 'gpt-image-1';
 
         // Only edit mode is supported
@@ -213,7 +213,7 @@ export async function POST(request: NextRequest) {
             });
             
             // Use retry mechanism for OpenAI API call
-            result = await retryWithBackoff(
+            const result = await retryWithBackoff(
                 () => openai.images.edit(params),
                 3, // max 3 retries
                 2000 // start with 2 second delay
@@ -271,15 +271,15 @@ export async function POST(request: NextRequest) {
 
         if (error instanceof Error) {
             errorMessage = error.message;
-            if (typeof error === 'object' && error !== null && 'status' in error && typeof error.status === 'number') {
-                status = error.status;
+            if (typeof error === 'object' && error !== null && 'status' in error && typeof (error as Record<string, unknown>).status === 'number') {
+                status = (error as Record<string, unknown>).status as number;
             }
         } else if (typeof error === 'object' && error !== null) {
-            if ('message' in error && typeof error.message === 'string') {
-                errorMessage = error.message;
+            if ('message' in error && typeof (error as Record<string, unknown>).message === 'string') {
+                errorMessage = (error as Record<string, unknown>).message as string;
             }
-            if ('status' in error && typeof error.status === 'number') {
-                status = error.status;
+            if ('status' in error && typeof (error as Record<string, unknown>).status === 'number') {
+                status = (error as Record<string, unknown>).status as number;
             }
         }
 

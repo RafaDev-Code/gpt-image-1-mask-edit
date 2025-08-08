@@ -362,9 +362,7 @@ export function HistoryPanel({
                                         <p>
                                             <span className='font-medium text-foreground dark:text-foreground'>{getText('editor:history.quality', 'Quality:')}:</span> {item.quality}
                                         </p>
-                                        <p>
-                                            <span className='font-medium text-foreground dark:text-foreground'>{getText('editor:history.mod', 'Mod:')}:</span> {item.moderation}
-                                        </p>
+
                                         <div className='mt-2 flex items-center gap-1'>
                                             <Dialog
                                                 open={openPromptDialogTimestamp === itemKey}

@@ -398,7 +398,7 @@ export default function HomePage() {
                                 const actualMimeType = getMimeTypeFromFormat(img.output_format);
                                 const blob = new Blob([byteArray], { type: actualMimeType });
 
-                                await db.images.put({ filename: img.filename, blob });
+                                await db.images.put({ filename: img.filename, blob, timestamp: Date.now() });
                                 console.log(`Saved ${img.filename} to IndexedDB with type ${actualMimeType}.`);
 
                                 const blobUrl = URL.createObjectURL(blob);
@@ -579,9 +579,7 @@ export default function HomePage() {
             setEditImageFiles([newFile]);
             setEditSourceImagePreviewUrls([newPreviewUrl]);
 
-            if (mode === 'generate') {
-                setMode('edit');
-            }
+            // Mode is always 'edit' in this version
 
             console.log(`Successfully set ${filename} in edit form.`);
         } catch (err: unknown) {

@@ -25,9 +25,7 @@ import {
     ScanEye,
     UploadCloud,
     Lock,
-    LockOpen,
-    Circle,
-    Eye
+    LockOpen
 } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';

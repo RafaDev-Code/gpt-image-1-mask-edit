@@ -171,7 +171,7 @@ export function ImageOutput({
                 <Button
                     variant='outline'
                     size='sm'
-                    onClick={() => onSendToEdit(selectedImageIndex)}
+                    onClick={handleSendClick}
                     disabled={!canSendToEdit}
                     className={cn(
                         'shrink-0 border-border text-foreground hover:bg-accent hover:text-accent-foreground dark:border-border dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50',

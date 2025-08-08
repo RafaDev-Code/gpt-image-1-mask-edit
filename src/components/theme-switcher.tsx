@@ -1,5 +1,5 @@
 'use client'
-import { useTheme } from './theme-provider'
+import { useTheme, type Theme } from './theme-provider'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Palette, Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +22,7 @@ export function ThemeSwitcher({ className = '' }: { className?: string }) {
         {themes.map((t) => (
           <button
             key={t.id}
-            onClick={() => setTheme(t.id as any)}
+            onClick={() => setTheme(t.id as Theme)}
             data-active={theme === t.id}
             className="inline-flex items-center justify-center h-8 px-3 min-w-[64px] rounded-full text-sm font-medium leading-none whitespace-nowrap text-secondary-foreground transition-colors data-[active=true]:bg-primary data-[active=true]:text-primary-foreground hover:bg-accent hover:text-accent-foreground"
           >
@@ -45,7 +45,7 @@ export function ThemeSwitcher({ className = '' }: { className?: string }) {
             {themes.map((themeOption) => (
               <DropdownMenuItem
                 key={themeOption.id}
-                onClick={() => setTheme(themeOption.id as any)}
+                onClick={() => setTheme(themeOption.id as Theme)}
                 className="flex items-center justify-between cursor-pointer"
                 role="menuitem"
               >
