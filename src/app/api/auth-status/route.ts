@@ -3,6 +3,8 @@
 
 import { NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
+
 export async function GET() {
     // APP_PASSWORD comentado para desarrollo local
     const appPasswordSet = !!process.env.APP_PASSWORD;
