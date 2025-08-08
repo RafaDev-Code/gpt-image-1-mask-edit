@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { getCookieValue, setCookieValue } from '@/lib/cookie-utils';
 
 type Theme = 'light' | 'dark' | 'green' | 'retro';
 
@@ -13,33 +14,55 @@ interface ThemeContextType {
 const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'app-theme';
+const COOKIE_KEY = 'theme';
 const DEFAULT_THEME: Theme = 'light';
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = React.useState<Theme>(DEFAULT_THEME);
+interface ThemeProviderProps {
+  children: React.ReactNode;
+  initialTheme?: Theme;
+}
+
+export function ThemeProvider({ children, initialTheme = DEFAULT_THEME }: ThemeProviderProps) {
+  const [theme, setThemeState] = React.useState<Theme>(initialTheme);
   const [mounted, setMounted] = React.useState(false);
 
-  // Cargar tema desde localStorage al montar
   React.useEffect(() => {
-    const savedTheme = localStorage.getItem(STORAGE_KEY) as Theme;
-    const initialTheme = savedTheme && ['light', 'dark', 'green', 'retro'].includes(savedTheme) 
-      ? savedTheme 
-      : DEFAULT_THEME;
-    
-    setThemeState(initialTheme);
     setMounted(true);
-  }, []);
-
-  // Aplicar tema al HTML y persistir
-  React.useEffect(() => {
-    if (!mounted) return;
     
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(STORAGE_KEY, theme);
-  }, [theme, mounted]);
+    // Sync on mount: check localStorage, then cookie, then use current theme
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      let finalTheme = theme;
+      
+      if (stored && (stored === 'light' || stored === 'dark' || stored === 'green' || stored === 'retro')) {
+        finalTheme = stored as Theme;
+      } else {
+        const cookieTheme = getCookieValue(COOKIE_KEY);
+        if (cookieTheme && (cookieTheme === 'light' || cookieTheme === 'dark' || cookieTheme === 'green' || cookieTheme === 'retro')) {
+          finalTheme = cookieTheme as Theme;
+        }
+      }
+      
+      // Sync HTML, localStorage and cookie
+      document.documentElement.setAttribute('data-theme', finalTheme);
+      localStorage.setItem(STORAGE_KEY, finalTheme);
+      setCookieValue(COOKIE_KEY, finalTheme);
+      
+      if (finalTheme !== theme) {
+        setThemeState(finalTheme);
+      }
+    }
+  }, []);
 
   const setTheme = React.useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
+    
+    // Sync HTML, localStorage and cookie immediately
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem(STORAGE_KEY, newTheme);
+      setCookieValue(COOKIE_KEY, newTheme);
+    }
   }, []);
 
   const getTheme = React.useCallback(() => {
@@ -52,21 +75,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     getTheme
   }), [theme, setTheme, getTheme]);
 
-  // Evitar hidration mismatch
-  if (!mounted) {
-    return <div suppressHydrationWarning>{children}</div>;
-  }
-
-  // Clonar el elemento HTML y aplicar data-theme
-  const htmlElement = React.Children.only(children) as React.ReactElement;
-  const htmlWithTheme = React.cloneElement(htmlElement, {
-    'data-theme': theme,
-    ...htmlElement.props
-  });
-
   return (
     <ThemeContext.Provider value={value}>
-      {htmlWithTheme}
+      {children}
     </ThemeContext.Provider>
   );
 }

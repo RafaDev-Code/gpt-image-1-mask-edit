@@ -1,8 +1,9 @@
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
 import { I18nProvider } from '@/components/i18n-provider';
+import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { cookies } from 'next/headers';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -23,19 +24,26 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-    children
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
-    return (
-        <ThemeProvider>
-            <html lang='en' suppressHydrationWarning>
-                <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                    <I18nProvider>
-                        {children}
-                    </I18nProvider>
-                </body>
-            </html>
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // Read theme from cookie on server
+  const themeCookie = cookies().get('theme')?.value;
+  const validThemes = ['light', 'dark', 'green', 'retro'] as const;
+  const initialTheme = validThemes.includes(themeCookie as any) 
+    ? (themeCookie as 'light' | 'dark' | 'green' | 'retro')
+    : 'light';
+
+  return (
+    <html lang="en" data-theme={initialTheme}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider initialTheme={initialTheme}>
+          <I18nProvider>
+            {children}
+          </I18nProvider>
         </ThemeProvider>
-    );
+      </body>
+    </html>
+  );
 }
