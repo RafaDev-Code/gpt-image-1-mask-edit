@@ -6,6 +6,8 @@ import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 
+export const runtime = 'nodejs';
+
 const outputDir = path.resolve(process.cwd(), 'generated-images');
 
 function sha256(data: string): string {

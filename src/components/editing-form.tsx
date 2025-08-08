@@ -25,9 +25,7 @@ import {
     ScanEye,
     UploadCloud,
     Lock,
-    LockOpen,
-    Circle,
-    Eye
+    LockOpen
 } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';
@@ -460,6 +458,12 @@ export function EditingForm({
         return `${files.length} ${getText('editor:form.filesSelected', 'files selected')}`;
     };
 
+    const getFileNamesForTooltip = (files: File[]) => {
+        if (files.length === 0) return getText('editor:form.noFileSelected', 'No file selected.');
+        if (files.length === 1) return files[0].name;
+        return files.map(f => f.name).join(', ');
+    };
+
     return (
         <Card className='flex h-full w-full flex-col overflow-hidden rounded-lg border border-border bg-card dark:border-border dark:bg-card'>
             <CardHeader className='flex items-start justify-between border-b border-border dark:border-border pb-4'>
@@ -503,7 +507,7 @@ export function EditingForm({
                         <Label
                             htmlFor='image-files-input'
                             className='group flex h-10 w-full cursor-pointer items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-background dark:hover:bg-accent dark:hover:text-accent-foreground'>
-                            <span className='truncate pr-2 text-muted-foreground group-hover:text-accent-foreground dark:text-muted-foreground dark:group-hover:text-accent-foreground'>{displayFileNames(imageFiles)}</span>
+                            <span className='truncate pr-2 text-muted-foreground group-hover:text-accent-foreground dark:text-muted-foreground dark:group-hover:text-accent-foreground' title={getFileNamesForTooltip(imageFiles)}>{displayFileNames(imageFiles)}</span>
                             <span className='flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-3 py-1 text-xs font-medium text-muted-foreground group-hover:text-accent-foreground dark:bg-muted dark:text-muted-foreground dark:group-hover:text-accent-foreground' style={{ transition: 'none' }}>
                                 <Upload className='h-3 w-3' /> {getText('editor:form.sourceImages.browse', 'Browse...')}
                             </span>
@@ -617,15 +621,16 @@ export function EditingForm({
                                         />
                                     </div>
                                 </div>
-                                <div className='flex items-center justify-between gap-2 pt-3'>
+                                <div className='grid grid-cols-2 gap-2 min-w-0 pt-3 sm:flex sm:flex-wrap sm:gap-2'>
                                     <Button
                                         type='button'
                                         variant='outline'
-                                        size='sm'
                                         onClick={() => maskInputRef.current?.click()}
                                         disabled={isLoading || !editOriginalImageSize}
-                                        className='mr-auto border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'>
-                                        <UploadCloud className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.uploadMask', 'Upload Mask')}
+                                        title={getText('editor:form.mask.actions.uploadMask', 'Upload Mask')}
+                                        className='col-span-1 w-full min-w-0 h-10 border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground sm:w-auto'>
+                                        <UploadCloud className='mr-2 h-4 w-4 shrink-0' /> 
+                                        <span className='truncate'>{getText('editor:form.mask.actions.uploadMask', 'Upload Mask')}</span>
                                     </Button>
                                     <Input
                                         ref={maskInputRef}
@@ -635,26 +640,26 @@ export function EditingForm({
                                         onChange={handleMaskFileChange}
                                         className='sr-only'
                                     />
-                                    <div className='flex gap-2'>
-                                        <Button
-                                            type='button'
-                                            variant='outline'
-                                            size='sm'
-                                            onClick={handleClearMask}
-                                            disabled={isLoading}
-                                            className='border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'>
-                                            <Eraser className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.clear', 'Clear')}
-                                        </Button>
-                                        <Button
-                                            type='button'
-                                            variant='default'
-                                            size='sm'
-                                            onClick={generateAndSaveMask}
-                                            disabled={isLoading || editDrawnPoints.length === 0}
-                                            className='bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50'>
-                                            <Save className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.saveMask', 'Save Mask')}
-                                        </Button>
-                                    </div>
+                                    <Button
+                                        type='button'
+                                        variant='outline'
+                                        onClick={handleClearMask}
+                                        disabled={isLoading}
+                                        title={getText('editor:form.mask.actions.clear', 'Clear')}
+                                        className='col-span-1 w-full min-w-0 h-10 border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground sm:w-auto'>
+                                        <Eraser className='mr-2 h-4 w-4 shrink-0' /> 
+                                        <span className='truncate'>{getText('editor:form.mask.actions.clear', 'Clear')}</span>
+                                    </Button>
+                                    <Button
+                                        type='button'
+                                        variant='default'
+                                        onClick={generateAndSaveMask}
+                                        disabled={isLoading || editDrawnPoints.length === 0}
+                                        title={getText('editor:form.mask.actions.saveMask', 'Save Mask')}
+                                        className='col-span-2 order-last w-full min-w-0 h-10 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 sm:order-none sm:col-span-1 sm:w-auto'>
+                                        <Save className='mr-2 h-4 w-4 shrink-0' /> 
+                                        <span className='truncate'>{getText('editor:form.mask.actions.saveMask', 'Save Mask')}</span>
+                                    </Button>
                                 </div>
                                 {editMaskPreviewUrl && (
                                     <div className='mt-3 border-t border-border pt-3 text-center dark:border-border' style={{ transition: 'none' }}>
@@ -695,7 +700,7 @@ export function EditingForm({
                             value={editSize}
                             onValueChange={(value) => setEditSize(value as EditingFormData['size'])}
                             disabled={isLoading}
-                            className='flex flex-wrap gap-x-5 gap-y-3'>
+                            className='grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap lg:gap-x-5 lg:gap-y-3'>
                             <RadioItemWithIcon value='auto' id='edit-size-auto' label={getText('editor:form.settings.sizeLabels.auto', 'Auto')} Icon={Sparkles} />
                             <RadioItemWithIcon value='1024x1024' id='edit-size-square' label={getText('editor:form.settings.sizeLabels.square', 'Square')} Icon={Square} />
                             <RadioItemWithIcon
@@ -719,7 +724,7 @@ export function EditingForm({
                             value={editQuality}
                             onValueChange={(value) => setEditQuality(value as EditingFormData['quality'])}
                             disabled={isLoading}
-                            className='flex flex-wrap gap-x-5 gap-y-3'>
+                            className='grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap lg:gap-x-5 lg:gap-y-3'>
                             <RadioItemWithIcon value='auto' id='edit-quality-auto' label={getText('editor:form.settings.qualityLabels.auto', 'Auto')} Icon={Sparkles} />
                             <RadioItemWithIcon value='low' id='edit-quality-low' label={getText('editor:form.settings.qualityLabels.low', 'Low')} Icon={Tally1} />
                             <RadioItemWithIcon value='medium' id='edit-quality-medium' label={getText('editor:form.settings.qualityLabels.medium', 'Medium')} Icon={Tally2} />

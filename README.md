@@ -38,6 +38,17 @@ A specialized image editing tool powered by OpenAI's `gpt-image-1` model.
   <img src="./readme-images/cost-breakdown.jpg" alt="Cost Breakdown" width="350"/>
 </p>
 
+## 📋 Requirements
+
+- **Node.js:** >= 20.0.0
+- **Package Manager:** npm (recommended) or pnpm
+- **OpenAI API Key:** Required for image editing functionality
+
+> **Note for CI/CD:** This project is configured for Vercel deployment with the following scripts:
+> - `build`: Creates optimized production build
+> - `start`: Starts production server (not used in Vercel)
+> - `dev`: Development server with Turbopack
+
 ## 🏗️ Project Structure
 
 ```
@@ -83,20 +94,45 @@ You will be prompted to enter your `OPENAI_API_KEY` during the deployment setup.
 *   [Node.js](https://nodejs.org/) (Version 20 or later required)
 *   [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), [pnpm](https://pnpm.io/), or [bun](https://bun.sh/)
 
-### 1. Set Up API Key 🟢
+### 1. Set Up Environment Variables 🟢
 
-You need an OpenAI API key to use this application.
+You need to configure environment variables for the application to work properly.
 
 ⚠️ [Your OpenAI Organization needs to be verified to use `gpt-image-1`](https://help.openai.com/en/articles/10910291-api-organization-verification)
 
-1.  If you don't have a `.env.local` file, create one.
-2.  Add your OpenAI API key to the `.env.local` file:
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env.local
+   ```
 
-```dotenv
-OPENAI_API_KEY=your_openai_api_key_here
-```
+2. Edit `.env.local` and add your configuration:
+   ```dotenv
+   # Required: OpenAI API Configuration
+   OPENAI_API_KEY=your_openai_api_key_here
+   
+   # Optional: Custom API endpoint
+   OPENAI_API_BASE_URL=your_compatible_api_endpoint_here
+   
+   # Optional: Application password for authentication
+   APP_PASSWORD=your_password_here
+   
+   # Optional: Storage mode (fs for local, indexeddb for Vercel)
+   NEXT_PUBLIC_IMAGE_STORAGE_MODE=fs
+   ```
 
 **Important:** Keep your API key secret. The `.env.local` file is included in `.gitignore` by default to prevent accidental commits.
+
+## 🌍 Environment Variables
+
+| Variable | Required | Description | Default |
+|----------|----------|-------------|----------|
+| `OPENAI_API_KEY` | ✅ | Your OpenAI API key | - |
+| `OPENAI_API_BASE_URL` | ❌ | Custom OpenAI-compatible endpoint | OpenAI default |
+| `APP_PASSWORD` | ❌ | Password for application access | None (no auth) |
+| `NEXT_PUBLIC_IMAGE_STORAGE_MODE` | ❌ | Storage mode: `fs` or `indexeddb` | Auto-detected |
+| `NEXT_PUBLIC_VERCEL_ENV` | ❌ | Vercel environment (auto-set) | - |
+| `VERCEL` | ❌ | Vercel deployment flag (auto-set) | - |
+| `NODE_ENV` | ❌ | Node environment (auto-set) | `development` |
 
 ---
 
@@ -166,6 +202,38 @@ npm run dev
 ### 4. Open the Editor 🟢
 
 Open [http://localhost:3000](http://localhost:3000) in your web browser. You should now be able to use the Custom Image Editor!
+
+## 🚀 Deployment to Vercel
+
+This application is optimized for deployment on Vercel:
+
+1. **Fork or clone** this repository
+2. **Connect** your repository to Vercel
+3. **Set environment variables** in Vercel dashboard:
+   - `OPENAI_API_KEY` (required)
+   - `APP_PASSWORD` (optional, for authentication)
+   - `OPENAI_API_BASE_URL` (optional, for custom endpoints)
+4. **Deploy** - Vercel will automatically:
+   - Use `NEXT_PUBLIC_IMAGE_STORAGE_MODE=indexeddb` for serverless compatibility
+   - Set `VERCEL=1` and `NEXT_PUBLIC_VERCEL_ENV` automatically
+   - Configure Node.js runtime for API routes
+
+### CI/CD Requirements
+
+**Node.js Version:** This project requires Node.js ≥20.0.0 (configured in `package.json` engines)
+
+**Package Manager:** Compatible with npm, yarn, pnpm, or bun. Uses standard npm scripts:
+- `npm run build` - Production build (Vercel compatible)
+- `npm run dev` - Development server
+- `npm run lint` - Code linting
+
+**Build Process:** The project uses Next.js 15 with standard build configuration. No special CI setup required.
+
+### Health Check
+
+After deployment, verify your application is working:
+- Visit `/api/health` to check the API status
+- Should return: `{"ok": true, "version": "...", "timestamp": "...", "environment": "..."}`
 
 ## 🎯 Main Functionality
 
