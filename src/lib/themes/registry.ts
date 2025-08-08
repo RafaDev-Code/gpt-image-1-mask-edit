@@ -27,13 +27,13 @@ export const THEME_REGISTRY: Record<ThemeId, ThemeMetadata> = {
     id: 'green',
     name: 'Green',
     description: 'Tema verde - Paleta natural con acentos esmeralda',
-    enabled: false // TODO: Fase 1 - Activar tras completar variables
+    enabled: true // Habilitado para testing del bridge
   },
   retro: {
     id: 'retro',
     name: 'Retro',
     description: 'Tema retro - Paleta vintage con acentos cálidos',
-    enabled: false // TODO: Fase 1 - Activar tras completar variables
+    enabled: true // Habilitado para testing del bridge
   }
 };
 
