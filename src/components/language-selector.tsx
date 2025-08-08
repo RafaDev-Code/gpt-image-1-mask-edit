@@ -36,10 +36,12 @@ export function LanguageSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button variant="outline" size="sm" className="gap-2" title={`${currentLanguage.flag} ${currentLanguage.name}`}>
           <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{currentLanguage.flag} {currentLanguage.name}</span>
-          <span className="sm:hidden">{currentLanguage.flag}</span>
+          <span className="truncate">
+            <span className="sm:hidden">{currentLanguage.flag}</span>
+            <span className="hidden sm:inline">{currentLanguage.flag} {currentLanguage.name}</span>
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

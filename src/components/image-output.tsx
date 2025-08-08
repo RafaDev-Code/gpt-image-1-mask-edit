@@ -175,12 +175,15 @@ export function ImageOutput({
                     disabled={!canSendToEdit}
                     className={cn(
                         'shrink-0 border-border text-foreground hover:bg-accent hover:text-accent-foreground dark:border-border dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50',
-                        // Hide button completely if grid view is active and there are multiple images
-                        showCarousel && viewMode === 'grid' ? 'invisible' : 'visible'
+                        // Compact button in grid view with multiple images
+                        showCarousel && viewMode === 'grid' ? 'h-8 px-2 text-sm' : ''
                     )}
-                    style={{ transition: 'none' }}>
-                    <Send className='mr-2 h-4 w-4' />
-                    {getText('editor:output.sendToEdit', 'Send to Edit')}
+                    style={{ transition: 'none' }}
+                    aria-label={showCarousel && viewMode === 'grid' ? getText('editor:output.sendToEdit', 'Send to Edit') : undefined}>
+                    <Send className={cn('h-4 w-4', showCarousel && viewMode === 'grid' ? '' : 'mr-2')} />
+                    <span className={cn(showCarousel && viewMode === 'grid' ? 'sr-only sm:not-sr-only sm:inline' : '')}>
+                        {getText('editor:output.sendToEdit', 'Send to Edit')}
+                    </span>
                 </Button>
             </div>
         </div>

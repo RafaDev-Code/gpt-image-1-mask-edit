@@ -128,7 +128,6 @@ export function HistoryPanel({
                             <DialogContent className='border-border bg-card text-card-foreground sm:max-w-[450px]'>
                                 <DialogHeader>
                                     <DialogTitle className='text-foreground'>{getText('editor:history.totalCostSummary', 'Total Cost Summary')}</DialogTitle>
-                                    {/* Add sr-only description for accessibility */}
                                     <DialogDescription className='sr-only'>
                                         A summary of the total estimated cost for all edited images in the history.
                                     </DialogDescription>
