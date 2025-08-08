@@ -623,15 +623,16 @@ export function EditingForm({
                                         />
                                     </div>
                                 </div>
-                                <div className='flex items-center justify-between gap-2 pt-3'>
+                                <div className='grid grid-cols-2 gap-2 min-w-0 pt-3 sm:flex sm:flex-wrap sm:gap-2'>
                                     <Button
                                         type='button'
                                         variant='outline'
-                                        size='sm'
                                         onClick={() => maskInputRef.current?.click()}
                                         disabled={isLoading || !editOriginalImageSize}
-                                        className='mr-auto border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'>
-                                        <UploadCloud className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.uploadMask', 'Upload Mask')}
+                                        title={getText('editor:form.mask.actions.uploadMask', 'Upload Mask')}
+                                        className='col-span-1 w-full min-w-0 h-10 border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground sm:w-auto'>
+                                        <UploadCloud className='mr-2 h-4 w-4 shrink-0' /> 
+                                        <span className='truncate'>{getText('editor:form.mask.actions.uploadMask', 'Upload Mask')}</span>
                                     </Button>
                                     <Input
                                         ref={maskInputRef}
@@ -641,26 +642,26 @@ export function EditingForm({
                                         onChange={handleMaskFileChange}
                                         className='sr-only'
                                     />
-                                    <div className='flex gap-2'>
-                                        <Button
-                                            type='button'
-                                            variant='outline'
-                                            size='sm'
-                                            onClick={handleClearMask}
-                                            disabled={isLoading}
-                                            className='border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground'>
-                                            <Eraser className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.clear', 'Clear')}
-                                        </Button>
-                                        <Button
-                                            type='button'
-                                            variant='default'
-                                            size='sm'
-                                            onClick={generateAndSaveMask}
-                                            disabled={isLoading || editDrawnPoints.length === 0}
-                                            className='bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50'>
-                                            <Save className='mr-1.5 h-4 w-4' /> {getText('editor:form.mask.actions.saveMask', 'Save Mask')}
-                                        </Button>
-                                    </div>
+                                    <Button
+                                        type='button'
+                                        variant='outline'
+                                        onClick={handleClearMask}
+                                        disabled={isLoading}
+                                        title={getText('editor:form.mask.actions.clear', 'Clear')}
+                                        className='col-span-1 w-full min-w-0 h-10 border-input text-foreground hover:bg-accent hover:text-accent-foreground dark:border-input dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground sm:w-auto'>
+                                        <Eraser className='mr-2 h-4 w-4 shrink-0' /> 
+                                        <span className='truncate'>{getText('editor:form.mask.actions.clear', 'Clear')}</span>
+                                    </Button>
+                                    <Button
+                                        type='button'
+                                        variant='default'
+                                        onClick={generateAndSaveMask}
+                                        disabled={isLoading || editDrawnPoints.length === 0}
+                                        title={getText('editor:form.mask.actions.saveMask', 'Save Mask')}
+                                        className='col-span-2 order-last w-full min-w-0 h-10 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 sm:order-none sm:col-span-1 sm:w-auto'>
+                                        <Save className='mr-2 h-4 w-4 shrink-0' /> 
+                                        <span className='truncate'>{getText('editor:form.mask.actions.saveMask', 'Save Mask')}</span>
+                                    </Button>
                                 </div>
                                 {editMaskPreviewUrl && (
                                     <div className='mt-3 border-t border-border pt-3 text-center dark:border-border' style={{ transition: 'none' }}>
