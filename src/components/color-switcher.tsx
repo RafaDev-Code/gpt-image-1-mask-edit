@@ -1,79 +1,67 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Check, Palette } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useTheme, type Color } from "@/components/theme-provider";
+} from '@/components/ui/dropdown-menu';
+import { useTheme, type Color } from '@/components/theme-provider';
 
-const colors: { id: Color; name: string; colorVar: string }[] = [
-  { id: "default", name: "Default", colorVar: "var(--color-default)" },
-  { id: "purple", name: "Purple", colorVar: "var(--color-purple)" },
-  { id: "blue", name: "Blue", colorVar: "var(--color-blue)" },
-  { id: "olive", name: "Olive", colorVar: "var(--color-olive)" },
-  { id: "tangerine", name: "Tangerine", colorVar: "var(--color-tangerine)" },
+const PALETTES: { id: Color; label: string }[] = [
+  { id: 'default', label: 'Default' },
+  { id: 'purple', label: 'Purple' },
+  { id: 'blue', label: 'Blue' },
+  { id: 'olive', label: 'Olive' },
+  { id: 'tangerine', label: 'Tangerine' },
 ];
 
 export function ColorSwitcher() {
   const { color, setColor } = useTheme();
 
-  return (
-    <>
-      {/* Desktop: Pills */}
-      <div className="hidden md:flex items-center space-x-1 rounded-lg border p-1">
-        {colors.map((colorOption) => (
-          <Button
-            key={colorOption.id}
-            variant={color === colorOption.id ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setColor(colorOption.id)}
-            className="h-8 px-3 text-xs font-medium"
-          >
-            <div
-              className="mr-2 h-3 w-3 rounded-full border border-border/50"
-              style={{ backgroundColor: colorOption.colorVar }}
-            />
-            {colorOption.name}
-          </Button>
-        ))}
-      </div>
+  // Get current palette info
+  const currentPalette = PALETTES.find(p => p.id === color) || PALETTES[0];
 
-      {/* Mobile: Dropdown */}
-      <div className="md:hidden">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9">
-              <Palette className="h-4 w-4" />
-              <span className="sr-only">Select color palette</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            {colors.map((colorOption) => (
-              <DropdownMenuItem
-                key={colorOption.id}
-                onClick={() => setColor(colorOption.id)}
-                className="flex items-center justify-between"
-              >
-                <div className="flex items-center">
-                  <div
-                    className="mr-3 h-4 w-4 rounded-full border border-border/50"
-                    style={{ backgroundColor: colorOption.colorVar }}
-                  />
-                  <span>{colorOption.name}</span>
-                </div>
-                {color === colorOption.id && (
-                  <Check className="h-4 w-4" />
-                )}
-              </DropdownMenuItem>
+  return (
+    <div className="shrink-0">
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger
+          className="h-9 px-3 gap-2 leading-none transition-colors inline-flex items-center rounded-md border border-border bg-card text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label="Color theme"
+        >
+          {/* Dot del color actual usando tokens CSS */}
+          <span 
+            className="h-2.5 w-2.5 rounded-full" 
+            style={{ backgroundColor: `var(--color-${currentPalette.id})` }} 
+          />
+          <span className="hidden sm:inline">{currentPalette.label}</span>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          align="end"
+          side="bottom"
+          sideOffset={6}
+          alignOffset={0}
+          collisionPadding={8}
+          avoidCollisions
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
+          className="z-50 min-w-[12rem] rounded-xl border border-border bg-card p-1 shadow-lg"
+        >
+          <DropdownMenuRadioGroup value={color} onValueChange={setColor}>
+            {PALETTES.map(palette => (
+              <DropdownMenuRadioItem key={palette.id} value={palette.id} className="flex items-center gap-2">
+                <span 
+                  className="h-2.5 w-2.5 rounded-full" 
+                  style={{ backgroundColor: `var(--color-${palette.id})` }} 
+                />
+                <span className="flex-1">{palette.label}</span>
+              </DropdownMenuRadioItem>
             ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

@@ -501,7 +501,7 @@ export function EditingForm({
                             onChange={(e) => setEditPrompt(e.target.value)}
                             required
                             disabled={isLoading}
-                            className='min-h-[80px] rounded-md border border-input bg-background text-foreground dark:border-input dark:bg-background dark:text-foreground dark:placeholder:text-muted-foreground dark:focus:border-ring dark:focus:ring-ring'
+                            className='min-h-[80px] max-w-full rounded-md border border-input bg-background text-foreground dark:border-input dark:bg-background dark:text-foreground dark:placeholder:text-muted-foreground dark:focus:border-ring dark:focus:ring-ring'
                         />
                     </div>
 
@@ -757,7 +757,7 @@ export function EditingForm({
                     <Button
                         type='submit'
                         disabled={isLoading || !editPrompt || imageFiles.length === 0}
-                        className='flex w-full items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground dark:disabled:bg-muted dark:disabled:text-muted-foreground'
+                        className='flex w-full max-w-full items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground dark:disabled:bg-muted dark:disabled:text-muted-foreground'
                         style={{ transition: 'none' }}>
                         {isLoading && <Loader2 className='h-4 w-4 animate-spin' />}
                         {isLoading ? getText('editor:form.submit.editing', 'Editing...') : getText('editor:form.submit.editImage', 'Edit Image')}

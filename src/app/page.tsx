@@ -681,17 +681,29 @@ export default function HomePage() {
             
             {/* Header */}
             <header className="border-b bg-background">
-                <div className="mx-auto max-w-6xl px-4 py-4 w-full flex items-center justify-between">
-                    <LanguageSelector />
-                    <ThemeSwitcher />
-                    <UserMenu />
+                <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
+                    <div className="flex flex-wrap items-center justify-between gap-3 py-4">
+                        {/* Left: LanguageSelector */}
+                        <div className="order-1 shrink-0">
+                            <LanguageSelector />
+                        </div>
+                        {/* Right: UserMenu (avatar) */}
+                        <div className="order-2 ml-auto shrink-0">
+                            <UserMenu />
+                        </div>
+                        {/* Row 2 (mobile): ThemeSwitcher centrado */}
+                        <div className="order-last basis-full w-auto md:order-2 md:basis-auto md:w-auto flex justify-center md:justify-center">
+                            <ThemeSwitcher />
+                        </div>
+                    </div>
                 </div>
             </header>
             
             {/* Main content */}
-            <section className="mx-auto max-w-6xl px-4 py-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-card border border-border rounded-lg p-6 w-full">
+            <section className="mx-auto w-full max-w-6xl px-4 lg:px-6 py-6 overflow-hidden">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8 overflow-hidden">
+                    <div className="min-w-0">
+                        <div className="bg-card border border-border rounded-lg p-6 w-full">
                         <EditingForm
                             onSubmit={handleApiCall}
                             isLoading={isLoading || isSendingToEdit}
@@ -727,8 +739,10 @@ export default function HomePage() {
                             setEditMaskPreviewUrl={setEditMaskPreviewUrl}
                             useCardWrapper={false}
                         />
+                        </div>
                     </div>
-                    <div className="bg-card border border-border rounded-lg p-6 w-full">
+                    <div className="min-w-0">
+                        <div className="bg-card border border-border rounded-lg p-6 w-full">
                         {error && (
                             <Alert variant='destructive' className='mb-4 border-destructive bg-[var(--state-error-soft)] text-destructive-foreground'>
                                 <AlertTitle className='text-destructive-foreground'>{t('common:messages.error')}</AlertTitle>
@@ -745,13 +759,14 @@ export default function HomePage() {
                             currentMode={mode}
                             baseImagePreviewUrl={editSourceImagePreviewUrls[0] || null}
                         />
+                        </div>
                     </div>
                 </div>
             </section>
             
             {/* History */}
-            <section className="mx-auto max-w-6xl px-4 pb-10">
-                <div className="bg-card border border-border rounded-lg p-6 w-full">
+            <section className="mx-auto w-full max-w-6xl px-4 lg:px-6 pb-10 overflow-hidden">
+                <div className="bg-card border border-border rounded-lg p-6 w-full overflow-hidden">
                     <HistoryPanel
                         history={history}
                         onSelectImage={handleHistorySelect}

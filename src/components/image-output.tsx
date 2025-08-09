@@ -174,7 +174,7 @@ export function ImageOutput({
                     onClick={handleSendClick}
                     disabled={!canSendToEdit}
                     className={cn(
-                        'shrink-0 border-border text-foreground hover:bg-accent hover:text-accent-foreground dark:border-border dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50',
+                        'shrink-0 max-w-full border-border text-foreground hover:bg-accent hover:text-accent-foreground dark:border-border dark:text-foreground dark:hover:bg-accent dark:hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50',
                         // Compact button in grid view with multiple images
                         showCarousel && viewMode === 'grid' ? 'h-8 px-2 text-sm' : ''
                     )}
