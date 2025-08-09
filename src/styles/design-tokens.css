@@ -491,4 +491,11 @@
   --sidebar-border: var(--dt-sidebar-border);
   --sidebar-ring: var(--dt-sidebar-ring);
   --radius: var(--dt-radius);
+  
+  /* Color palette indicators */
+  --color-default: #0ea5e9;
+  --color-purple: #a855f7;
+  --color-blue: #3b82f6;
+  --color-olive: #b4c087;
+  --color-tangerine: #f97316;
 }

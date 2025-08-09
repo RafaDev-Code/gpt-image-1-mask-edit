@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme, type Color } from "@/components/theme-provider";
 
-const colors: { id: Color; name: string; colorClass: string }[] = [
-  { id: "default", name: "Default", colorClass: "bg-[#0ea5e9]" },
-  { id: "purple", name: "Purple", colorClass: "bg-[#a855f7]" },
-  { id: "blue", name: "Blue", colorClass: "bg-[#3b82f6]" },
-  { id: "olive", name: "Olive", colorClass: "bg-[#b4c087]" },
-  { id: "tangerine", name: "Tangerine", colorClass: "bg-[#f97316]" },
+const colors: { id: Color; name: string; colorVar: string }[] = [
+  { id: "default", name: "Default", colorVar: "var(--color-default)" },
+  { id: "purple", name: "Purple", colorVar: "var(--color-purple)" },
+  { id: "blue", name: "Blue", colorVar: "var(--color-blue)" },
+  { id: "olive", name: "Olive", colorVar: "var(--color-olive)" },
+  { id: "tangerine", name: "Tangerine", colorVar: "var(--color-tangerine)" },
 ];
 
 export function ColorSwitcher() {
@@ -35,7 +35,8 @@ export function ColorSwitcher() {
             className="h-8 px-3 text-xs font-medium"
           >
             <div
-              className={`mr-2 h-3 w-3 rounded-full border border-border/50 ${colorOption.colorClass}`}
+              className="mr-2 h-3 w-3 rounded-full border border-border/50"
+              style={{ backgroundColor: colorOption.colorVar }}
             />
             {colorOption.name}
           </Button>
@@ -60,7 +61,8 @@ export function ColorSwitcher() {
               >
                 <div className="flex items-center">
                   <div
-                    className={`mr-3 h-4 w-4 rounded-full border border-border/50 ${colorOption.colorClass}`}
+                    className="mr-3 h-4 w-4 rounded-full border border-border/50"
+                    style={{ backgroundColor: colorOption.colorVar }}
                   />
                   <span>{colorOption.name}</span>
                 </div>

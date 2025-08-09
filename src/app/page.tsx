@@ -7,7 +7,6 @@ import { PasswordDialog } from '@/components/password-dialog';
 import { LanguageSelector } from '@/components/language-selector';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Card } from '@/components/ui/card';
 import { calculateApiCost, type CostDetails } from '@/lib/cost-utils';
 import { db, type ImageRecord } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
