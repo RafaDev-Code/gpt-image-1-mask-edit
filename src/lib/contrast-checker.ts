@@ -118,6 +118,46 @@ export function validateThemeContrast(theme: Record<string, string>): ContrastRe
 }
 
 /**
+ * Validate color palette contrast (primary and accent pairs)
+ * Specifically for the new color system
+ */
+export function validateColorPalette(palette: string, colors: Record<string, string>): ContrastResult[] {
+  const results: ContrastResult[] = [];
+
+  // Define critical color pairs for palettes
+  const colorPairs = [
+    { fg: 'dt-primary-foreground', bg: 'dt-primary', name: 'primary-foreground/primary' },
+    { fg: 'dt-accent-foreground', bg: 'dt-accent', name: 'accent-foreground/accent' },
+  ];
+
+  colorPairs.forEach(({ fg, bg, name }) => {
+    const fgColor = colors[fg];
+    const bgColor = colors[bg];
+
+    if (fgColor && bgColor) {
+      const ratio = checkContrast(fgColor, bgColor);
+      const aaCompliant = meetsAA(ratio);
+      const aaaCompliant = meetsAAA(ratio);
+
+      const result: ContrastResult = {
+        tokenPair: `${palette}/${name}`,
+        ratio: Math.round(ratio * 100) / 100,
+        meetsAA: aaCompliant,
+        meetsAAA: aaaCompliant,
+      };
+
+      if (!aaCompliant) {
+        result.warning = `Low contrast ratio (${result.ratio}:1) in ${palette} palette. WCAG AA requires 4.5:1 minimum.`;
+      }
+
+      results.push(result);
+    }
+  });
+
+  return results;
+}
+
+/**
  * Log contrast validation results to console
  */
 export function logContrastResults(themeName: string, results: ContrastResult[]): void {

@@ -45,9 +45,9 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* COMENTADO: Ahora las variables legacy se definen en design-tokens.css a través del bridge */
-/* Las variables --dt-* son la fuente de verdad y se mapean automáticamente a las legacy */
-/*
+/* COMENTADO: Ahora las variables legacy se definen en design-tokens.css a través del bridge
+   Las variables --dt-* son la fuente de verdad y se mapean automáticamente a las legacy
+
 :root {
   --radius: 0.625rem;
   --background: #f8fafc;
@@ -84,8 +84,8 @@
 }
 */
 
-/* COMENTADO: Ahora los temas se manejan con data-theme en design-tokens.css */
-/*
+/* COMENTADO: Ahora los temas se manejan con data-theme en design-tokens.css
+
 .dark {
   --background: #111827;
   --foreground: #f1f5f9;

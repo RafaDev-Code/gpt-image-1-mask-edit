@@ -29,18 +29,26 @@ export default async function RootLayout({
   children: React.ReactNode;
   params?: Promise<Record<string, unknown>>;
 }) {
-  // Read theme from cookie on server
+  // Read scheme and colors from cookies on server
   const cookieStore = await cookies();
-  const themeCookie = cookieStore.get('theme')?.value;
-  const validThemes = ['light', 'dark', 'green', 'retro'] as const;
-  const initialTheme = validThemes.includes(themeCookie as typeof validThemes[number]) 
-    ? (themeCookie as 'light' | 'dark' | 'green' | 'retro')
+  const schemeCookie = cookieStore.get('scheme')?.value;
+  const colorsCookie = cookieStore.get('colors')?.value;
+  
+  const validSchemes = ['light', 'dark'] as const;
+  const validColors = ['default', 'purple', 'blue', 'olive', 'vanilla', 'tangerine'] as const;
+  
+  const initialScheme = validSchemes.includes(schemeCookie as typeof validSchemes[number]) 
+    ? (schemeCookie as 'light' | 'dark')
     : 'light';
+    
+  const initialColors = validColors.includes(colorsCookie as typeof validColors[number])
+    ? (colorsCookie as 'default' | 'purple' | 'blue' | 'olive' | 'vanilla' | 'tangerine')
+    : 'default';
 
   return (
-    <html lang="en" data-theme={initialTheme}>
+    <html lang="en" data-scheme={initialScheme} data-colors={initialColors}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider initialTheme={initialTheme}>
+        <ThemeProvider initialScheme={initialScheme} initialColor={initialColors}>
           <I18nProvider>
             {children}
           </I18nProvider>

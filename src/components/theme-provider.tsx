@@ -3,77 +3,128 @@
 import * as React from 'react';
 import { getCookieValue, setCookieValue } from '@/lib/cookie-utils';
 
-export type Theme = 'light' | 'dark' | 'green' | 'retro';
+export type Scheme = 'light' | 'dark';
+export type Color = 'default' | 'purple' | 'blue' | 'olive' | 'vanilla' | 'tangerine';
 
 interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  getTheme: () => Theme;
+  scheme: Scheme;
+  color: Color;
+  setScheme: (scheme: Scheme) => void;
+  setColor: (color: Color) => void;
+  getScheme: () => Scheme;
+  getColor: () => Color;
 }
 
 const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'app-theme';
-const COOKIE_KEY = 'theme';
-const DEFAULT_THEME: Theme = 'light';
+const SCHEME_STORAGE_KEY = 'app-scheme';
+const COLORS_STORAGE_KEY = 'app-colors';
+const SCHEME_COOKIE_KEY = 'scheme';
+const COLORS_COOKIE_KEY = 'colors';
+const DEFAULT_SCHEME: Scheme = 'light';
+const DEFAULT_COLOR: Color = 'default';
 
 interface ThemeProviderProps {
   children: React.ReactNode;
-  initialTheme?: Theme;
+  initialScheme?: Scheme;
+  initialColor?: Color;
 }
 
-export function ThemeProvider({ children, initialTheme = DEFAULT_THEME }: ThemeProviderProps) {
-  const [theme, setThemeState] = React.useState<Theme>(initialTheme);
+export function ThemeProvider({ 
+  children, 
+  initialScheme = DEFAULT_SCHEME,
+  initialColor = DEFAULT_COLOR 
+}: ThemeProviderProps) {
+  const [scheme, setSchemeState] = React.useState<Scheme>(initialScheme);
+  const [color, setColorState] = React.useState<Color>(initialColor);
   const [, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
     
-    // Sync on mount: check localStorage, then cookie, then use current theme
+    // Sync on mount: check localStorage, then cookie, then use current values
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      let finalTheme = theme;
+      // Handle scheme
+      const storedScheme = localStorage.getItem(SCHEME_STORAGE_KEY);
+      let finalScheme = scheme;
       
-      if (stored && (stored === 'light' || stored === 'dark' || stored === 'green' || stored === 'retro')) {
-        finalTheme = stored as Theme;
+      if (storedScheme && (storedScheme === 'light' || storedScheme === 'dark')) {
+        finalScheme = storedScheme as Scheme;
       } else {
-        const cookieTheme = getCookieValue(COOKIE_KEY);
-        if (cookieTheme && (cookieTheme === 'light' || cookieTheme === 'dark' || cookieTheme === 'green' || cookieTheme === 'retro')) {
-          finalTheme = cookieTheme as Theme;
+        const cookieScheme = getCookieValue(SCHEME_COOKIE_KEY);
+        if (cookieScheme && (cookieScheme === 'light' || cookieScheme === 'dark')) {
+          finalScheme = cookieScheme as Scheme;
         }
       }
       
-      // Sync HTML, localStorage and cookie
-      document.documentElement.setAttribute('data-theme', finalTheme);
-      localStorage.setItem(STORAGE_KEY, finalTheme);
-      setCookieValue(COOKIE_KEY, finalTheme);
+      // Handle colors
+      const storedColors = localStorage.getItem(COLORS_STORAGE_KEY);
+      let finalColor = color;
       
-      if (finalTheme !== theme) {
-        setThemeState(finalTheme);
+      if (storedColors && ['default', 'purple', 'blue', 'olive', 'vanilla', 'tangerine'].includes(storedColors)) {
+        finalColor = storedColors as Color;
+      } else {
+        const cookieColors = getCookieValue(COLORS_COOKIE_KEY);
+        if (cookieColors && ['default', 'purple', 'blue', 'olive', 'vanilla', 'tangerine'].includes(cookieColors)) {
+          finalColor = cookieColors as Color;
+        }
+      }
+      
+      // Sync HTML, localStorage and cookies
+      document.documentElement.setAttribute('data-scheme', finalScheme);
+      document.documentElement.setAttribute('data-colors', finalColor);
+      localStorage.setItem(SCHEME_STORAGE_KEY, finalScheme);
+      localStorage.setItem(COLORS_STORAGE_KEY, finalColor);
+      setCookieValue(SCHEME_COOKIE_KEY, finalScheme);
+      setCookieValue(COLORS_COOKIE_KEY, finalColor);
+      
+      if (finalScheme !== scheme) {
+        setSchemeState(finalScheme);
+      }
+      if (finalColor !== color) {
+        setColorState(finalColor);
       }
     }
-  }, [theme]);
+  }, [scheme, color]);
 
-  const setTheme = React.useCallback((newTheme: Theme) => {
-    setThemeState(newTheme);
+  const setScheme = React.useCallback((newScheme: Scheme) => {
+    setSchemeState(newScheme);
     
     // Sync HTML, localStorage and cookie immediately
     if (typeof window !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem(STORAGE_KEY, newTheme);
-      setCookieValue(COOKIE_KEY, newTheme);
+      document.documentElement.setAttribute('data-scheme', newScheme);
+      localStorage.setItem(SCHEME_STORAGE_KEY, newScheme);
+      setCookieValue(SCHEME_COOKIE_KEY, newScheme);
     }
   }, []);
 
-  const getTheme = React.useCallback(() => {
-    return theme;
-  }, [theme]);
+  const setColor = React.useCallback((newColor: Color) => {
+    setColorState(newColor);
+    
+    // Sync HTML, localStorage and cookie immediately
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-colors', newColor);
+      localStorage.setItem(COLORS_STORAGE_KEY, newColor);
+      setCookieValue(COLORS_COOKIE_KEY, newColor);
+    }
+  }, []);
+
+  const getScheme = React.useCallback(() => {
+    return scheme;
+  }, [scheme]);
+
+  const getColor = React.useCallback(() => {
+    return color;
+  }, [color]);
 
   const value = React.useMemo(() => ({
-    theme,
-    setTheme,
-    getTheme
-  }), [theme, setTheme, getTheme]);
+    scheme,
+    color,
+    setScheme,
+    setColor,
+    getScheme,
+    getColor
+  }), [scheme, color, setScheme, setColor, getScheme, getColor]);
 
   return (
     <ThemeContext.Provider value={value}>
@@ -88,4 +139,19 @@ export function useTheme() {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
+}
+
+// Legacy compatibility - maps old theme values to new scheme/color
+export function mapLegacyTheme(legacyTheme: string): { scheme: Scheme; color: Color } {
+  switch (legacyTheme) {
+    case 'dark':
+      return { scheme: 'dark', color: 'default' };
+    case 'green':
+      return { scheme: 'light', color: 'olive' };
+    case 'retro':
+      return { scheme: 'light', color: 'vanilla' };
+    case 'light':
+    default:
+      return { scheme: 'light', color: 'default' };
+  }
 }
