@@ -7,6 +7,7 @@ import { PasswordDialog } from '@/components/password-dialog';
 import { LanguageSelector } from '@/components/language-selector';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
 import { calculateApiCost, type CostDetails } from '@/lib/cost-utils';
 import { db, type ImageRecord } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -665,7 +666,7 @@ export default function HomePage() {
 
     
     return (
-        <>
+        <main className="min-h-screen bg-background">
             <PasswordDialog
                 isOpen={isPasswordDialogOpen}
                 onOpenChange={setIsPasswordDialogOpen}
@@ -679,67 +680,57 @@ export default function HomePage() {
             />
             
             {/* Header */}
-            <div className="w-full border-b border-border">
-                <div className="mx-auto max-w-7xl px-6">
-                    <div className="grid grid-cols-[1fr_auto_1fr] items-center py-4">
-                        <div className="justify-self-start">
-                            <LanguageSelector />
-                        </div>
-                        <div className="justify-self-center">
-                            <ThemeSwitcher />
-                        </div>
-                        <div />
-                    </div>
+            <header className="border-b bg-background">
+                <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-center gap-4">
+                    <LanguageSelector />
+                    <ThemeSwitcher />
                 </div>
-            </div>
+            </header>
             
             {/* Main content */}
-            <div className="w-full">
-                <div className="mx-auto max-w-7xl px-6">
-                    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-80px)] gap-6 py-6">
-                        <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
-                    <div className='relative flex flex-col lg:col-span-1'>
-                        <div className="block w-full">
-                            <EditingForm
-                                onSubmit={handleApiCall}
-                                isLoading={isLoading || isSendingToEdit}
-                                isPasswordRequiredByBackend={isPasswordRequiredByBackend}
-                                clientPasswordHash={clientPasswordHash}
-                                onOpenPasswordDialog={handleOpenPasswordDialog}
-                                imageFiles={editImageFiles}
-                                sourceImagePreviewUrls={editSourceImagePreviewUrls}
-                                setImageFiles={setEditImageFiles}
-                                setSourceImagePreviewUrls={setEditSourceImagePreviewUrls}
-                                maxImages={MAX_EDIT_IMAGES}
-                                editPrompt={editPrompt}
-                                setEditPrompt={setEditPrompt}
-                                editN={editN}
-                                setEditN={setEditN}
-                                editSize={editSize}
-                                setEditSize={setEditSize}
-                                editQuality={editQuality}
-                                setEditQuality={setEditQuality}
-                                editBrushSize={editBrushSize}
-                                setEditBrushSize={setEditBrushSize}
-                                editShowMaskEditor={editShowMaskEditor}
-                                setEditShowMaskEditor={setEditShowMaskEditor}
-                                editGeneratedMaskFile={editGeneratedMaskFile}
-                                setEditGeneratedMaskFile={setEditGeneratedMaskFile}
-                                editIsMaskSaved={editIsMaskSaved}
-                                setEditIsMaskSaved={setEditIsMaskSaved}
-                                editOriginalImageSize={editOriginalImageSize}
-                                setEditOriginalImageSize={setEditOriginalImageSize}
-                                editDrawnPoints={editDrawnPoints}
-                                setEditDrawnPoints={setEditDrawnPoints}
-                                editMaskPreviewUrl={editMaskPreviewUrl}
-                                setEditMaskPreviewUrl={setEditMaskPreviewUrl}
-                            />
-                        </div>
+            <section className="mx-auto max-w-6xl px-4 py-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="bg-card border border-border rounded-lg p-6 w-full">
+                        <EditingForm
+                            onSubmit={handleApiCall}
+                            isLoading={isLoading || isSendingToEdit}
+                            isPasswordRequiredByBackend={isPasswordRequiredByBackend}
+                            clientPasswordHash={clientPasswordHash}
+                            onOpenPasswordDialog={handleOpenPasswordDialog}
+                            imageFiles={editImageFiles}
+                            sourceImagePreviewUrls={editSourceImagePreviewUrls}
+                            setImageFiles={setEditImageFiles}
+                            setSourceImagePreviewUrls={setEditSourceImagePreviewUrls}
+                            maxImages={MAX_EDIT_IMAGES}
+                            editPrompt={editPrompt}
+                            setEditPrompt={setEditPrompt}
+                            editN={editN}
+                            setEditN={setEditN}
+                            editSize={editSize}
+                            setEditSize={setEditSize}
+                            editQuality={editQuality}
+                            setEditQuality={setEditQuality}
+                            editBrushSize={editBrushSize}
+                            setEditBrushSize={setEditBrushSize}
+                            editShowMaskEditor={editShowMaskEditor}
+                            setEditShowMaskEditor={setEditShowMaskEditor}
+                            editGeneratedMaskFile={editGeneratedMaskFile}
+                            setEditGeneratedMaskFile={setEditGeneratedMaskFile}
+                            editIsMaskSaved={editIsMaskSaved}
+                            setEditIsMaskSaved={setEditIsMaskSaved}
+                            editOriginalImageSize={editOriginalImageSize}
+                            setEditOriginalImageSize={setEditOriginalImageSize}
+                            editDrawnPoints={editDrawnPoints}
+                            setEditDrawnPoints={setEditDrawnPoints}
+                            editMaskPreviewUrl={editMaskPreviewUrl}
+                            setEditMaskPreviewUrl={setEditMaskPreviewUrl}
+                            useCardWrapper={false}
+                        />
                     </div>
-                    <div className='flex flex-col lg:col-span-1'>
+                    <div className="bg-card border border-border rounded-lg p-6 w-full">
                         {error && (
                             <Alert variant='destructive' className='mb-4 border-destructive bg-[var(--state-error-soft)] text-destructive-foreground'>
-                    <AlertTitle className='text-destructive-foreground'>{t('common:messages.error')}</AlertTitle>
+                                <AlertTitle className='text-destructive-foreground'>{t('common:messages.error')}</AlertTitle>
                                 <AlertDescription>{error}</AlertDescription>
                             </Alert>
                         )}
@@ -754,14 +745,12 @@ export default function HomePage() {
                             baseImagePreviewUrl={editSourceImagePreviewUrls[0] || null}
                         />
                     </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
+            </section>
             
             {/* History */}
-            <div className="w-full">
-                <div className="mx-auto max-w-7xl px-6">
+            <section className="mx-auto max-w-6xl px-4 pb-10">
+                <div className="bg-card border border-border rounded-lg p-6 w-full">
                     <HistoryPanel
                         history={history}
                         onSelectImage={handleHistorySelect}
@@ -773,9 +762,10 @@ export default function HomePage() {
                         onCancelDeletion={handleCancelDeletion}
                         deletePreferenceDialogValue={dialogCheckboxStateSkipConfirm}
                         onDeletePreferenceDialogChange={setDialogCheckboxStateSkipConfirm}
+                        useCardWrapper={false}
                     />
                 </div>
-            </div>
-        </>
+            </section>
+        </main>
     );
 }

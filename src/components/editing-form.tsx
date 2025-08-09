@@ -52,6 +52,7 @@ type EditingFormProps = {
     clientPasswordHash: string | null;
     onOpenPasswordDialog: () => void;
     imageFiles: File[];
+    useCardWrapper?: boolean;
     sourceImagePreviewUrls: string[];
     setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
     setSourceImagePreviewUrls: React.Dispatch<React.SetStateAction<string[]>>;
@@ -136,7 +137,8 @@ export function EditingForm({
     editDrawnPoints,
     setEditDrawnPoints,
     editMaskPreviewUrl,
-    setEditMaskPreviewUrl
+    setEditMaskPreviewUrl,
+    useCardWrapper = true
 }: EditingFormProps) {
     const { t } = useTranslation(['common', 'editor']);
     const [mounted, setMounted] = useState(false);
@@ -464,29 +466,30 @@ export function EditingForm({
         return files.map(f => f.name).join(', ');
     };
 
-    return (
-        <Card className='flex h-full w-full flex-col overflow-hidden rounded-lg border border-border bg-card dark:border-border dark:bg-card'>
-            <CardHeader className='flex items-start justify-between border-b border-border dark:border-border pb-4'>
-                <div>
-                    <div className='flex items-center'>
-                        <CardTitle className='py-1 text-lg font-medium text-foreground dark:text-foreground' style={{ transition: 'none' }}>{getText('editor:form.title', 'Edit Image')}</CardTitle>
-                        {isPasswordRequiredByBackend && (
-                            <Button
-                                variant='ghost'
-                                size='icon'
-                                onClick={onOpenPasswordDialog}
-                                className='ml-2 text-white/60 hover:text-white'
-                                aria-label='Configure Password'>
-                                {clientPasswordHash ? <Lock className='h-4 w-4' /> : <LockOpen className='h-4 w-4' />}
-                            </Button>
-                        )}
+    const formContent = (
+        <>
+            {useCardWrapper && (
+                <CardHeader className='flex items-start justify-between border-b border-border dark:border-border pb-4'>
+                    <div>
+                        <div className='flex items-center'>
+                            <CardTitle className='py-1 text-lg font-medium text-foreground dark:text-foreground' style={{ transition: 'none' }}>{getText('editor:form.title', 'Edit Image')}</CardTitle>
+                            {isPasswordRequiredByBackend && (
+                                <Button
+                                    variant='ghost'
+                                    size='icon'
+                                    onClick={onOpenPasswordDialog}
+                                    className='ml-2 text-white/60 hover:text-white'
+                                    aria-label='Configure Password'>
+                                    {clientPasswordHash ? <Lock className='h-4 w-4' /> : <LockOpen className='h-4 w-4' />}
+                                </Button>
+                            )}
+                        </div>
+                        <CardDescription className='mt-1 text-muted-foreground dark:text-muted-foreground' style={{ transition: 'none' }}>{getText('editor:form.description', 'Modify an image using gpt-image-1.')}</CardDescription>
                     </div>
-                    <CardDescription className='mt-1 text-muted-foreground dark:text-muted-foreground' style={{ transition: 'none' }}>{getText('editor:form.description', 'Modify an image using gpt-image-1.')}</CardDescription>
-                </div>
-
-            </CardHeader>
+                </CardHeader>
+            )}
             <form onSubmit={handleSubmit} className='flex w-full flex-col'>
-                <CardContent className='w-full space-y-5 p-4'>
+                <div className={useCardWrapper ? 'w-full space-y-5 p-4' : 'w-full space-y-5'}>
                     <div className='space-y-1.5'>
                         <Label htmlFor='edit-prompt' className='text-foreground dark:text-foreground' style={{ transition: 'none' }}>
                             {getText('editor:form.prompt.label', 'Prompt')}
@@ -749,8 +752,8 @@ export function EditingForm({
                             className='mt-3 [&>button]:border-primary [&>button]:bg-background [&>button]:ring-offset-background dark:[&>button]:border-primary dark:[&>button]:bg-background dark:[&>button]:ring-offset-background [&>span:first-child]:h-1 [&>span:first-child>span]:bg-primary dark:[&>span:first-child>span]:bg-primary'
                         />
                     </div>
-                </CardContent>
-                <CardFooter className='border-t border-border p-4 dark:border-border' style={{ transition: 'none' }}>
+                </div>
+                <div className={useCardWrapper ? 'border-t border-border p-4 dark:border-border' : 'pt-4'} style={{ transition: 'none' }}>
                     <Button
                         type='submit'
                         disabled={isLoading || !editPrompt || imageFiles.length === 0}
@@ -759,8 +762,14 @@ export function EditingForm({
                         {isLoading && <Loader2 className='h-4 w-4 animate-spin' />}
                         {isLoading ? getText('editor:form.submit.editing', 'Editing...') : getText('editor:form.submit.editImage', 'Edit Image')}
                     </Button>
-                </CardFooter>
+                </div>
             </form>
-        </Card>
+        </>
     );
+
+    return useCardWrapper ? (
+        <Card className='flex h-full w-full flex-col overflow-hidden rounded-lg border border-border bg-card dark:border-border dark:bg-card'>
+            {formContent}
+        </Card>
+    ) : formContent;
 }

@@ -43,6 +43,7 @@ type HistoryPanelProps = {
     onCancelDeletion: () => void;
     deletePreferenceDialogValue: boolean;
     onDeletePreferenceDialogChange: (isChecked: boolean) => void;
+    useCardWrapper?: boolean;
 };
 
 const formatDuration = (ms: number): string => {
@@ -67,7 +68,8 @@ export function HistoryPanel({
     onConfirmDeletion,
     onCancelDeletion,
     deletePreferenceDialogValue,
-    onDeletePreferenceDialogChange
+    onDeletePreferenceDialogChange,
+    useCardWrapper = true
 }: HistoryPanelProps) {
     const { t } = useTranslation(['common', 'editor']);
     const [mounted, setMounted] = useState(false);
@@ -111,11 +113,15 @@ export function HistoryPanel({
         }
     };
 
-    return (
-        <Card className='flex w-full flex-col rounded-lg border border-border bg-card dark:bg-card dark:border-border'>
-            <CardHeader className='flex flex-row items-center justify-between gap-4 border-b border-border px-4 py-3 dark:border-border'>
+    const panelContent = (
+        <>
+            <div className={useCardWrapper ? 'flex flex-row items-center justify-between gap-4 border-b border-border px-4 py-3 dark:border-border' : 'flex flex-row items-center justify-between gap-4 border-b border-border px-4 py-3 dark:border-border'}>
                 <div className='flex items-center gap-2'>
-                    <CardTitle className='text-lg font-medium text-foreground dark:text-foreground'>{getText('editor:history.title', 'History')}</CardTitle>
+                    {useCardWrapper ? (
+                        <CardTitle className='text-lg font-medium text-foreground dark:text-foreground'>{getText('editor:history.title', 'History')}</CardTitle>
+                    ) : (
+                        <div className='text-lg font-medium text-foreground dark:text-foreground'>{getText('editor:history.title', 'History')}</div>
+                    )}
                     {totalCost > 0 && (
                         <Dialog open={isTotalCostDialogOpen} onOpenChange={setIsTotalCostDialogOpen}>
                             <DialogTrigger asChild>
@@ -178,8 +184,8 @@ export function HistoryPanel({
                         {getText('editor:history.clear', 'Clear')}
                     </Button>
                 )}
-            </CardHeader>
-            <CardContent className='w-full p-4'>
+            </div>
+            <div className='w-full p-4'>
                 {history.length === 0 ? (
                     <div className='flex h-full items-center justify-center text-muted-foreground dark:text-muted-foreground'>
                         <p>{getText('editor:history.emptyMessage', 'Edited images will appear here.')}</p>
@@ -208,7 +214,7 @@ export function HistoryPanel({
                                     <div className='group relative'>
                                         <button
                                             onClick={() => onSelectImage(item)}
-                                            className='relative block aspect-square w-full overflow-hidden rounded-t-md border border-border dark:border-border group-hover:border-primary dark:group-hover:border-primary focus:ring-2 focus:ring-primary dark:focus:ring-primary focus:ring-offset-2 focus:ring-offset-background dark:focus:ring-offset-background focus:outline-none'
+                                            className='relative block aspect-square w-full overflow-hidden rounded-t-md border border-border dark:border-border group-hover:border-primary dark:group-hover:border-primary focus:ring-2 focus:ring-ring dark:focus:ring-ring focus:ring-offset-2 focus:ring-offset-background dark:focus:ring-offset-background focus:outline-none'
                                             style={{ transition: 'none' }}
                                             aria-label={`View image batch from ${new Date(item.timestamp).toLocaleString()}`}>
                                             {thumbnailUrl ? (
@@ -481,7 +487,13 @@ export function HistoryPanel({
                         })}
                     </div>
                 )}
-            </CardContent>
-        </Card>
+            </div>
+        </>
     );
+
+    return useCardWrapper ? (
+        <Card className='flex w-full flex-col rounded-lg border border-border bg-card dark:bg-card dark:border-border'>
+            {panelContent}
+        </Card>
+    ) : panelContent;
 }
