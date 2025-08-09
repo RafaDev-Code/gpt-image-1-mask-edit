@@ -44,11 +44,9 @@ export function ColorSwitcher() {
           alignOffset={0}
           collisionPadding={8}
           avoidCollisions
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          onCloseAutoFocus={(e) => e.preventDefault()}
           className="z-50 min-w-[12rem] rounded-xl border border-border bg-card p-1 shadow-lg"
         >
-          <DropdownMenuRadioGroup value={color} onValueChange={setColor}>
+          <DropdownMenuRadioGroup value={color} onValueChange={(value) => setColor(value as Color)}>
             {PALETTES.map(palette => (
               <DropdownMenuRadioItem key={palette.id} value={palette.id} className="flex items-center gap-2">
                 <span 
