@@ -126,11 +126,22 @@
     @apply border-border outline-ring/50;
   }
   html, body {
+    scrollbar-gutter: stable both-edges;
     @apply bg-background text-foreground overflow-x-hidden;
   }
   
   /* Estilos para el modo claro/oscuro */
   .dark {
     color-scheme: dark;
+  }
+}
+
+/* Preferencias de movimiento reducido (accesibilidad) */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

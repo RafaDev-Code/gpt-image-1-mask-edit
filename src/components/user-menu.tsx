@@ -13,20 +13,20 @@ import { Button } from '@/components/ui/button';
 
 export function UserMenu() {
     return (
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 rounded-full bg-card border border-border hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="inline-flex h-8 w-8 min-w-[32px] rounded-full bg-card border border-border hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     aria-label="Cuenta"
                 >
-                    <User className="h-4 w-4 text-foreground" />
+                    <User className="h-4 w-4 text-foreground flex-shrink-0" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
                 align="end" 
-                className="w-48 bg-card border border-border"
+                className="w-48 bg-card border border-border data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
             >
                 <DropdownMenuItem asChild>
                     <Link 
