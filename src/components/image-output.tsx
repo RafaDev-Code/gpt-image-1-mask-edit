@@ -94,26 +94,44 @@ export function ImageOutput({
                                 <div
                                     key={img.filename}
                                     className='relative aspect-square overflow-hidden rounded border border-border dark:border-border'>
-                                    <Image
-                                        src={img.path}
-                                        alt={`Generated image ${index + 1}`}
-                                        fill
-                                        style={{ objectFit: 'contain' }}
-                                        sizes='(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
-                                        unoptimized
-                                    />
+                                    {img.path.startsWith('blob:') || img.path.startsWith('data:') ? (
+                                        <img
+                                            src={img.path}
+                                            alt={`Generated image ${index + 1}`}
+                                            className='h-full w-full object-contain'
+                                            loading='eager'
+                                        />
+                                    ) : (
+                                        <Image
+                                            src={img.path}
+                                            alt={`Generated image ${index + 1}`}
+                                            fill
+                                            style={{ objectFit: 'contain' }}
+                                            sizes='(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
+                                            unoptimized
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </div>
                     ) : imageBatch[viewMode] ? (
-                        <Image
-                            src={imageBatch[viewMode].path}
-                            alt={altText}
-                            width={512}
-                            height={512}
-                            className='max-h-full max-w-full object-contain'
-                            unoptimized
-                        />
+                        imageBatch[viewMode].path.startsWith('blob:') || imageBatch[viewMode].path.startsWith('data:') ? (
+                            <img
+                                src={imageBatch[viewMode].path}
+                                alt={altText}
+                                className='max-h-full max-w-full object-contain'
+                                loading='eager'
+                            />
+                        ) : (
+                            <Image
+                                src={imageBatch[viewMode].path}
+                                alt={altText}
+                                width={512}
+                                height={512}
+                                className='max-h-full max-w-full object-contain'
+                                unoptimized
+                            />
+                        )
                     ) : (
                         <div className='text-center text-muted-foreground dark:text-muted-foreground'>
                             <p>{getText('output.errorDisplaying', 'Error displaying image.')}</p>
@@ -155,14 +173,23 @@ export function ImageOutput({
                                 )}
                                 onClick={() => onViewChange(index)}
                                 aria-label={`Select image ${index + 1}`}>
-                                <Image
-                                    src={img.path}
-                                    alt={`Thumbnail ${index + 1}`}
-                                    width={28}
-                                    height={28}
-                                    className='h-full w-full object-cover'
-                                    unoptimized
-                                />
+                                {img.path.startsWith('blob:') || img.path.startsWith('data:') ? (
+                                    <img
+                                        src={img.path}
+                                        alt={`Thumbnail ${index + 1}`}
+                                        className='h-full w-full object-cover'
+                                        loading='eager'
+                                    />
+                                ) : (
+                                    <Image
+                                        src={img.path}
+                                        alt={`Thumbnail ${index + 1}`}
+                                        width={28}
+                                        height={28}
+                                        className='h-full w-full object-cover'
+                                        unoptimized
+                                    />
+                                )}
                             </Button>
                         ))}
                     </div>

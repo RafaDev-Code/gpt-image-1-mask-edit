@@ -124,7 +124,8 @@ export default function HomePage() {
             const record = allDbImages?.find((img) => img.filename === filename);
             if (record?.blob) {
                 const url = URL.createObjectURL(record.blob);
-
+                // Cache the URL to avoid creating multiple URLs for the same blob
+                setBlobUrlCache((prev) => ({ ...prev, [filename]: url }));
                 return url;
             }
 
@@ -133,16 +134,16 @@ export default function HomePage() {
         [allDbImages, blobUrlCache]
     );
 
+    // Cleanup blob URLs only when component unmounts
     React.useEffect(() => {
         return () => {
-            console.log('Revoking blob URLs:', Object.keys(blobUrlCache).length);
             Object.values(blobUrlCache).forEach((url) => {
                 if (url.startsWith('blob:')) {
                     URL.revokeObjectURL(url);
                 }
             });
         };
-    }, [blobUrlCache]);
+    }, []);
 
     React.useEffect(() => {
         return () => {
@@ -305,7 +306,20 @@ export default function HomePage() {
         return 'image/png';
     };
 
-    const handleApiCall = async (formData: EditingFormData) => {
+    // Function to properly manage blob URLs - revoke old ones and set new ones
+    const updateBlobUrls = React.useCallback((newUrls: Record<string, string>) => {
+        setBlobUrlCache((prevCache) => {
+            // Revoke old URLs that are not in the new set
+            Object.entries(prevCache).forEach(([filename, url]) => {
+                if (!newUrls[filename] && url.startsWith('blob:')) {
+                    URL.revokeObjectURL(url);
+                }
+            });
+            return newUrls;
+        });
+    }, []);
+
+    const handleApiCall = async (data: EditingFormData) => {
         const startTime = Date.now();
         let durationMs = 0;
 
@@ -404,9 +418,7 @@ export default function HomePage() {
                                 console.log(`Saved ${img.filename} to IndexedDB with type ${actualMimeType}.`);
 
                                 const blobUrl = URL.createObjectURL(blob);
-                                setBlobUrlCache((prev) => ({ ...prev, [img.filename]: blobUrl }));
-
-                                return { filename: img.filename, path: blobUrl };
+                                return { filename: img.filename, path: blobUrl, blobUrl };
                             } catch (dbError) {
                                 console.error(`Error saving blob ${img.filename} to IndexedDB:`, dbError);
                                 setError(`Failed to save image ${img.filename} to local database.`);
@@ -431,7 +443,19 @@ export default function HomePage() {
                 const processedImages = (await Promise.all(newImageBatchPromises)).filter(Boolean) as {
                     path: string;
                     filename: string;
+                    blobUrl?: string;
                 }[];
+
+                // Update blob URL cache for IndexedDB mode
+                if (effectiveStorageModeClient === 'indexeddb') {
+                    const newBlobUrls: Record<string, string> = {};
+                    processedImages.forEach((img) => {
+                        if (img.blobUrl) {
+                            newBlobUrls[img.filename] = img.blobUrl;
+                        }
+                    });
+                    updateBlobUrls(newBlobUrls);
+                }
 
                 setLatestImageBatch(processedImages);
                 setImageOutputView(processedImages.length > 1 ? 'grid' : 0);
