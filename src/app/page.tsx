@@ -6,6 +6,7 @@ import { ImageOutput } from '@/components/image-output';
 import { PasswordDialog } from '@/components/password-dialog';
 import { LanguageSelector } from '@/components/language-selector';
 import { ThemeSwitcher } from '@/components/theme-switcher';
+import { UserMenu } from '@/components/user-menu';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { calculateApiCost, type CostDetails } from '@/lib/cost-utils';
 import { db, type ImageRecord } from '@/lib/db';
@@ -680,9 +681,10 @@ export default function HomePage() {
             
             {/* Header */}
             <header className="border-b bg-background">
-                <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-center gap-4">
+                <div className="mx-auto max-w-6xl px-4 py-4 w-full flex items-center justify-between">
                     <LanguageSelector />
                     <ThemeSwitcher />
+                    <UserMenu />
                 </div>
             </header>
             
