@@ -16,7 +16,7 @@ const languages = [
   { code: 'es', name: 'Español', flag: '🇪🇸' },
 ];
 
-export function LanguageSelector() {
+export function LanguageSelector({ className = "" }: { className?: string }) {
   const { i18n } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
@@ -34,24 +34,31 @@ export function LanguageSelector() {
     : languages[0]; // Default to English
 
   return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="inline-flex h-8 px-3 min-w-[120px] gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" 
-          title={`${currentLanguage.flag} ${currentLanguage.name}`}
-        >
+    <div className={className}>
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="inline-flex h-8 px-3 min-w-[120px] gap-2 overflow-hidden whitespace-nowrap truncate focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" 
+            title={currentLanguage.name}
+            aria-label={`Language: ${currentLanguage.name}`}
+          >
           <Globe className="h-4 w-4 flex-shrink-0" />
           <span className="truncate">
+            {/* En móvil: solo bandera */}
             <span className="sm:hidden">{currentLanguage.flag}</span>
-            <span className="hidden sm:inline">{currentLanguage.flag} {currentLanguage.name}</span>
+            {/* En desktop: bandera + nombre, pero en ≤360px solo bandera */}
+            <span className="hidden sm:inline">
+              <span>{currentLanguage.flag}</span>
+              <span className="max-[360px]:sr-only ml-1">{currentLanguage.name}</span>
+            </span>
           </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end"
-        className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+        className=""
       >
         {languages.map((language) => (
           <DropdownMenuItem
@@ -65,5 +72,6 @@ export function LanguageSelector() {
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
+    </div>
   );
 }

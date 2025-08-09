@@ -24,10 +24,9 @@ export function ColorSwitcher() {
   const currentPalette = PALETTES.find(p => p.id === color) || PALETTES[0];
 
   return (
-    <div className="shrink-0">
-      <DropdownMenu modal={false}>
+    <DropdownMenu modal={false}>
         <DropdownMenuTrigger
-          className="h-9 px-3 gap-2 leading-none transition-colors inline-flex items-center rounded-md border border-border bg-card text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="h-8 min-w-[32px] px-3 gap-2 leading-none transition-colors inline-flex items-center rounded-md border border-border bg-card text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Color theme"
         >
           {/* Dot del color actual usando tokens CSS */}
@@ -62,6 +61,5 @@ export function ColorSwitcher() {
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
   );
 }

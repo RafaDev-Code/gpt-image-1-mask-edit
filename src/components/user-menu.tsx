@@ -26,7 +26,7 @@ export function UserMenu() {
             </DropdownMenuTrigger>
             <DropdownMenuContent 
                 align="end" 
-                className="w-48 bg-card border border-border data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                className="w-48 bg-card border border-border"
             >
                 <DropdownMenuItem asChild>
                     <Link 

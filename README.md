@@ -40,6 +40,39 @@ A specialized image editing tool powered by OpenAI's `gpt-image-1` model.
   <img src="./readme-images/cost-breakdown.jpg" alt="Cost Breakdown" width="350"/>
 </p>
 
+## 🧪 Responsive Testing
+
+### Width Validation Helper
+
+Use el helper temporal `width-validator.html` para probar el comportamiento responsive:
+
+```bash
+# 1. Inicia el servidor de desarrollo
+npm run dev
+
+# 2. Abre el helper de validación (cualquiera de estas opciones):
+npm run test:responsive
+# O manualmente: doble clic en width-validator.html
+```
+
+### 📐 Breakpoints Críticos
+
+| Ancho | Dispositivo | Qué Verificar |
+|-------|-------------|---------------|
+| **1280px** | Desktop XL | Espaciado completo, todos los elementos visibles |
+| **1024px** | Desktop | Truncamiento gradual del LanguageSelector |
+| **900px** | Tablet L | max-w responsive aplicado correctamente |
+| **768px** | Tablet | Compresión del selector, cluster intacto |
+| **360px** | Mobile XS | Solo flag visible, cluster derecho sin deformar |
+
+### ✅ Criterios de Aceptación
+
+- ✅ **Header en una sola fila** en todos los anchos
+- ✅ **Cluster derecho inmutable** (UserMenu, SchemeToggle, ColorSwitcher)
+- ✅ **LanguageSelector truncable** sin empujar el cluster
+- ✅ **Solo flag visible** en pantallas ≤360px
+- ✅ **Sin animaciones problemáticas** en dropdowns
+
 ## 📋 Requirements
 
 - **Node.js:** >= 20.0.0

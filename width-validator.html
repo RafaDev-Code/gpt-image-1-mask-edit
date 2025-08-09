@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Width Validator - Responsive Testing Helper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .width-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .width-btn {
+            padding: 10px 15px;
+            border: none;
+            background: #007acc;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .width-btn:hover {
+            background: #005a9e;
+        }
+        .width-btn.active {
+            background: #28a745;
+        }
+        .current-width {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        .iframe-container {
+            border: 2px solid #007acc;
+            border-radius: 5px;
+            overflow: hidden;
+            resize: horizontal;
+            min-width: 320px;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            display: block;
+        }
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .breakpoint-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Width Validator - Responsive Testing Helper</h1>
+        
+        <div class="instructions">
+            <h3>📋 Instrucciones:</h3>
+            <ul>
+                <li>Haz clic en los botones de ancho para probar diferentes resoluciones</li>
+                <li>El iframe se redimensionará automáticamente</li>
+                <li>También puedes redimensionar manualmente arrastrando el borde derecho</li>
+                <li>Verifica que el header permanezca en una sola fila en todos los anchos</li>
+            </ul>
+        </div>
+
+        <div class="breakpoint-info">
+            <h3>📐 Breakpoints a validar:</h3>
+            <ul>
+                <li><strong>1280px</strong> - Desktop grande (verificar espaciado completo)</li>
+                <li><strong>1024px</strong> - Desktop estándar (verificar truncamiento gradual)</li>
+                <li><strong>900px</strong> - Tablet landscape (verificar max-w responsive)</li>
+                <li><strong>768px</strong> - Tablet portrait (verificar compresión)</li>
+                <li><strong>360px</strong> - Mobile extremo (solo flag visible, cluster intacto)</li>
+            </ul>
+        </div>
+
+        <div class="width-buttons">
+            <button class="width-btn" onclick="setWidth(1280)">1280px - Desktop XL</button>
+            <button class="width-btn" onclick="setWidth(1024)">1024px - Desktop</button>
+            <button class="width-btn" onclick="setWidth(900)">900px - Tablet L</button>
+            <button class="width-btn" onclick="setWidth(768)">768px - Tablet</button>
+            <button class="width-btn" onclick="setWidth(360)">360px - Mobile XS</button>
+            <button class="width-btn" onclick="resetWidth()">Reset</button>
+        </div>
+
+        <div class="current-width" id="currentWidth">
+            Ancho actual: Auto
+        </div>
+
+        <div class="iframe-container" id="iframeContainer">
+            <iframe src="http://localhost:3000" id="testFrame"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function setWidth(width) {
+            const container = document.getElementById('iframeContainer');
+            const currentWidthDisplay = document.getElementById('currentWidth');
+            
+            container.style.width = width + 'px';
+            currentWidthDisplay.textContent = `Ancho actual: ${width}px`;
+            
+            // Update active button
+            document.querySelectorAll('.width-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function resetWidth() {
+            const container = document.getElementById('iframeContainer');
+            const currentWidthDisplay = document.getElementById('currentWidth');
+            
+            container.style.width = '100%';
+            currentWidthDisplay.textContent = 'Ancho actual: Auto';
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('.width-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        // Show current viewport width
+        function updateViewportWidth() {
+            const iframe = document.getElementById('testFrame');
+            const iframeWidth = iframe.offsetWidth;
+            document.getElementById('currentWidth').textContent += ` (Viewport: ${window.innerWidth}px, Frame: ${iframeWidth}px)`;
+        }
+
+        window.addEventListener('resize', updateViewportWidth);
+        window.addEventListener('load', updateViewportWidth);
+    </script>
+</body>
+</html>
