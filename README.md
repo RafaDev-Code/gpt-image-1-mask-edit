@@ -11,6 +11,7 @@ A specialized image editing tool powered by OpenAI's `gpt-image-1` model.
 *   **🖌️ Specialized Image Editor:** Modify existing images using text prompts and optional masks.
 *   **⚙️ Full API Parameter Control:** Access and adjust all relevant parameters supported by the OpenAI Images API directly through the UI (size, quality, output format, compression, moderation, number of images).
 *   **🎭 Integrated Masking Tool:** Easily create or upload masks directly within the editing mode to specify areas for modification. Draw directly on the image to generate a mask.
+*   **🎨 5 Beautiful Color Palettes:** Choose from Default, Purple, Blue, Olive, and Tangerine themes, all WCAG AA compliant. See [THEMES.md](./THEMES.md) for details.
 
      > ⚠️ Please note that `gpt-image-1`'s masking feature does not guarantee 100% control at this time. <br>1) [It's a known & acknowledged model limitation.](https://community.openai.com/t/gpt-image-1-problems-with-mask-edits/1240639/37) <br>2) [OpenAI are looking to address it in a future update.](https://community.openai.com/t/gpt-image-1-problems-with-mask-edits/1240639/41)
 
@@ -25,6 +26,7 @@ A specialized image editing tool powered by OpenAI's `gpt-image-1` model.
 *   **🖼️ Flexible Image Output View:** View edited image batches as a grid or select individual images for a closer look.
 *   **📋 Paste to Edit:** Paste images directly from your clipboard into the Edit mode's source image area.
 *   **💾 Storage:** Local filesystem mode for development
+*   **♿ Accessible Design:** Full keyboard navigation support and high contrast ratios
 
 <p align="center">
   <img src="./readme-images/mask-creation.jpg" alt="Mask Creation" width="350"/>

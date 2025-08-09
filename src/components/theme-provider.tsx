@@ -4,7 +4,7 @@ import * as React from 'react';
 import { getCookieValue, setCookieValue } from '@/lib/cookie-utils';
 
 export type Scheme = 'light' | 'dark';
-export type Color = 'default' | 'purple' | 'blue' | 'olive' | 'vanilla' | 'tangerine';
+export type Color = 'default' | 'purple' | 'blue' | 'olive' | 'tangerine';
 
 interface ThemeContextType {
   scheme: Scheme;
@@ -61,12 +61,18 @@ export function ThemeProvider({
       const storedColors = localStorage.getItem(COLORS_STORAGE_KEY);
       let finalColor = color;
       
-      if (storedColors && ['default', 'purple', 'blue', 'olive', 'vanilla', 'tangerine'].includes(storedColors)) {
+      if (storedColors && ['default', 'purple', 'blue', 'olive', 'tangerine'].includes(storedColors)) {
         finalColor = storedColors as Color;
+      } else if (storedColors === 'vanilla') {
+        // Migrate vanilla users to default
+        finalColor = 'default';
       } else {
         const cookieColors = getCookieValue(COLORS_COOKIE_KEY);
-        if (cookieColors && ['default', 'purple', 'blue', 'olive', 'vanilla', 'tangerine'].includes(cookieColors)) {
+        if (cookieColors && ['default', 'purple', 'blue', 'olive', 'tangerine'].includes(cookieColors)) {
           finalColor = cookieColors as Color;
+        } else if (cookieColors === 'vanilla') {
+          // Migrate vanilla users to default
+          finalColor = 'default';
         }
       }
       
@@ -149,7 +155,7 @@ export function mapLegacyTheme(legacyTheme: string): { scheme: Scheme; color: Co
     case 'green':
       return { scheme: 'light', color: 'olive' };
     case 'retro':
-      return { scheme: 'light', color: 'vanilla' };
+      return { scheme: 'light', color: 'default' };
     case 'light':
     default:
       return { scheme: 'light', color: 'default' };

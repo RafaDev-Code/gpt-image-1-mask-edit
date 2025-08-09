@@ -10,15 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme, type Color } from "@/components/theme-provider";
-import { cn } from "@/lib/utils";
 
-const colors: { id: Color; name: string; preview: string }[] = [
-  { id: "default", name: "Default", preview: "#3B82F6" },
-  { id: "purple", name: "Purple", preview: "#381D2A" },
-  { id: "blue", name: "Blue", preview: "#3E6990" },
-  { id: "olive", name: "Olive", preview: "#AABD8C" },
-  { id: "vanilla", name: "Vanilla", preview: "#E9E3B4" },
-  { id: "tangerine", name: "Tangerine", preview: "#F39B6D" },
+const colors: { id: Color; name: string }[] = [
+  { id: "default", name: "Default" },
+  { id: "purple", name: "Purple" },
+  { id: "blue", name: "Blue" },
+  { id: "olive", name: "Olive" },
+  { id: "tangerine", name: "Tangerine" },
 ];
 
 export function ColorSwitcher() {
@@ -37,8 +35,7 @@ export function ColorSwitcher() {
             className="h-8 px-3 text-xs font-medium"
           >
             <div
-              className="mr-2 h-3 w-3 rounded-full border border-border/50"
-              style={{ backgroundColor: colorOption.preview }}
+              className="mr-2 h-3 w-3 rounded-full border border-border/50 bg-primary"
             />
             {colorOption.name}
           </Button>
@@ -63,8 +60,7 @@ export function ColorSwitcher() {
               >
                 <div className="flex items-center">
                   <div
-                    className="mr-3 h-4 w-4 rounded-full border border-border/50"
-                    style={{ backgroundColor: colorOption.preview }}
+                    className="mr-3 h-4 w-4 rounded-full border border-border/50 bg-primary"
                   />
                   <span>{colorOption.name}</span>
                 </div>

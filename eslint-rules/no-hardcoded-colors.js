@@ -27,6 +27,7 @@ module.exports = {
     // Skip files in src/styles/ directory and validation utilities
     if (filename.includes('src\\styles\\') || filename.includes('src/styles/') ||
         filename.includes('validate-themes.ts') || 
+        filename.includes('validate-color-palettes.ts') ||
         filename.includes('contrast-checker.ts')) {
       return {};
     }

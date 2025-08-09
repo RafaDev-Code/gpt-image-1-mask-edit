@@ -35,15 +35,16 @@ export default async function RootLayout({
   const colorsCookie = cookieStore.get('colors')?.value;
   
   const validSchemes = ['light', 'dark'] as const;
-  const validColors = ['default', 'purple', 'blue', 'olive', 'vanilla', 'tangerine'] as const;
+  const validColors = ['default', 'purple', 'blue', 'olive', 'tangerine'] as const;
   
   const initialScheme = validSchemes.includes(schemeCookie as typeof validSchemes[number]) 
     ? (schemeCookie as 'light' | 'dark')
     : 'light';
     
+  // Migrate vanilla users to default on SSR
   const initialColors = validColors.includes(colorsCookie as typeof validColors[number])
-    ? (colorsCookie as 'default' | 'purple' | 'blue' | 'olive' | 'vanilla' | 'tangerine')
-    : 'default';
+    ? (colorsCookie as 'default' | 'purple' | 'blue' | 'olive' | 'tangerine')
+    : colorsCookie === 'vanilla' ? 'default' : 'default';
 
   return (
     <html lang="en" data-scheme={initialScheme} data-colors={initialColors}>

@@ -30,12 +30,7 @@ const colorPalettes = {
     'dt-accent': '#AABD8C',
     'dt-accent-foreground': '#0F172A',
   },
-  vanilla: {
-    'dt-primary': '#BFAE55',
-    'dt-primary-foreground': '#0F172A',
-    'dt-accent': '#E9E3B4',
-    'dt-accent-foreground': '#0F172A',
-  },
+
   tangerine: {
     'dt-primary': '#D77E52',
     'dt-primary-foreground': '#0F172A',
@@ -71,7 +66,7 @@ export function getPaletteValidationSummary(): {
   const failedPairs: ContrastResult[] = [];
   let compliantPalettes = 0;
 
-  Object.entries(allResults).forEach(([paletteName, results]) => {
+  Object.entries(allResults).forEach(([, results]) => {
     const hasFailures = results.some(r => !r.meetsAA);
     if (!hasFailures) {
       compliantPalettes++;
