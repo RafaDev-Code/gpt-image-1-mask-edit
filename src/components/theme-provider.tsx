@@ -2,32 +2,47 @@
 
 import * as React from 'react';
 import { getCookieValue, setCookieValue } from '@/lib/cookie-utils';
+import { createBrowserClient } from '@supabase/ssr';
+import type { Database } from '@/lib/db.types';
+import { validateThemeValues } from '@/lib/secure-cookies';
 
 export type Scheme = 'light' | 'dark';
 export type Color = 'default' | 'purple' | 'blue' | 'olive' | 'tangerine';
+export type Locale = 'en' | 'es';
 
 interface ThemeContextType {
   scheme: Scheme;
   color: Color;
+  locale: Locale;
   setScheme: (scheme: Scheme) => void;
   setColor: (color: Color) => void;
+  setLocale: (locale: Locale) => void;
   getScheme: () => Scheme;
   getColor: () => Color;
+  getLocale: () => Locale;
+  isAuthenticated: boolean;
 }
 
 const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
 
 const SCHEME_STORAGE_KEY = 'app-scheme';
 const COLORS_STORAGE_KEY = 'app-colors';
+const LOCALE_STORAGE_KEY = 'app-locale';
 const SCHEME_COOKIE_KEY = 'scheme';
-const COLORS_COOKIE_KEY = 'colors';
+const COLORS_COOKIE_KEY = 'color';
+const LOCALE_COOKIE_KEY = 'locale';
 const DEFAULT_SCHEME: Scheme = 'light';
 const DEFAULT_COLOR: Color = 'default';
+const DEFAULT_LOCALE: Locale = 'en';
+
+// Debounce timeout for saving to database
+const SAVE_DEBOUNCE_MS = 300;
 
 interface ThemeProviderProps {
   children: React.ReactNode;
   initialScheme?: Scheme;
   initialColor?: Color;
+  initialLocale?: Locale;
 }
 
 export function ThemeProvider({ 

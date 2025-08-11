@@ -1,5 +1,6 @@
 import 'server-only';
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/lib/db.types';
 
 // Server-only admin client with service role key
 // DO NOT import this in client components
@@ -11,7 +12,7 @@ export function supabaseAdmin() {
     throw new Error('Missing Supabase environment variables for admin client');
   }
 
-  return createClient(supabaseUrl, supabaseServiceKey, {
+  return createClient<Database>(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

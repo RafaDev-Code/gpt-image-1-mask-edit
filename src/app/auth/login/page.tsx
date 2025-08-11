@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { supabaseBrowser } from '@/lib/supabase/client';
+import type { Database } from '@/lib/db.types';
+import { validateRedirectUrl } from '@/lib/secure-cookies';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
@@ -19,10 +21,14 @@ export default function LoginPage() {
             setIsLoading(true);
             const supabase = supabaseBrowser();
             
+            // Validar URL de redirección para OAuth
+            const safeNext = validateRedirectUrl(next, window.location.origin);
+            
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
+                    redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext.replace(window.location.origin, ''))}`,
+                    scopes: 'email profile openid'
                 }
             });
             

@@ -3,7 +3,10 @@ import { I18nProvider } from '@/components/i18n-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { cookies } from 'next/headers';
+import { supabaseServer } from '@/lib/supabase/server';
+import { cookies, headers } from 'next/headers';
+import type { Database } from '@/lib/db.types';
+import { getServerThemeCookies, validateThemeValues } from '@/lib/secure-cookies';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -29,27 +32,43 @@ export default async function RootLayout({
   children: React.ReactNode;
   params?: Promise<Record<string, unknown>>;
 }) {
-  // Read scheme and colors from cookies on server
-  const cookieStore = await cookies();
-  const schemeCookie = cookieStore.get('scheme')?.value;
-  const colorsCookie = cookieStore.get('colors')?.value;
+  const supabase = await supabaseServer();
+  const { data: { user } } = await supabase.auth.getUser();
   
-  const validSchemes = ['light', 'dark'] as const;
-  const validColors = ['default', 'purple', 'blue', 'olive', 'tangerine'] as const;
+  let themeData = {
+    scheme: 'light' as const,
+    color: 'default' as const,
+    locale: 'en' as const,
+  };
   
-  const initialScheme = validSchemes.includes(schemeCookie as typeof validSchemes[number]) 
-    ? (schemeCookie as 'light' | 'dark')
-    : 'light';
+  if (user) {
+    // Usuario autenticado: obtener preferencias de la base de datos
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('theme_scheme, theme_color, locale')
+      .eq('id', user.id)
+      .single();
     
-  // Migrate vanilla users to default on SSR
-  const initialColors = validColors.includes(colorsCookie as typeof validColors[number])
-    ? (colorsCookie as 'default' | 'purple' | 'blue' | 'olive' | 'tangerine')
-    : colorsCookie === 'vanilla' ? 'default' : 'default';
+    if (profile) {
+      themeData = validateThemeValues({
+        scheme: profile.theme_scheme,
+        color: profile.theme_color,
+        locale: profile.locale,
+      });
+    }
+  } else {
+    // Usuario no autenticado: fallback a cookies
+    const cookieStore = await cookies();
+    themeData = getServerThemeCookies(cookieStore);
+  }
+  
+  // Nota: Las cookies se establecen en el middleware o en Server Actions
+  // No podemos modificar cookies directamente en el layout
 
   return (
-    <html lang="en" data-scheme={initialScheme} data-colors={initialColors}>
+    <html lang={themeData.locale} data-scheme={themeData.scheme} data-colors={themeData.color}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider initialScheme={initialScheme} initialColor={initialColors}>
+        <ThemeProvider initialScheme={themeData.scheme} initialColor={themeData.color}>
           <I18nProvider>
             {children}
           </I18nProvider>

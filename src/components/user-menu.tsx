@@ -4,6 +4,7 @@ import { User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import type { Database } from '@/lib/db.types';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -53,6 +54,12 @@ export function UserMenu() {
         try {
             const supabase = supabaseBrowser();
             await supabase.auth.signOut();
+            
+            // Limpiar cookies de tema al cerrar sesión
+            document.cookie = 'scheme=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            document.cookie = 'color=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            document.cookie = 'locale=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            
             router.push('/');
         } catch (error) {
             console.error('Error signing out:', error);
