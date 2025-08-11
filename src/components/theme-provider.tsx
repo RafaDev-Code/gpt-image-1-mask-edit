@@ -88,7 +88,7 @@ export function ThemeProvider({
         // User authenticated: try to get profile data
         const { data: profile } = await supabase
           .from('profiles')
-          .select('theme_scheme, theme_color, locale')
+          .select('*')
           .eq('id', currentUser.id)
           .single();
 
@@ -218,11 +218,12 @@ export function ThemeProvider({
         } else {
           logger.supabase('save_theme_preferences', null, { userId: user.id });
           // Update local profile data
-          setProfileData({
+          setProfileData(prev => prev ? {
+            ...prev,
             theme_scheme: newScheme,
             theme_color: newColor,
             locale: newLocale
-          });
+          } : null);
         }
       } catch (error) {
         logger.supabase('debounced_save', error, { userId: user?.id });

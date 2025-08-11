@@ -80,10 +80,11 @@ class Logger {
   
   supabase(action: string, error?: unknown, context?: LogContext): void {
     if (error) {
+      const errorObj = error as any;
       this.error(`Supabase ${action} failed`, {
         action: `supabase_${action}`,
-        error: error.message || error,
-        code: error.code,
+        error: errorObj?.message || error,
+        code: errorObj?.code,
         component: 'supabase',
         ...context
       });

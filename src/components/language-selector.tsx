@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Globe } from 'lucide-react';
+import { useTheme } from './theme-provider';
+import type { Locale } from '@/lib/db.types';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -18,6 +20,7 @@ const languages = [
 
 export function LanguageSelector({ className = "" }: { className?: string }) {
   const { i18n } = useTranslation();
+  const { locale, setLocale } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -25,12 +28,13 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
   }, []);
 
   const changeLanguage = (languageCode: string) => {
-    i18n.changeLanguage(languageCode);
+    // Use ThemeProvider to persist locale in profile and sync cookies
+    setLocale(languageCode as Locale);
   };
 
   // Always show English during SSR to prevent hydration mismatch
   const currentLanguage = mounted 
-    ? (languages.find(lang => lang.code === i18n.language) || languages[0])
+    ? (languages.find(lang => lang.code === locale) || languages[0])
     : languages[0]; // Default to English
 
   return (

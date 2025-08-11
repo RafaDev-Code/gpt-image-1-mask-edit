@@ -40,6 +40,96 @@ A specialized image editing tool powered by OpenAI's `gpt-image-1` model.
   <img src="./readme-images/cost-breakdown.jpg" alt="Cost Breakdown" width="350"/>
 </p>
 
+## 🚀 Despliegue y Configuración
+
+### OAuth Configuration para Múltiples Entornos
+
+#### Google OAuth Setup
+
+Para configurar Google OAuth correctamente en todos los entornos, debes agregar los siguientes dominios en tu Google Cloud Console:
+
+**Authorized JavaScript Origins:**
+```
+http://localhost:3000
+https://your-app-preview.vercel.app
+https://your-production-domain.com
+```
+
+**Authorized Redirect URIs:**
+```
+http://localhost:3000/auth/callback
+https://your-app-preview.vercel.app/auth/callback
+https://your-production-domain.com/auth/callback
+```
+
+#### Supabase Configuration
+
+En tu proyecto de Supabase, ve a Authentication > URL Configuration y agrega las siguientes URLs:
+
+**Additional Redirect URLs:**
+```
+http://localhost:3000/auth/callback
+https://your-app-preview.vercel.app/auth/callback
+https://your-production-domain.com/auth/callback
+```
+
+#### Validación de redirect_uri
+
+Para evitar errores 400 relacionados con redirect_uri:
+
+1. **Verifica que las URLs coincidan exactamente** (incluyendo protocolo, puerto y path)
+2. **No incluyas parámetros de query** en las URLs de configuración
+3. **Usa HTTPS en producción** - nunca HTTP para dominios públicos
+4. **Testa cada entorno** después de la configuración
+
+```javascript
+// Ejemplo de validación en el código
+const getRedirectUrl = () => {
+  const baseUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://your-production-domain.com'
+    : process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000'
+  
+  return `${baseUrl}/auth/callback`
+}
+```
+
+### 📁 Almacenamiento de Imágenes
+
+#### Consideraciones para Vercel
+
+En Vercel, el sistema de archivos es **efímero**, lo que significa:
+
+- ✅ **Modo actual (memoria)**: Las imágenes se almacenan temporalmente y funcionan bien para desarrollo
+- ❌ **Persistencia**: Los archivos se pierden entre deployments y después de un tiempo de inactividad
+
+#### Opción: Supabase Storage (Recomendado para Producción)
+
+Para persistir imágenes de forma segura:
+
+```javascript
+// Configuración de bucket privado
+const { data, error } = await supabase.storage
+  .from('image-results')
+  .upload(`user-${userId}/${filename}`, file, {
+    cacheControl: '3600',
+    upsert: false
+  })
+
+// Generar URL firmada (owner-only access)
+const { data: signedUrl } = await supabase.storage
+  .from('image-results')
+  .createSignedUrl(`user-${userId}/${filename}`, 3600) // 1 hora
+```
+
+**Ventajas de Supabase Storage:**
+- 🔒 **Seguridad**: Buckets privados con acceso controlado
+- 🔗 **URLs firmadas**: Acceso temporal y seguro
+- 👤 **Owner-only**: Cada usuario solo ve sus imágenes
+- 💾 **Persistencia**: Los archivos no se pierden
+- 🌍 **CDN**: Distribución global automática
+
 ## 🧪 Responsive Testing
 
 ### Width Validation Helper
@@ -48,6 +138,7 @@ Use el helper temporal `width-validator.html` para probar el comportamiento resp
 
 ```bash
 # 1. Inicia el servidor de desarrollo
+```
 npm run dev
 
 # 2. Abre el helper de validación (cualquiera de estas opciones):

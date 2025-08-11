@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import i18n from '@/lib/i18n';
+import { useTheme } from './theme-provider';
 
 interface I18nProviderProps {
   children: React.ReactNode;
@@ -9,17 +10,22 @@ interface I18nProviderProps {
 
 export function I18nProvider({ children }: I18nProviderProps) {
   const [isInitialized, setIsInitialized] = useState(false);
+  const { locale } = useTheme();
 
   useEffect(() => {
-    // Ensure i18n is properly initialized on client side
-    if (typeof window !== 'undefined' && !isInitialized) {
-      // Change language to detected language after hydration
-      const detectedLang = i18n.language || 'en';
-      i18n.changeLanguage(detectedLang).then(() => {
+    // Sync i18n with theme provider locale
+    if (typeof window !== 'undefined' && locale && i18n.language !== locale) {
+      i18n.changeLanguage(locale).then(() => {
+        setIsInitialized(true);
+      });
+    } else if (!isInitialized) {
+      // Fallback initialization
+      const fallbackLang = locale || 'en';
+      i18n.changeLanguage(fallbackLang).then(() => {
         setIsInitialized(true);
       });
     }
-  }, [isInitialized]);
+  }, [locale, isInitialized]);
 
   // Render children immediately to prevent hydration mismatch
   return <>{children}</>;

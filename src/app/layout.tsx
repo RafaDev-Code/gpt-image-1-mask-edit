@@ -73,7 +73,7 @@ export default async function RootLayout({
   return (
     <html lang={themeData.locale} data-scheme={themeData.scheme} data-colors={themeData.color}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider initialScheme={themeData.scheme} initialColor={themeData.color}>
+        <ThemeProvider initialScheme={themeData.scheme} initialColor={themeData.color} initialLocale={themeData.locale}>
           <I18nProvider>
             {children}
             <Toaster />
