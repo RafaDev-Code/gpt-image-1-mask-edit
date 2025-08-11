@@ -48,7 +48,12 @@ export function ColorSwitcher() {
         >
           <DropdownMenuRadioGroup value={color} onValueChange={(value) => setColor(value as Color)}>
             {PALETTES.map(palette => (
-              <DropdownMenuRadioItem key={palette.id} value={palette.id} className="flex items-center gap-2">
+              <DropdownMenuRadioItem 
+                key={palette.id} 
+                value={palette.id} 
+                className="flex items-center gap-2"
+                aria-current={color === palette.id ? 'true' : undefined}
+              >
                 <span 
                   className="h-2.5 w-2.5 rounded-full" 
                   style={{ backgroundColor: `var(--color-${palette.id})` }} 

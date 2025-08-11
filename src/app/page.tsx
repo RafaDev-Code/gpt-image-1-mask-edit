@@ -366,7 +366,7 @@ export default function HomePage() {
                 if (response.status === 401 && isPasswordRequiredByBackend) {
                     setError('Unauthorized: Invalid or missing password. Please try again.');
                     setPasswordDialogContext('retry');
-                    setLastApiCallArgs([formData]);
+                    setLastApiCallArgs([data]);
                     setIsPasswordDialogOpen(true);
 
                     return;
@@ -706,16 +706,16 @@ export default function HomePage() {
             
             {/* Header */}
             <header className="border-b bg-background">
-                <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
-                    {/* 1 fila, sin wrap */}
-                    <div className="flex flex-nowrap items-center gap-2 py-4">
+                <div className="mx-auto w-full max-w-6xl px-2 sm:px-4 lg:px-6">
+                    {/* 1 fila, sin wrap, optimizado para 320px+ */}
+                    <div className="flex flex-nowrap items-center gap-1 sm:gap-2 py-3 sm:py-4 min-w-0">
                         {/* Izquierda: el que se encoge y trunca */}
-                        <div className="min-w-0 flex-1">
-                            <LanguageSelector className="w-full max-w-[200px] sm:max-w-[240px] md:max-w-[260px] lg:max-w-[280px] truncate" />
+                        <div className="min-w-0 flex-1 overflow-hidden">
+                            <LanguageSelector className="w-full max-w-[120px] xs:max-w-[140px] sm:max-w-[180px] md:max-w-[220px] lg:max-w-[280px] truncate" />
                         </div>
 
                         {/* Derecha: cluster fijo que NO se encoge */}
-                        <div className="shrink-0 ml-2 flex items-center gap-2">
+                        <div className="shrink-0 flex items-center gap-1 sm:gap-2">
                             <UserMenu />
                             <SchemeToggle />
                             {/* Color como botón con dropdown (no pills visibles) */}

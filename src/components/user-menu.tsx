@@ -4,7 +4,6 @@ import { User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import type { Database } from '@/lib/db.types';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { logger } from '@/lib/logger';
 
 export function UserMenu() {
     const router = useRouter();
@@ -31,6 +31,7 @@ export function UserMenu() {
                 const { data: { session } } = await supabase.auth.getSession();
                 setUser(session?.user ?? null);
             } catch (error) {
+                logger.supabase('get_session', error);
                 console.error('Error getting initial session:', error);
             } finally {
                 setIsLoading(false);
@@ -44,6 +45,13 @@ export function UserMenu() {
             (event, session) => {
                 setUser(session?.user ?? null);
                 setIsLoading(false);
+                
+                // Log auth events
+                if (event === 'SIGNED_IN') {
+                    logger.auth('login', session?.user?.id);
+                } else if (event === 'SIGNED_OUT') {
+                    logger.auth('logout', session?.user?.id);
+                }
             }
         );
         
@@ -62,6 +70,7 @@ export function UserMenu() {
             
             router.push('/');
         } catch (error) {
+            logger.supabase('sign_out', error, { userId: user?.id });
             console.error('Error signing out:', error);
         }
     };

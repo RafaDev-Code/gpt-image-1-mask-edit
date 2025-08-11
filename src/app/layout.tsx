@@ -1,11 +1,12 @@
 import './globals.css';
 import { I18nProvider } from '@/components/i18n-provider';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { supabaseServer } from '@/lib/supabase/server';
 import { cookies, headers } from 'next/headers';
-import type { Database } from '@/lib/db.types';
+import type { Database, ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
 import { getServerThemeCookies, validateThemeValues } from '@/lib/secure-cookies';
 
 const geistSans = Geist({
@@ -35,10 +36,14 @@ export default async function RootLayout({
   const supabase = await supabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   
-  let themeData = {
-    scheme: 'light' as const,
-    color: 'default' as const,
-    locale: 'en' as const,
+  let themeData: {
+    scheme: ThemeScheme;
+    color: ThemeColor;
+    locale: Locale;
+  } = {
+    scheme: 'light',
+    color: 'default',
+    locale: 'en',
   };
   
   if (user) {
@@ -71,6 +76,7 @@ export default async function RootLayout({
         <ThemeProvider initialScheme={themeData.scheme} initialColor={themeData.color}>
           <I18nProvider>
             {children}
+            <Toaster />
           </I18nProvider>
         </ThemeProvider>
       </body>

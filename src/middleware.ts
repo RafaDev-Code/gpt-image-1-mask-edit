@@ -121,18 +121,31 @@ export async function middleware(request: NextRequest) {
   }
 
   // Proteger rutas que requieren autenticación
-  if (request.nextUrl.pathname.startsWith('/profile') && !user) {
+  const protectedRoutes = ['/profile', '/dashboard'];
+  const isProtectedRoute = protectedRoutes.some(route => 
+    request.nextUrl.pathname.startsWith(route)
+  );
+  
+  if (isProtectedRoute && !user) {
     const redirectUrl = new URL('/auth/login', request.url);
-    redirectUrl.searchParams.set('next', request.nextUrl.pathname);
+    redirectUrl.searchParams.set('next', request.nextUrl.pathname + request.nextUrl.search);
     return NextResponse.redirect(redirectUrl);
   }
 
   // Redirigir usuarios autenticados lejos de páginas de auth
   if (request.nextUrl.pathname.startsWith('/auth/login') && user) {
-    const next = request.nextUrl.searchParams.get('next') || '/';
-    // Validar URL de redirección
-    const safeNext = next.startsWith('/') ? next : '/';
-    return NextResponse.redirect(new URL(safeNext, request.url));
+    const next = request.nextUrl.searchParams.get('next');
+    let redirectPath = '/profile/settings'; // Default redirect for authenticated users
+    
+    // Validar next parameter - solo permitir rutas internas
+    if (next && next.startsWith('/') && !next.startsWith('//')) {
+      // Verificar que no sea una ruta de auth para evitar loops
+      if (!next.startsWith('/auth/')) {
+        redirectPath = next;
+      }
+    }
+    
+    return NextResponse.redirect(new URL(redirectPath, request.url));
   }
 
   return response;

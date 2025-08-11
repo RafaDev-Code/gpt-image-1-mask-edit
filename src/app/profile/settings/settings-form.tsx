@@ -1,15 +1,17 @@
 'use client';
 import { useState, useTransition } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { supabaseBrowser } from '@/lib/supabase/client';
 import type { Database, ProfileFormData, ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
 import { setClientThemeCookies, validateThemeValues } from '@/lib/secure-cookies';
+import { useToast } from '@/hooks/use-toast';
 
 interface SettingsFormProps {
   initial: Partial<ProfileFormData> | null;
 }
 
 export default function SettingsForm({ initial }: SettingsFormProps) {
-  const supabase = createClientComponentClient<Database>();
+  const supabase = supabaseBrowser();
+  const { toast } = useToast();
   
   // Validar y establecer valores iniciales
   const validatedInitial = validateThemeValues({
@@ -23,15 +25,16 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
   const [scheme, setScheme] = useState<ThemeScheme>(validatedInitial.scheme);
   const [color, setColor] = useState<ThemeColor>(validatedInitial.color);
   const [pending, start] = useTransition();
-  const [error, setError] = useState<string | null>(null);
 
   const onSave = () => start(async () => {
     try {
-      setError(null);
-      
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setError('Usuario no autenticado');
+        toast({
+          variant: "destructive",
+          title: "Error de autenticación",
+          description: "No se pudo verificar tu sesión. Por favor, inicia sesión nuevamente.",
+        });
         return;
       }
 
@@ -48,7 +51,11 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
       
       if (dbError) {
         console.error('Error updating profile:', dbError);
-        setError('Error al guardar los cambios');
+        toast({
+          variant: "destructive",
+          title: "Error al guardar",
+          description: "No se pudieron guardar los cambios. Verifica tu conexión e inténtalo de nuevo.",
+        });
         return;
       }
 
@@ -60,19 +67,24 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
       // Establecer cookies seguras
       setClientThemeCookies(validatedData);
       
+      // Toast de éxito
+      toast({
+        title: "Cambios guardados",
+        description: "Tus preferencias se han actualizado correctamente.",
+      });
+      
     } catch (err) {
       console.error('Error in onSave:', err);
-      setError('Error inesperado al guardar');
+      toast({
+        variant: "destructive",
+        title: "Error inesperado",
+        description: "Ocurrió un problema al guardar los cambios. Por favor, inténtalo de nuevo.",
+      });
     }
   });
 
   return (
     <form className="mx-auto w-full max-w-2xl space-y-4">
-      {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-          {error}
-        </div>
-      )}
       
       <div>
         <label className="block text-sm mb-1 font-medium">Display name</label>

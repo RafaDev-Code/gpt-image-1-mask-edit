@@ -1,6 +1,9 @@
 import { supabaseServer } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import SettingsForm from './settings-form';
-import type { Database, Profile } from '@/lib/db.types';
+import type { Database, Profile, Locale, ThemeScheme, ThemeColor } from '@/lib/db.types';
+import { SettingsSkeleton } from '@/components/settings-skeleton';
+import { Suspense } from 'react';
 
 export default async function SettingsPage() {
   const supabase = await supabaseServer();
@@ -35,14 +38,21 @@ export default async function SettingsPage() {
         <p className="text-gray-600">Personaliza tu experiencia en la aplicación.</p>
       </div>
       
-      <SettingsForm 
-        initial={profile || {
-          display_name: user.email || '',
-          locale: 'en',
-          theme_scheme: 'light',
-          theme_color: 'default'
-        }} 
-      />
+      <Suspense fallback={<SettingsSkeleton />}>
+        <SettingsForm 
+          initial={profile ? {
+            display_name: profile.display_name || user.email || '',
+            locale: profile.locale as Locale,
+            theme_scheme: profile.theme_scheme as ThemeScheme,
+            theme_color: profile.theme_color as ThemeColor
+          } : {
+            display_name: user.email || '',
+            locale: 'en',
+            theme_scheme: 'light',
+            theme_color: 'default'
+          }} 
+        />
+      </Suspense>
     </div>
   );
 }

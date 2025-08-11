@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import type { Database } from '@/lib/db.types';
 import { validateRedirectUrl } from '@/lib/secure-cookies';
+import { AuthError } from '@/components/auth-error';
+import { logger } from '@/lib/logger';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
@@ -33,9 +35,19 @@ export default function LoginPage() {
             });
             
             if (error) {
+                logger.auth('error', undefined, { 
+                    provider: 'google', 
+                    error: error.message,
+                    code: error.status 
+                });
                 console.error('Error during Google login:', error);
             }
         } catch (error) {
+            logger.auth('error', undefined, { 
+                provider: 'google', 
+                error: error instanceof Error ? error.message : 'Unknown error',
+                type: 'unexpected' 
+            });
             console.error('Unexpected error:', error);
         } finally {
             setIsLoading(false);
@@ -44,13 +56,15 @@ export default function LoginPage() {
     
     return (
         <main className="min-h-screen bg-background flex items-center justify-center p-6">
-            <Card className="w-full max-w-md mx-auto bg-card border border-border">
-                <CardHeader className="text-center">
-                    <CardTitle className="text-foreground text-2xl font-semibold">
-                        Iniciar sesión
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+            <div className="w-full max-w-md mx-auto">
+                <AuthError />
+                <Card className="bg-card border border-border">
+                    <CardHeader className="text-center">
+                        <CardTitle className="text-foreground text-2xl font-semibold">
+                            Iniciar sesión
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
                     <Button 
                         onClick={handleGoogleLogin}
                         disabled={isLoading}
@@ -95,8 +109,9 @@ export default function LoginPage() {
                         </Button>
                     </div>
                     */}
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </div>
         </main>
     );
 }

@@ -65,6 +65,7 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
             key={language.code}
             onClick={() => changeLanguage(language.code)}
             className="gap-2"
+            aria-current={i18n.language === language.code ? 'true' : undefined}
           >
             <span>{language.flag}</span>
             <span>{language.name}</span>
