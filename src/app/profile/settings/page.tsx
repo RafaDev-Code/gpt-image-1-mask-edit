@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import SettingsForm from './settings-form';
 import type { Database, Profile, Locale, ThemeScheme, ThemeColor } from '@/lib/db.types';
 import { SettingsSkeleton } from '@/components/settings-skeleton';
+import { SettingsNavigation } from '@/components/settings-navigation';
 import { Suspense } from 'react';
 
 export default async function SettingsPage() {
@@ -33,9 +34,11 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl p-4">
+      <SettingsNavigation />
+      
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">Configuración del perfil</h1>
-        <p className="text-gray-600">Personaliza tu experiencia en la aplicación.</p>
+        <p className="text-muted-foreground">Personaliza tu experiencia en la aplicación.</p>
       </div>
       
       <Suspense fallback={<SettingsSkeleton />}>
