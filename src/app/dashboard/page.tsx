@@ -1,75 +1,90 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import type { Database } from '@/lib/db.types';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { supabaseBrowser } from '@/lib/supabase/client';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import type { User } from '@supabase/supabase-js';
 
-export default async function DashboardPage() {
-  const cookieStore = await cookies();
-  
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
+export const metadata = {
+  title: 'Dashboard - QA Auth',
+  description: 'Dashboard mínimo para QA de autenticación'
+};
 
-  const { data: { user } } = await supabase.auth.getUser();
+export default function DashboardPage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = supabaseBrowser();
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        redirect('/auth/login?next=/dashboard');
+        return;
+      }
+      
+      setUser(user);
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  const handleSignOut = async () => {
+    const supabase = supabaseBrowser();
+    await supabase.auth.signOut();
+    redirect('/');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
-    redirect('/auth/login?next=/dashboard');
+    return null; // Redirect will handle this
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-        
-        <div className="bg-card rounded-lg border p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Welcome, {user.email}!</h2>
-          <p className="text-muted-foreground mb-4">
-            This is a protected dashboard page. Only authenticated users can access this content.
-          </p>
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-card rounded-lg border border-border p-6">
+          <h1 className="text-2xl font-bold text-foreground mb-6">Dashboard QA</h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-background rounded border p-4">
-              <h3 className="font-medium mb-2">User ID</h3>
-              <p className="text-sm text-muted-foreground font-mono">{user.id}</p>
-            </div>
+          <div className="space-y-4 mb-6">
+            <p className="text-foreground">
+              Estás logueado como <strong>{user.email}</strong>
+            </p>
             
-            <div className="bg-background rounded border p-4">
-              <h3 className="font-medium mb-2">Email</h3>
-              <p className="text-sm text-muted-foreground">{user.email}</p>
-            </div>
-            
-            <div className="bg-background rounded border p-4">
-              <h3 className="font-medium mb-2">Last Sign In</h3>
-              <p className="text-sm text-muted-foreground">
-                {user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString() : 'N/A'}
-              </p>
+            <div className="bg-background rounded border border-border p-3">
+              <p className="text-sm text-muted-foreground mb-1">User ID:</p>
+              <p className="font-mono text-sm text-foreground break-all">{user.id}</p>
             </div>
           </div>
-        </div>
-        
-        <div className="flex gap-4">
-          <a 
-            href="/profile/settings" 
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-          >
-            Profile Settings
-          </a>
           
-          <Link 
-            href="/" 
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-          >
-            Back to Home
-          </Link>
+          <div className="flex gap-3">
+            <Button asChild>
+              <Link href="/profile/settings">
+                Ir a Settings
+              </Link>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={handleSignOut}
+            >
+              Cerrar sesión
+            </Button>
+          </div>
         </div>
       </div>
     </div>
