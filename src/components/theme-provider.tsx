@@ -6,7 +6,7 @@ import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/lib/db.types';
 import type { User } from '@supabase/supabase-js';
 import { validateThemeValues } from '@/lib/secure-cookies';
-import { logger } from '@/lib/logger';
+import { logger, isError } from '@/lib/logger';
 
 export type Scheme = 'light' | 'dark';
 export type Color = 'default' | 'purple' | 'blue' | 'olive' | 'tangerine';
@@ -153,8 +153,11 @@ export function ThemeProvider({
       setColorState(validated.color as Color);
       setLocaleState(validated.locale as Locale);
       
-    } catch (error) {
-      console.error('Error initializing theme:', error);
+    } catch (err: unknown) {
+      logger.warn('Theme initialization failed', {
+        component: 'theme-provider',
+        error: isError(err) ? err.message : String(err)
+      });
     }
   }, [supabase]);
 
@@ -225,9 +228,8 @@ export function ThemeProvider({
             locale: newLocale
           } : null);
         }
-      } catch (error) {
-        logger.supabase('debounced_save', error, { userId: user?.id });
-        console.error('Error in debounced save:', error);
+      } catch (err: unknown) {
+        logger.supabase('debounced_save', err, { userId: user?.id });
       }
     }, SAVE_DEBOUNCE_MS);
   }, [isAuthenticated, user, profileData, supabase]);

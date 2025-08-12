@@ -1,9 +1,10 @@
 'use client';
 import { useState, useTransition } from 'react';
 import { supabaseBrowser } from '@/lib/supabase/client';
-import type { Database, ProfileFormData, ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
+import type { ProfileFormData, ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
 import { setClientThemeCookies, validateThemeValues } from '@/lib/secure-cookies';
 import { useToast } from '@/hooks/use-toast';
+import { logger, isError } from '@/lib/logger';
 
 interface SettingsFormProps {
   initial: Partial<ProfileFormData> | null;
@@ -73,8 +74,11 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
         description: "Tus preferencias se han actualizado correctamente.",
       });
       
-    } catch (err) {
-      console.error('Error in onSave:', err);
+    } catch (err: unknown) {
+      logger.error('Settings save failed', {
+        component: 'settings-form',
+        error: isError(err) ? err.message : String(err)
+      });
       toast({
         variant: "destructive",
         title: "Error inesperado",
@@ -89,7 +93,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
       <div>
         <label className="block text-sm mb-1 font-medium">Display name</label>
         <input 
-          className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring" 
           value={displayName} 
           onChange={e => setDisplayName(e.target.value)}
           placeholder="Tu nombre para mostrar"
@@ -99,7 +103,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
       <div>
         <label className="block text-sm mb-1 font-medium">Idioma / Language</label>
         <select 
-          className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring" 
           value={locale} 
           onChange={e => setLocale(e.target.value as Locale)}
           disabled={pending}
@@ -112,7 +116,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
       <div>
         <label className="block text-sm mb-1 font-medium">Esquema de tema / Theme scheme</label>
         <select 
-          className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring" 
           value={scheme} 
           onChange={e => setScheme(e.target.value as ThemeScheme)}
           disabled={pending}
@@ -125,7 +129,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
       <div>
         <label className="block text-sm mb-1 font-medium">Color del tema / Theme color</label>
         <select 
-          className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+           className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring" 
           value={color} 
           onChange={e => setColor(e.target.value as ThemeColor)}
           disabled={pending}
@@ -142,7 +146,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
         type="button" 
         onClick={onSave} 
         disabled={pending} 
-        className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full rounded-lg bg-primary px-4 py-2 text-primary-foreground font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {pending ? '⏳ Guardando...' : '💾 Guardar cambios'}
       </button>

@@ -11,6 +11,11 @@ interface LogContext {
   [key: string]: unknown;
 }
 
+// Type guard para errores
+export function isError(err: unknown): err is { message?: string } {
+  return typeof err === 'object' && err !== null && ('message' in err || err instanceof Error);
+}
+
 class Logger {
   private isDev = process.env.NODE_ENV === 'development';
   
@@ -80,11 +85,12 @@ class Logger {
   
   supabase(action: string, error?: unknown, context?: LogContext): void {
     if (error) {
-      const errorObj = error as any;
+      const errorMessage = isError(error) ? error.message : String(error);
+      const errorCode = (error && typeof error === 'object' && 'code' in error) ? error.code : undefined;
       this.error(`Supabase ${action} failed`, {
         action: `supabase_${action}`,
-        error: errorObj?.message || error,
-        code: errorObj?.code,
+        error: errorMessage || String(error),
+        code: errorCode,
         component: 'supabase',
         ...context
       });

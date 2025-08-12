@@ -2,6 +2,8 @@
 
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -316,8 +318,11 @@ export function EditingForm({
         try {
             const dataUrl = offscreenCanvas.toDataURL('image/png');
             setEditMaskPreviewUrl(dataUrl);
-        } catch (e) {
-            console.error('Error generating mask preview data URL:', e);
+        } catch (err: unknown) {
+            logger.error('Error generating mask preview data URL', {
+                component: 'EditingForm',
+                error: isError(err) ? err.message : String(err)
+            });
             setEditMaskPreviewUrl(null);
         }
 
@@ -365,8 +370,11 @@ export function EditingForm({
                 .then((newUrls) => {
                     setSourceImagePreviewUrls((prevUrls) => [...prevUrls, ...newUrls]);
                 })
-                .catch((error) => {
-                    console.error('Error reading new image files:', error);
+                .catch((err: unknown) => {
+                    logger.error('Error reading new image files', {
+                        component: 'EditingForm',
+                        error: isError(err) ? err.message : String(err)
+                    });
                 });
 
             event.target.value = '';

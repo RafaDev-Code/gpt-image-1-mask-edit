@@ -14,6 +14,7 @@ import { db, type ImageRecord } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
 import * as React from 'react';
+import { logger, isError } from '@/lib/logger';
 
 type HistoryImage = {
     filename: string;
@@ -163,8 +164,11 @@ export default function HomePage() {
                     localStorage.removeItem('openaiImageHistory');
                 }
             }
-        } catch (e) {
-            console.error('Failed to load or parse history from localStorage:', e);
+        } catch (err: unknown) {
+            logger.warn('Failed to load history from localStorage', {
+                component: 'home-page',
+                error: isError(err) ? err.message : String(err)
+            });
             localStorage.removeItem('openaiImageHistory');
         }
         setIsInitialLoad(false);
@@ -179,8 +183,11 @@ export default function HomePage() {
                 }
                 const data = await response.json();
                 setIsPasswordRequiredByBackend(data.passwordRequired);
-            } catch (error) {
-                console.error('Error fetching auth status:', error);
+            } catch (err: unknown) {
+                logger.warn('Error fetching auth status', {
+                    component: 'home-page',
+                    error: isError(err) ? err.message : String(err)
+                });
                 setIsPasswordRequiredByBackend(false);
             }
         };
@@ -196,8 +203,11 @@ export default function HomePage() {
         if (!isInitialLoad) {
             try {
                 localStorage.setItem('openaiImageHistory', JSON.stringify(history));
-            } catch (e) {
-                console.error('Failed to save history to localStorage:', e);
+            } catch (err: unknown) {
+                logger.warn('Failed to save history to localStorage', {
+                    component: 'home-page',
+                    error: isError(err) ? err.message : String(err)
+                });
             }
         }
     }, [history, isInitialLoad]);
@@ -288,8 +298,11 @@ export default function HomePage() {
                 console.log('Retrying API call after password save...');
                 await handleApiCall(...lastApiCallArgs);
             }
-        } catch (e) {
-            console.error('Error hashing password:', e);
+        } catch (err: unknown) {
+            logger.error('Error hashing password', {
+                component: 'HomePage',
+                error: isError(err) ? err.message : String(err)
+            });
             setError('Failed to save password due to a hashing error.');
         }
     };
@@ -419,8 +432,12 @@ export default function HomePage() {
 
                                 const blobUrl = URL.createObjectURL(blob);
                                 return { filename: img.filename, path: blobUrl, blobUrl };
-                            } catch (dbError) {
-                                console.error(`Error saving blob ${img.filename} to IndexedDB:`, dbError);
+                            } catch (err: unknown) {
+                                logger.error('Error saving blob to IndexedDB', {
+                                    component: 'home-page',
+                                    filename: img.filename,
+                                    error: isError(err) ? err.message : String(err)
+                                });
                                 setError(`Failed to save image ${img.filename} to local database.`);
                                 return null;
                             }
@@ -467,8 +484,12 @@ export default function HomePage() {
             }
         } catch (err: unknown) {
             durationMs = Date.now() - startTime;
-            console.error(`API Call Error after ${durationMs}ms:`, err);
-            const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred.';
+            logger.error('API call failed', {
+                component: 'home-page',
+                durationMs,
+                error: isError(err) ? err.message : String(err)
+            });
+            const errorMessage = isError(err) ? err.message : 'An unexpected error occurred.';
             setError(errorMessage);
             setLatestImageBatch(null);
         } finally {
@@ -540,9 +561,12 @@ export default function HomePage() {
 
                     setBlobUrlCache({});
                 }
-            } catch (e) {
-                console.error('Failed during history clearing:', e);
-                setError(`Failed to clear history: ${e instanceof Error ? e.message : String(e)}`);
+            } catch (err: unknown) {
+                logger.error('Failed during history clearing', {
+                    component: 'HomePage',
+                    error: isError(err) ? err.message : String(err)
+                });
+                setError(`Failed to clear history: ${isError(err) ? err.message : String(err)}`);
             }
         }
     };
@@ -609,8 +633,12 @@ export default function HomePage() {
 
             console.log(`Successfully set ${filename} in edit form.`);
         } catch (err: unknown) {
-            console.error('Error sending image to edit:', err);
-            const errorMessage = err instanceof Error ? err.message : 'Failed to send image to edit form.';
+            logger.error('Error sending image to edit', {
+                component: 'home-page',
+                filename,
+                error: isError(err) ? err.message : String(err)
+            });
+            const errorMessage = isError(err) ? err.message : 'Failed to send image to edit form.';
             setError(errorMessage);
         } finally {
             setIsSendingToEdit(false);
@@ -660,9 +688,13 @@ export default function HomePage() {
             if (latestImageBatch && latestImageBatch.some((img) => filenamesToDelete.includes(img.filename))) {
                 setLatestImageBatch(null); // Clear current view if it contained deleted images
             }
-        } catch (e: unknown) {
-            console.error('Error during item deletion:', e);
-            setError(e instanceof Error ? e.message : 'An unexpected error occurred during deletion.');
+        } catch (err: unknown) {
+            logger.error('Error during item deletion', {
+                component: 'home-page',
+                timestamp,
+                error: isError(err) ? err.message : String(err)
+            });
+            setError(isError(err) ? err.message : 'An unexpected error occurred during deletion.');
         } finally {
             setItemToDeleteConfirm(null); // Always close dialog
         }

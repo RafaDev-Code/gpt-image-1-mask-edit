@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabaseBrowser } from '@/lib/supabase/client';
+import { logger } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 
 export default function AuthCallbackPage() {
     const router = useRouter();
@@ -23,8 +25,11 @@ export default function AuthCallbackPage() {
                 // Obtener el parámetro 'next' para redirigir
                 const next = searchParams.get('next') || '/';
                 router.push(next);
-            } catch (error) {
-                console.error('Unexpected error in auth callback:', error);
+            } catch (err: unknown) {
+                logger.error('Unexpected error in auth callback', {
+                    component: 'AuthCallbackClient',
+                    error: isError(err) ? err.message : String(err)
+                });
                 router.push('/auth/login');
             }
         };

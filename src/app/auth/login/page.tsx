@@ -2,18 +2,15 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { supabaseBrowser } from '@/lib/supabase/client';
-import type { Database } from '@/lib/db.types';
 import { validateRedirectUrl } from '@/lib/secure-cookies';
 import { AuthError } from '@/components/auth-error';
-import { logger } from '@/lib/logger';
+import { logger, isError } from '@/lib/logger';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     
     const next = searchParams.get('next') || '/';
@@ -40,15 +37,19 @@ export default function LoginPage() {
                     error: error.message,
                     code: error.status 
                 });
-                console.error('Error during Google login:', error);
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('Error during Google login:', error);
+                }
             }
-        } catch (error) {
+        } catch (err: unknown) {
             logger.auth('error', undefined, { 
                 provider: 'google', 
-                error: error instanceof Error ? error.message : 'Unknown error',
+                error: isError(err) ? err.message : String(err),
                 type: 'unexpected' 
             });
-            console.error('Unexpected error:', error);
+            if (process.env.NODE_ENV !== 'production') {
+                console.error('Unexpected error:', isError(err) ? err.message : String(err));
+            }
         } finally {
             setIsLoading(false);
         }

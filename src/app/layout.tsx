@@ -5,8 +5,8 @@ import { Toaster } from '@/components/ui/toaster';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { supabaseServer } from '@/lib/supabase/server';
-import { cookies, headers } from 'next/headers';
-import type { Database, ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
+import { cookies } from 'next/headers';
+import type { ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
 import { getServerThemeCookies, validateThemeValues } from '@/lib/secure-cookies';
 
 const geistSans = Geist({

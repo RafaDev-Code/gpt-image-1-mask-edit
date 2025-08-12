@@ -1,7 +1,6 @@
 import { supabaseServer } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
 import SettingsForm from './settings-form';
-import type { Database, Profile, Locale, ThemeScheme, ThemeColor } from '@/lib/db.types';
+import type { Locale, ThemeScheme, ThemeColor } from '@/lib/db.types';
 import { SettingsSkeleton } from '@/components/settings-skeleton';
 import { SettingsNavigation } from '@/components/settings-navigation';
 import { Suspense } from 'react';
@@ -14,9 +13,9 @@ export default async function SettingsPage() {
   if (userError || !user) {
     return (
       <div className="mx-auto w-full max-w-2xl p-4">
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-center">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Acceso denegado</h2>
-          <p className="text-red-700">Debes iniciar sesión para acceder a la configuración.</p>
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center">
+          <h2 className="text-lg font-semibold text-destructive mb-2">Acceso denegado</h2>
+          <p className="text-destructive/80">Debes iniciar sesión para acceder a la configuración.</p>
         </div>
       </div>
     );

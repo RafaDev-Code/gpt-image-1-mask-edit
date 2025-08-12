@@ -6,6 +6,8 @@ import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import path from 'path';
+import { logger } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 
 export const runtime = 'nodejs';
 
@@ -39,13 +41,17 @@ function validateOutputFormat(format: unknown): ValidOutputFormat {
 async function ensureOutputDirExists() {
     try {
         await fs.access(outputDir);
-    } catch (error: unknown) {
-        if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'ENOENT') {
+    } catch (err: unknown) {
+        if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'ENOENT') {
             try {
                 await fs.mkdir(outputDir, { recursive: true });
-                console.log(`Created output directory: ${outputDir}`);
-            } catch (mkdirError) {
-                console.error(`Error creating output directory ${outputDir}:`, mkdirError);
+                logger.info('Created output directory', { component: 'ImagesAPI', outputDir });
+            } catch (mkdirErr: unknown) {
+                logger.error('Error creating output directory', {
+                    component: 'ImagesAPI',
+                    outputDir,
+                    error: isError(mkdirErr) ? mkdirErr.message : String(mkdirErr)
+                });
                 throw new Error('Failed to create image output directory.');
             }
         } else {
@@ -72,8 +78,8 @@ async function retryWithBackoff<T>(
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
         try {
             return await fn();
-        } catch (error) {
-            lastError = error as Error;
+        } catch (err: unknown) {
+            lastError = err as Error;
             
             // Check if it's a retryable error
             const isConnectionError = 
@@ -263,23 +269,26 @@ export async function POST(request: NextRequest) {
         console.log(`All images processed. Mode: ${effectiveStorageMode}`);
 
         return NextResponse.json({ images: savedImagesData, usage: result.usage });
-    } catch (error: unknown) {
-        console.error('Error in /api/images:', error);
+    } catch (err: unknown) {
+        logger.error('Error in /api/images', {
+            component: 'ImagesAPI',
+            error: isError(err) ? err.message : String(err)
+        });
 
         let errorMessage = 'An unexpected error occurred.';
         let status = 500;
 
-        if (error instanceof Error) {
-            errorMessage = error.message;
-            if (typeof error === 'object' && error !== null && 'status' in error && typeof (error as Record<string, unknown>).status === 'number') {
-                status = (error as Record<string, unknown>).status as number;
+        if (err instanceof Error) {
+            errorMessage = err.message;
+            if (typeof err === 'object' && err !== null && 'status' in err && typeof (err as Record<string, unknown>).status === 'number') {
+                status = (err as Record<string, unknown>).status as number;
             }
-        } else if (typeof error === 'object' && error !== null) {
-            if ('message' in error && typeof (error as Record<string, unknown>).message === 'string') {
-                errorMessage = (error as Record<string, unknown>).message as string;
+        } else if (typeof err === 'object' && err !== null) {
+            if ('message' in err && typeof (err as Record<string, unknown>).message === 'string') {
+                errorMessage = (err as Record<string, unknown>).message as string;
             }
-            if ('status' in error && typeof (error as Record<string, unknown>).status === 'number') {
-                status = (error as Record<string, unknown>).status as number;
+            if ('status' in err && typeof (err as Record<string, unknown>).status === 'number') {
+                status = (err as Record<string, unknown>).status as number;
             }
         }
 

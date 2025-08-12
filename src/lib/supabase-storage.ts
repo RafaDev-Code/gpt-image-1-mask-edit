@@ -12,6 +12,8 @@
 
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from './db.types'
+import { logger } from './logger'
+import { isError } from './utils'
 
 // Cliente de Supabase para operaciones de storage
 const supabase = createClient<Database>(
@@ -77,8 +79,11 @@ export async function uploadImage(
       path: filePath
     }
 
-  } catch (error) {
-    console.error('Unexpected error in uploadImage:', error)
+  } catch (err: unknown) {
+    logger.error('Unexpected error in uploadImage', {
+      component: 'SupabaseStorage',
+      error: isError(err) ? err.message : String(err)
+    })
     return {
       success: false,
       error: 'Unexpected error occurred during upload'
@@ -111,8 +116,11 @@ export async function getSignedUrl(filePath: string): Promise<StorageResult> {
       url: data.signedUrl
     }
 
-  } catch (error) {
-    console.error('Unexpected error in getSignedUrl:', error)
+  } catch (err: unknown) {
+    logger.error('Unexpected error in getSignedUrl', {
+      component: 'SupabaseStorage',
+      error: isError(err) ? err.message : String(err)
+    })
     return {
       success: false,
       error: 'Unexpected error occurred while creating signed URL'
@@ -144,8 +152,11 @@ export async function deleteImage(filePath: string): Promise<StorageResult> {
       success: true
     }
 
-  } catch (error) {
-    console.error('Unexpected error in deleteImage:', error)
+  } catch (err: unknown) {
+    logger.error('Unexpected error in deleteImage', {
+      component: 'SupabaseStorage',
+      error: isError(err) ? err.message : String(err)
+    })
     return {
       success: false,
       error: 'Unexpected error occurred during deletion'
@@ -183,8 +194,11 @@ export async function listUserImages(userId: string) {
       files: data || []
     }
 
-  } catch (error) {
-    console.error('Unexpected error in listUserImages:', error)
+  } catch (err: unknown) {
+    logger.error('Unexpected error in listUserImages', {
+      component: 'SupabaseStorage',
+      error: isError(err) ? err.message : String(err)
+    })
     return {
       success: false,
       error: 'Unexpected error occurred while listing images',

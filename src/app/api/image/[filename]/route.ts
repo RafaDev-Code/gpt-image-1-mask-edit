@@ -2,6 +2,8 @@ import fs from 'fs/promises';
 import { lookup } from 'mime-types';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
+import { logger } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 
 export const runtime = 'nodejs';
 
@@ -36,9 +38,13 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                 'Content-Length': fileBuffer.length.toString()
             }
         });
-    } catch (error: unknown) {
-        console.error(`Error serving image ${filename}:`, error);
-        if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'ENOENT') {
+    } catch (err: unknown) {
+        logger.error('Error serving image', {
+            component: 'ImageAPI',
+            filename,
+            error: isError(err) ? err.message : String(err)
+        });
+        if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'ENOENT') {
             return NextResponse.json({ error: 'Image not found' }, { status: 404 });
         }
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

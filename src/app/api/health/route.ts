@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { logger } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 
 export const runtime = 'nodejs';
 
@@ -17,8 +19,11 @@ export async function GET() {
             timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV || 'development'
         });
-    } catch (error) {
-        console.error('Health check error:', error);
+    } catch (err: unknown) {
+        logger.error('Health check error', {
+            component: 'HealthAPI',
+            error: isError(err) ? err.message : String(err)
+        });
         return NextResponse.json(
             {
                 ok: false,

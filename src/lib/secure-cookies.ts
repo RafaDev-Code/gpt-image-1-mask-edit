@@ -3,6 +3,8 @@
 // =====================================================
 
 import type { ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
+import { logger } from './logger';
+import { isError } from './utils';
 
 // Configuración de cookies seguras
 export const COOKIE_OPTIONS = {
@@ -64,8 +66,11 @@ export function validateRedirectUrl(next: string | null | undefined, origin?: st
     }
     
     return (origin || '') + next;
-  } catch (error) {
-    console.warn(`Invalid redirect URL: ${next}`, error);
+  } catch (err: unknown) {
+    logger.warn(`Invalid redirect URL: ${next}`, {
+      component: 'SecureCookies',
+      error: isError(err) ? err.message : String(err)
+    });
     return origin || '/';
   }
 }

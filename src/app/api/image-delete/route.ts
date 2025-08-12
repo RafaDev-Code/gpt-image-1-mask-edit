@@ -5,6 +5,8 @@ import crypto from 'crypto';
 import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
+import { logger } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 
 export const runtime = 'nodejs';
 
@@ -50,8 +52,11 @@ export async function POST(request: NextRequest) {
         }
         // Now read the original request body for processing
         requestBody = await request.json();
-    } catch (e) {
-        console.error('Error parsing request body for /api/image-delete:', e);
+    } catch (err: unknown) {
+        logger.error('Error parsing request body for /api/image-delete', {
+            component: 'ImageDeleteAPI',
+            error: isError(err) ? err.message : String(err)
+        });
         return NextResponse.json({ error: 'Invalid request body: Must be JSON.' }, { status: 400 });
     }
 
@@ -80,9 +85,13 @@ export async function POST(request: NextRequest) {
             await fs.unlink(filepath);
             console.log(`Successfully deleted image: ${filepath}`);
             deletionResults.push({ filename, success: true });
-        } catch (error: unknown) {
-            console.error(`Error deleting image ${filepath}:`, error);
-            if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'ENOENT') {
+        } catch (err: unknown) {
+            logger.error('Error deleting image', {
+                component: 'ImageDeleteAPI',
+                filepath,
+                error: isError(err) ? err.message : String(err)
+            });
+            if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'ENOENT') {
                 deletionResults.push({ filename, success: false, error: 'File not found.' });
             } else {
                 deletionResults.push({ filename, success: false, error: 'Failed to delete file.' });

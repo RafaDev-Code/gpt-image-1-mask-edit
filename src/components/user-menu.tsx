@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import { logger } from '@/lib/logger';
+import { logger, isError } from '@/lib/logger';
 
 export function UserMenu() {
     const router = useRouter();
@@ -30,9 +30,11 @@ export function UserMenu() {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
                 setUser(session?.user ?? null);
-            } catch (error) {
-                logger.supabase('get_session', error);
-                console.error('Error getting initial session:', error);
+            } catch (err: unknown) {
+                logger.supabase('get_session', err);
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('Error getting initial session:', isError(err) ? err.message : String(err));
+                }
             } finally {
                 setIsLoading(false);
             }
@@ -69,9 +71,11 @@ export function UserMenu() {
             document.cookie = 'locale=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
             
             router.push('/');
-        } catch (error) {
-            logger.supabase('sign_out', error, { userId: user?.id });
-            console.error('Error signing out:', error);
+        } catch (err: unknown) {
+            logger.supabase('sign_out', err, { userId: user?.id });
+            if (process.env.NODE_ENV !== 'production') {
+                console.error('Error signing out:', isError(err) ? err.message : String(err));
+            }
         }
     };
     
