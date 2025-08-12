@@ -6,8 +6,7 @@ import { Card, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { logger } from '@/lib/logger';
-import { isError } from '@/lib/utils';
+import { logger, isError } from '@/lib/logger';
 import {
     Dialog,
     DialogContent,

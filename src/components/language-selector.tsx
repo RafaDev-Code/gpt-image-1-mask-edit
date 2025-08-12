@@ -44,20 +44,20 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
           <Button 
             variant="outline" 
             size="sm" 
-            className="inline-flex h-8 px-3 min-w-[120px] gap-2 overflow-hidden whitespace-nowrap truncate focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" 
+            className="inline-flex h-8 w-8 sm:w-auto sm:px-3 sm:min-w-[120px] p-0 sm:p-2 sm:gap-2 items-center justify-center overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" 
             title={currentLanguage.name}
             aria-label={`Language: ${currentLanguage.name}`}
           >
-          <Globe className="h-4 w-4 flex-shrink-0" />
-          <span className="truncate">
-            {/* En móvil: solo bandera */}
-            <span className="sm:hidden">{currentLanguage.flag}</span>
-            {/* En desktop: bandera + nombre, pero en ≤360px solo bandera */}
-            <span className="hidden sm:inline">
+          {/* En <640px: solo bandera/ícono */}
+          <span className="sm:hidden text-base">{currentLanguage.flag}</span>
+          {/* En ≥640px: ícono + texto truncado */}
+          <div className="hidden sm:flex sm:items-center sm:gap-2">
+            <Globe className="h-4 w-4 flex-shrink-0" />
+            <span className="truncate">
               <span>{currentLanguage.flag}</span>
-              <span className="max-[360px]:sr-only ml-1">{currentLanguage.name}</span>
+              <span className="ml-1">{currentLanguage.name}</span>
             </span>
-          </span>
+          </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
