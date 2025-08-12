@@ -1,18 +1,52 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import type { Database } from '@/lib/db.types';
-import { validateThemeValues } from '@/lib/secure-cookies';
+
+// Validación de valores de tema inline para evitar importaciones problemáticas
+type ThemeScheme = 'light' | 'dark';
+type ThemeColor = 'blue' | 'green' | 'purple' | 'orange' | 'red';
+type Locale = 'en' | 'es';
+
+function validateThemeValues(data: {
+  scheme?: string;
+  color?: string;
+  locale?: string;
+}): {
+  scheme: ThemeScheme;
+  color: ThemeColor;
+  locale: Locale;
+} {
+  const validSchemes: ThemeScheme[] = ['light', 'dark'];
+  const validColors: ThemeColor[] = ['blue', 'green', 'purple', 'orange', 'red'];
+  const validLocales: Locale[] = ['en', 'es'];
+
+  return {
+    scheme: validSchemes.includes(data.scheme as ThemeScheme) ? data.scheme as ThemeScheme : 'light',
+    color: validColors.includes(data.color as ThemeColor) ? data.color as ThemeColor : 'blue',
+    locale: validLocales.includes(data.locale as Locale) ? data.locale as Locale : 'en',
+  };
+}
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+  // Guard de ENV - fail-open si faltan variables
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn('Missing Supabase environment variables, middleware bypassed');
+    return NextResponse.next();
+  }
 
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  try {
+    let response = NextResponse.next({
+      request: {
+        headers: request.headers,
+      },
+    });
+
+    const supabase = createServerClient<Database>(
+      supabaseUrl,
+      supabaseAnonKey,
     {
       cookies: {
         get(name: string) {
@@ -148,7 +182,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(redirectPath, request.url));
   }
 
-  return response;
+    return response;
+  } catch (error) {
+    // Try/catch global - fail-open en caso de error
+    console.error('Middleware error:', error);
+    return NextResponse.next();
+  }
 }
 
 export const config = {
@@ -159,7 +198,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
+     * - auth/callback (temporarily excluded for debugging)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|auth/callback|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
