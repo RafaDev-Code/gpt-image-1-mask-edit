@@ -164,10 +164,10 @@ export function logContrastResults(themeName: string, results: ContrastResult[])
   console.group(`🎨 Contrast validation for "${themeName}" theme`);
   
   results.forEach((result) => {
-    const icon = result.meetsAA ? '✅' : '⚠️';
-    const aaaIcon = result.meetsAAA ? ' (AAA ✅)' : '';
+    // const icon = result.meetsAA ? '✅' : '❌';
+    // const aaaIcon = result.meetsAAA ? ' (AAA ✅)' : '';
     
-    console.log(`${icon} ${result.tokenPair}: ${result.ratio}:1${aaaIcon}`);
+    // console.log(`${icon} ${result.tokenPair}: ${result.ratio}:1${aaaIcon}`);
     
     if (result.warning) {
       console.warn(`   ${result.warning}`);
@@ -178,7 +178,7 @@ export function logContrastResults(themeName: string, results: ContrastResult[])
   if (failedCount > 0) {
     console.warn(`⚠️ ${failedCount} color pairs do not meet WCAG AA standards`);
   } else {
-    console.log('✅ All color pairs meet WCAG AA standards');
+    // console.log('✅ All color pairs meet WCAG AA standards');
   }
   
   console.groupEnd();

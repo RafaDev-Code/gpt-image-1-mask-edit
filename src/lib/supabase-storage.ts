@@ -1,3 +1,4 @@
+// demo-only: not used in production
 /**
  * Supabase Storage Integration (Opcional)
  * 

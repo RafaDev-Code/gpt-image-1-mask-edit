@@ -13,9 +13,7 @@ export function supabaseBrowser() {
         throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is not set');
     }
     
-    if (process.env.NODE_ENV !== 'production') {
-        console.debug('supabaseBrowser OK');
-    }
+    // Debug log removed for production
     
     return createBrowserClient<Database>(url, anonKey);
 }

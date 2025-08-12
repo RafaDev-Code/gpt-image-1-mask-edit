@@ -257,14 +257,14 @@ export default function HomePage() {
                         setEditImageFiles((prevFiles) => [...prevFiles, file]);
                         setEditSourceImagePreviewUrls((prevUrls) => [...prevUrls, previewUrl]);
 
-                        console.log('Pasted image added:', file.name);
+                        // Image added from paste
 
                         break;
                     }
                 }
             }
             if (!imageFound) {
-                console.log('Paste event did not contain a recognized image file.');
+                // No valid image found in paste event
             }
         };
 
@@ -296,7 +296,7 @@ export default function HomePage() {
             setError(null);
             setIsPasswordDialogOpen(false);
             if (passwordDialogContext === 'retry' && lastApiCallArgs) {
-                console.log('Retrying API call after password save...');
+                // Retrying API call with saved password
                 await handleApiCall(...lastApiCallArgs);
             }
         } catch (err: unknown) {
@@ -366,7 +366,7 @@ export default function HomePage() {
             apiFormData.append('mask', editGeneratedMaskFile, editGeneratedMaskFile.name);
         }
 
-        console.log('Sending request to /api/images with mode:', mode);
+        // Sending image generation request
 
         try {
             const response = await fetch('/api/images', {
@@ -388,11 +388,11 @@ export default function HomePage() {
                 throw new Error(result.error || `API request failed with status ${response.status}`);
             }
 
-            console.log('API Response:', result);
+            // API response received
 
             if (result.images && result.images.length > 0) {
                 durationMs = Date.now() - startTime;
-                console.log(`API call successful. Duration: ${durationMs}ms`);
+                // API call completed
 
                 const historyQuality = editQuality;
                 const historyPrompt = editPrompt;
@@ -414,7 +414,7 @@ export default function HomePage() {
 
                 let newImageBatchPromises: Promise<{ path: string; filename: string } | null>[] = [];
                 if (effectiveStorageModeClient === 'indexeddb') {
-                    console.log('Processing images for IndexedDB storage...');
+                    // Processing images for storage
                     newImageBatchPromises = result.images.map(async (img: ApiImageResponseItem) => {
                         if (img.b64_json) {
                             try {
@@ -429,7 +429,7 @@ export default function HomePage() {
                                 const blob = new Blob([byteArray], { type: actualMimeType });
 
                                 await db.images.put({ filename: img.filename, blob, timestamp: Date.now() });
-                                console.log(`Saved ${img.filename} to IndexedDB with type ${actualMimeType}.`);
+                                // Image saved to storage
 
                                 const blobUrl = URL.createObjectURL(blob);
                                 return { filename: img.filename, path: blobUrl, blobUrl };
@@ -443,7 +443,7 @@ export default function HomePage() {
                                 return null;
                             }
                         } else {
-                            console.warn(`Image ${img.filename} missing b64_json in indexeddb mode.`);
+                            // Image missing data in storage mode
                             return null;
                         }
                     });
@@ -499,9 +499,7 @@ export default function HomePage() {
     };
 
     const handleHistorySelect = (item: HistoryMetadata) => {
-        console.log(
-            `Selecting history item from ${new Date(item.timestamp).toISOString()}, stored via: ${item.storageModeUsed}`
-        );
+        // Selecting history item
         const originalStorageMode = item.storageModeUsed || 'fs';
 
         const selectedBatchPromises = item.images.map(async (imgInfo) => {
@@ -515,9 +513,7 @@ export default function HomePage() {
             if (path) {
                 return { path, filename: imgInfo.filename };
             } else {
-                console.warn(
-                    `Could not get image source for history item: ${imgInfo.filename} (mode: ${originalStorageMode})`
-                );
+                // Could not load image from history
                 setError(`Image ${imgInfo.filename} could not be loaded.`);
                 return null;
             }
@@ -553,11 +549,11 @@ export default function HomePage() {
 
             try {
                 localStorage.removeItem('openaiImageHistory');
-                console.log('Cleared history metadata from localStorage.');
+                // History metadata cleared
 
                 if (effectiveStorageModeClient === 'indexeddb') {
                     await db.images.clear();
-                    console.log('Cleared images from IndexedDB.');
+                    // Images cleared from storage
 
                     setBlobUrlCache({});
                 }
@@ -578,7 +574,7 @@ export default function HomePage() {
 
         const alreadyExists = editImageFiles.some((file) => file.name === filename);
         if (alreadyExists) {
-            console.log(`Image ${filename} already in edit list.`);
+            // Image already in edit list
             setIsSendingToEdit(false);
             return;
         }
@@ -589,32 +585,32 @@ export default function HomePage() {
             return;
         }
 
-        console.log(`Sending image ${filename} to edit...`);
+        // Sending image to edit form
 
         try {
             let blob: Blob | undefined;
             let mimeType: string = 'image/png';
 
             if (effectiveStorageModeClient === 'indexeddb') {
-                console.log(`Fetching blob ${filename} from IndexedDB...`);
+                // Fetching image from storage
 
                 const record = allDbImages?.find((img) => img.filename === filename);
                 if (record?.blob) {
                     blob = record.blob;
                     mimeType = blob.type || mimeType;
-                    console.log(`Found blob ${filename} in IndexedDB.`);
+                    // Image found in storage
                 } else {
                     throw new Error(`Image ${filename} not found in local database.`);
                 }
             } else {
-                console.log(`Fetching image ${filename} from API...`);
+                // Fetching image from API
                 const response = await fetch(`/api/image/${filename}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch image: ${response.statusText}`);
                 }
                 blob = await response.blob();
                 mimeType = response.headers.get('Content-Type') || mimeType;
-                console.log(`Fetched image ${filename} from API.`);
+                // Image fetched from API
             }
 
             if (!blob) {
@@ -631,7 +627,7 @@ export default function HomePage() {
 
             // Mode is always 'edit' in this version
 
-            console.log(`Successfully set ${filename} in edit form.`);
+            // Image successfully added to edit form
         } catch (err: unknown) {
             logger.error('Error sending image to edit', {
                 component: 'home-page',
@@ -646,7 +642,7 @@ export default function HomePage() {
 
     const executeDeleteItem = async (item: HistoryMetadata) => {
         if (!item) return;
-        console.log(`Executing delete for history item timestamp: ${item.timestamp}`);
+        // Executing delete for history item
         setError(null); // Clear previous errors
 
         const { images: imagesInEntry, storageModeUsed, timestamp } = item;
@@ -654,16 +650,16 @@ export default function HomePage() {
 
         try {
             if (storageModeUsed === 'indexeddb') {
-                console.log('Deleting from IndexedDB:', filenamesToDelete);
+                // Deleting from storage
                 await db.images.where('filename').anyOf(filenamesToDelete).delete();
                 setBlobUrlCache((prevCache) => {
                     const newCache = { ...prevCache };
                     filenamesToDelete.forEach((fn) => delete newCache[fn]);
                     return newCache;
                 });
-                console.log('Successfully deleted from IndexedDB and cleared blob cache.');
+                // Successfully deleted from storage
             } else if (storageModeUsed === 'fs') {
-                console.log('Requesting deletion from filesystem via API:', filenamesToDelete);
+                // Requesting deletion via API
                 const apiPayload: { filenames: string[]; passwordHash?: string } = { filenames: filenamesToDelete };
                 if (isPasswordRequiredByBackend && clientPasswordHash) {
                     apiPayload.passwordHash = clientPasswordHash;
@@ -677,10 +673,10 @@ export default function HomePage() {
 
                 const result = await response.json();
                 if (!response.ok) {
-                    console.error('API deletion error:', result);
+                    // API deletion error
                     throw new Error(result.error || `API deletion failed with status ${response.status}`);
                 }
-                console.log('API deletion successful:', result);
+                // API deletion successful
             }
 
             setHistory((prevHistory) => prevHistory.filter((h) => h.timestamp !== timestamp));

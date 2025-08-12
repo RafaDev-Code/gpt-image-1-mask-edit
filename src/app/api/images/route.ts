@@ -112,11 +112,10 @@ async function retryWithBackoff<T>(
             let delay;
             if (isRateLimitError) {
                 delay = Math.max(5000, baseDelay * Math.pow(3, attempt)); // Minimum 5 seconds, exponential with base 3
-                console.log(`Rate limit exceeded (attempt ${attempt + 1}). Waiting ${delay}ms before retry...`);
+                // Rate limit exceeded, retrying after delay
             } else {
                 delay = baseDelay * Math.pow(2, attempt);
-                const errorMessage = err instanceof Error ? err.message : String(err);
-                console.log(`Connection error (attempt ${attempt + 1}): ${errorMessage}. Retrying in ${delay}ms...`);
+                // Connection error, retrying after delay
             }
             
             await new Promise(resolve => setTimeout(resolve, delay));
@@ -127,7 +126,7 @@ async function retryWithBackoff<T>(
 }
 
 export async function POST(request: NextRequest) {
-    console.log('Received POST request to /api/images');
+    // Processing image generation request
 
     if (!process.env.OPENAI_API_KEY) {
         console.error('OPENAI_API_KEY is not set.');
@@ -173,7 +172,7 @@ export async function POST(request: NextRequest) {
 
         const prompt = formData.get('prompt') as string | null;
 
-        console.log(`Mode: edit, Prompt: ${prompt ? prompt.substring(0, 50) + '...' : 'N/A'}`);
+        // Edit mode processing
 
         if (!prompt) {
             return NextResponse.json({ error: 'Missing required parameter: prompt' }, { status: 400 });
@@ -212,11 +211,7 @@ export async function POST(request: NextRequest) {
                 params.mask = maskFile;
             }
 
-            console.log('Calling OpenAI edit with params:', {
-                ...params,
-                image: `[${imageFiles.map((f) => f.name).join(', ')}]`,
-                mask: maskFile ? maskFile.name : 'N/A'
-            });
+            // Calling OpenAI edit API
             
             // Use retry mechanism for OpenAI API call
             const result = await retryWithBackoff(
@@ -225,7 +220,7 @@ export async function POST(request: NextRequest) {
                 2000 // start with 2 second delay
             );
 
-        console.log('OpenAI API call successful.');
+        // OpenAI API call completed
 
         if (!result || !Array.isArray(result.data) || result.data.length === 0) {
             console.error('Invalid or empty data received from OpenAI API:', result);
@@ -246,9 +241,9 @@ export async function POST(request: NextRequest) {
 
                 if (effectiveStorageMode === 'fs') {
                     const filepath = path.join(outputDir, filename);
-                    console.log(`Attempting to save image to: ${filepath}`);
+                    // Saving image to filesystem
                     await fs.writeFile(filepath, buffer);
-                    console.log(`Successfully saved image: ${filename}`);
+                    // Image saved successfully
                 } else {
                 }
 
@@ -266,7 +261,7 @@ export async function POST(request: NextRequest) {
             })
         );
 
-        console.log(`All images processed. Mode: ${effectiveStorageMode}`);
+        // All images processed successfully
 
         return NextResponse.json({ images: savedImagesData, usage: result.usage });
     } catch (err: unknown) {

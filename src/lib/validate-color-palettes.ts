@@ -84,18 +84,18 @@ export function getPaletteValidationSummary(): {
 
 // Run validation if this file is executed directly
 if (typeof window === 'undefined' && require.main === module) {
-  console.log('🎨 Validating all color palettes...');
-  const summary = getPaletteValidationSummary();
+  // console.log('🎨 Validating all color palettes...');
+  // const summary = getPaletteValidationSummary();
   
-  console.log('\n📊 Summary:');
-  console.log(`✅ Compliant palettes: ${summary.compliantPalettes}/${summary.totalPalettes}`);
-  
-  if (summary.failedPairs.length > 0) {
-    console.log(`⚠️ Failed pairs: ${summary.failedPairs.length}`);
-    summary.failedPairs.forEach(pair => {
-      console.log(`   - ${pair.tokenPair}: ${pair.ratio}:1`);
-    });
-  } else {
-    console.log('🎉 All palettes meet WCAG AA standards!');
-  }
+  // console.log('\n📊 Summary:');
+// console.log(`✅ Compliant palettes: ${summary.compliantPalettes}/${summary.totalPalettes}`);
+
+// if (summary.failedPairs.length > 0) {
+// console.log(`⚠️ Failed pairs: ${summary.failedPairs.length}`);
+// summary.failedPairs.forEach(pair => {
+// console.log(`   - ${pair.tokenPair}: ${pair.ratio}:1`);
+// });
+// } else {
+// console.log('🎉 All palettes meet WCAG AA standards!');
+// }
 }

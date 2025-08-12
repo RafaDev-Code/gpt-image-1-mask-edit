@@ -28,7 +28,7 @@ type FileDeletionResult = {
 };
 
 export async function POST(request: NextRequest) {
-    console.log('Received POST request to /api/image-delete');
+    // Processing image deletion request
 
     let requestBody: DeleteRequestBody;
     try {
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
 
         try {
             await fs.unlink(filepath);
-            console.log(`Successfully deleted image: ${filepath}`);
+            // Image deleted successfully
             deletionResults.push({ filename, success: true });
         } catch (err: unknown) {
             logger.error('Error deleting image', {

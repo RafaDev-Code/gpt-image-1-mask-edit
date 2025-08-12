@@ -77,27 +77,27 @@ const themes = {
  * Validate all themes and log results
  */
 export function validateAllThemes(): void {
-  console.log('🎨 Starting theme contrast validation...\n');
+  // console.log('🎨 Starting theme contrast validation...\n');
   
-  let totalFailures = 0;
+  // let totalFailures = 0;
   
   Object.entries(themes).forEach(([themeName, themeColors]) => {
     const results = validateThemeContrast(themeColors);
     logContrastResults(themeName, results);
     
-    const failures = results.filter(r => !r.meetsAA).length;
-    totalFailures += failures;
+    // const failures = results.filter(r => !r.meetsAA).length;
+    // totalFailures += failures;
     
-    console.log(''); // Add spacing between themes
+    // console.log(''); // Add spacing between themes
   });
   
-  console.log('📊 Validation Summary:');
-  if (totalFailures === 0) {
-    console.log('✅ All themes pass WCAG AA contrast requirements!');
-  } else {
-    console.warn(`⚠️ Found ${totalFailures} contrast issues across all themes`);
-    console.log('💡 Consider adjusting colors to improve accessibility');
-  }
+  // console.log('📊 Validation Summary:');
+  // if (totalFailures === 0) {
+  //   console.log('✅ All themes pass WCAG AA contrast requirements!');
+  // } else {
+  //   console.warn(`⚠️ Found ${totalFailures} contrast issues across all themes`);
+  //   console.log('💡 Consider adjusting colors to improve accessibility');
+  // }
 }
 
 // Run validation if this file is executed directly

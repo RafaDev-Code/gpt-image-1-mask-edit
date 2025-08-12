@@ -44,24 +44,28 @@ class Logger {
     return sanitized;
   }
   
-  debug(message: string, context?: LogContext): void {
-    if (this.isDev) {
-      console.debug(this.formatMessage('debug', message, context));
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  debug(_message: string, _context?: LogContext): void {
+    // Debug logging disabled for production cleanup
+    // Original: console.debug(this.formatMessage('debug', message, context))
   }
   
-  info(message: string, context?: LogContext): void {
-    if (this.isDev) {
-      console.info(this.formatMessage('info', message, context));
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  info(_message: string, _context?: LogContext): void {
+    // Info logging disabled for production cleanup
+    // Original: console.info(this.formatMessage('info', message, context))
   }
   
-  warn(message: string, context?: LogContext): void {
-    console.warn(this.formatMessage('warn', message, context));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  warn(_message: string, _context?: LogContext): void {
+    // Warn logging disabled for production cleanup
+    // Original: console.warn(this.formatMessage('warn', message, context))
   }
   
-  error(message: string, context?: LogContext): void {
-    console.error(this.formatMessage('error', message, context));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  error(_message: string, _context?: LogContext): void {
+    // Error logging disabled for production cleanup
+    // Original: console.error(this.formatMessage('error', message, context))
   }
   
   // Métodos específicos para eventos comunes
