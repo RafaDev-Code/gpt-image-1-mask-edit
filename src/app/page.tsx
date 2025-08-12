@@ -15,6 +15,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
 import * as React from 'react';
 import { logger, isError } from '@/lib/logger';
+import { getErrorMessage } from '@/lib/utils';
 
 type HistoryImage = {
     filename: string;
@@ -489,8 +490,7 @@ export default function HomePage() {
                 durationMs,
                 error: isError(err) ? err.message : String(err)
             });
-            const errorMessage = isError(err) ? err.message : 'An unexpected error occurred.';
-            setError(errorMessage);
+            setError(getErrorMessage(err) || 'An unexpected error occurred.');
             setLatestImageBatch(null);
         } finally {
             if (durationMs === 0) durationMs = Date.now() - startTime;
@@ -638,8 +638,7 @@ export default function HomePage() {
                 filename,
                 error: isError(err) ? err.message : String(err)
             });
-            const errorMessage = isError(err) ? err.message : 'Failed to send image to edit form.';
-            setError(errorMessage);
+            setError(getErrorMessage(err) || 'Failed to send image to edit form.');
         } finally {
             setIsSendingToEdit(false);
         }
@@ -694,7 +693,7 @@ export default function HomePage() {
                 timestamp,
                 error: isError(err) ? err.message : String(err)
             });
-            setError(isError(err) ? err.message : 'An unexpected error occurred during deletion.');
+            setError(getErrorMessage(err) || 'An unexpected error occurred during deletion.');
         } finally {
             setItemToDeleteConfirm(null); // Always close dialog
         }

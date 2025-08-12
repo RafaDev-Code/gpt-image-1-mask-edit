@@ -7,10 +7,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import type { User } from '@supabase/supabase-js';
 
-export const metadata = {
-  title: 'Dashboard - QA Auth',
-  description: 'Dashboard mínimo para QA de autenticación'
-};
+// Metadata removido - no se puede exportar desde client component
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);

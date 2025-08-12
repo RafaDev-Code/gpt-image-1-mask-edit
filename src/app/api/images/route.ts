@@ -55,9 +55,9 @@ async function ensureOutputDirExists() {
                 throw new Error('Failed to create image output directory.');
             }
         } else {
-            console.error(`Error accessing output directory ${outputDir}:`, error);
+            console.error(`Error accessing output directory ${outputDir}:`, err);
             throw new Error(
-                `Failed to access or ensure image output directory exists. Original error: ${error instanceof Error ? error.message : String(error)}`
+                `Failed to access or ensure image output directory exists. Original error: ${err instanceof Error ? err.message : String(err)}`
             );
         }
     }
@@ -83,29 +83,29 @@ async function retryWithBackoff<T>(
             
             // Check if it's a retryable error
             const isConnectionError = 
-                error instanceof Error && (
-                    error.message.includes('ECONNRESET') ||
-                    error.message.includes('Connection error') ||
-                    error.message.includes('ENOTFOUND') ||
-                    error.message.includes('ETIMEDOUT') ||
-                    error.message.includes('socket hang up')
+                err instanceof Error && (
+                    err.message.includes('ECONNRESET') ||
+                    err.message.includes('Connection error') ||
+                    err.message.includes('ENOTFOUND') ||
+                    err.message.includes('ETIMEDOUT') ||
+                    err.message.includes('socket hang up')
                 );
             
             // Check if it's a rate limit error (429)
             const isRateLimitError = 
-                error instanceof Error && (
-                    error.message.includes('429') ||
-                    error.message.includes('rate limit') ||
-                    error.message.includes('exceeded the rate limit')
+                err instanceof Error && (
+                    err.message.includes('429') ||
+                    err.message.includes('rate limit') ||
+                    err.message.includes('exceeded the rate limit')
                 ) || 
                 // Handle OpenAI API error objects
-                (error as Record<string, unknown>)?.status === 429 ||
-                (error as Record<string, unknown>)?.code === 'rate_limit_exceeded';
+                (err as Record<string, unknown>)?.status === 429 ||
+                (err as Record<string, unknown>)?.code === 'rate_limit_exceeded';
             
             const isRetryableError = isConnectionError || isRateLimitError;
             
             if (!isRetryableError || attempt === maxRetries) {
-                throw error;
+                throw err;
             }
             
             // For rate limit errors, use longer delays
@@ -115,7 +115,7 @@ async function retryWithBackoff<T>(
                 console.log(`Rate limit exceeded (attempt ${attempt + 1}). Waiting ${delay}ms before retry...`);
             } else {
                 delay = baseDelay * Math.pow(2, attempt);
-                const errorMessage = error instanceof Error ? error.message : String(error);
+                const errorMessage = err instanceof Error ? err.message : String(err);
                 console.log(`Connection error (attempt ${attempt + 1}): ${errorMessage}. Retrying in ${delay}ms...`);
             }
             
