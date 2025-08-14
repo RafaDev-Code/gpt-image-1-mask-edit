@@ -2,7 +2,7 @@
 import { useState, useTransition } from 'react';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import type { ProfileFormData, ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
-import { setClientThemeCookies, validateThemeValues } from '@/lib/secure-cookies';
+import { validateThemeValues } from '@/lib/secure-cookies';
 import { useToast } from '@/hooks/use-toast';
 import { log } from '@/lib/logger';
 import { useTheme } from '@/hooks/use-theme';
