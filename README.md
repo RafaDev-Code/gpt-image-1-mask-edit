@@ -28,6 +28,7 @@ A specialized image editing tool powered by OpenAI's `gpt-image-1` model.
 *   **💾 Storage:** Local filesystem mode for development
 *   **♿ Accessible Design:** Full keyboard navigation support and high contrast ratios
 
+
 <p align="center">
   <img src="./readme-images/mask-creation.jpg" alt="Mask Creation" width="350"/>
 </p>
