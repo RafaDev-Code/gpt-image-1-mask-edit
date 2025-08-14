@@ -5,6 +5,7 @@ import type { ProfileFormData, ThemeScheme, ThemeColor, Locale } from '@/lib/db.
 import { setClientThemeCookies, validateThemeValues } from '@/lib/secure-cookies';
 import { useToast } from '@/hooks/use-toast';
 import { log } from '@/lib/logger';
+import { useTheme } from '@/hooks/use-theme';
 
 interface SettingsFormProps {
   initial: Partial<ProfileFormData> | null;
@@ -13,6 +14,7 @@ interface SettingsFormProps {
 export default function SettingsForm({ initial }: SettingsFormProps) {
   const supabase = supabaseBrowser();
   const { toast } = useToast();
+  const { setScheme: setThemeScheme, setColor: setThemeColor, setLocale: setThemeLocale } = useTheme();
   
   // Validar y establecer valores iniciales
   const validatedInitial = validateThemeValues({
@@ -60,13 +62,10 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
         return;
       }
 
-      // Sync instantáneo y seguro (sin flicker)
-      const html = document.documentElement;
-      html.setAttribute('data-scheme', validatedData.scheme);
-      html.setAttribute('data-color', validatedData.color);
-      
-      // Establecer cookies seguras
-      setClientThemeCookies(validatedData);
+      // Sincronizar con ThemeProvider (esto maneja DOM, cookies y i18n automáticamente)
+      setThemeScheme(validatedData.scheme);
+      setThemeColor(validatedData.color);
+      setThemeLocale(validatedData.locale);
       
       // Toast de éxito
       toast({

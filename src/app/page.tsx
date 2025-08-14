@@ -5,8 +5,6 @@ import { HistoryPanel } from '@/components/history-panel';
 import { ImageOutput } from '@/components/image-output';
 import { PasswordDialog } from '@/components/password-dialog';
 import { LanguageSelector } from '@/components/language-selector';
-import { SchemeToggle } from '@/components/scheme-toggle';
-import { ColorSwitcher } from '@/components/color-switcher';
 import { UserMenu } from '@/components/user-menu';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { calculateApiCost, type CostDetails } from '@/lib/cost-utils';
@@ -744,9 +742,6 @@ export default function HomePage() {
                         {/* Derecha: cluster fijo que NO se encoge */}
                         <div className="shrink-0 flex items-center gap-1 sm:gap-2">
                             <UserMenu />
-                            <SchemeToggle />
-                            {/* Color como botón con dropdown (no pills visibles) */}
-                            <ColorSwitcher />
                         </div>
                     </div>
                 </div>
