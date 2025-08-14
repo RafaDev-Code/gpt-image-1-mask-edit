@@ -1,7 +1,6 @@
 'use client';
 
 import { User } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
@@ -11,7 +10,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { log } from '@/lib/logger';
@@ -22,6 +20,7 @@ export function UserMenu() {
     const pathname = usePathname();
     const [user, setUser] = useState<SupabaseUser | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [open, setOpen] = useState(false);
     
     useEffect(() => {
         const supabase = supabaseBrowser();
@@ -61,7 +60,14 @@ export function UserMenu() {
         return () => subscription.unsubscribe();
     }, []);
     
-    const handleSignOut = async () => {
+    // Cerrar dropdown al cambiar de ruta
+    useEffect(() => {
+        setOpen(false);
+    }, [pathname]);
+    
+    const handleSignOut = async (e: Event) => {
+        e.preventDefault();
+        setOpen(false);
         try {
             const supabase = supabaseBrowser();
             await supabase.auth.signOut();
@@ -80,61 +86,73 @@ export function UserMenu() {
         }
     };
     
-    const handleSignIn = () => {
+    const handleSignIn = (e: Event) => {
+        e.preventDefault();
+        setOpen(false);
         const currentPath = pathname;
         router.push(`/auth/login?next=${encodeURIComponent(currentPath)}`);
     };
     
     if (isLoading) {
         return (
-            <Button
-                variant="ghost"
-                size="sm"
+            <button
+                type="button"
                 className="inline-flex h-8 w-8 min-w-[32px] rounded-full bg-card border border-border opacity-50"
                 disabled
                 aria-label="Cargando..."
             >
                 <User className="h-4 w-4 text-foreground flex-shrink-0" />
-            </Button>
+            </button>
         );
     }
     
     return (
-        <DropdownMenu modal={false}>
+        <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
             <DropdownMenuTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="inline-flex h-8 w-8 min-w-[32px] rounded-full bg-card border border-border hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                <button
+                    type="button"
                     aria-label="Cuenta"
+                    className="
+                        inline-flex h-8 w-8 items-center justify-center rounded-full
+                        p-0 leading-none
+                        bg-transparent text-foreground
+                        hover:bg-accent
+                        focus-visible:outline-none
+                        focus-visible:ring-2 focus-visible:ring-ring
+                        focus-visible:ring-offset-2 ring-offset-background
+                        data-[state=open]:bg-accent
+                    "
                 >
-                    <User className="h-4 w-4 text-foreground flex-shrink-0" />
-                </Button>
+                    <User className="h-4 w-4 block" aria-hidden="true" />
+                </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
                 align="end" 
-                className="w-48 bg-card border border-border"
+                sideOffset={8}
+                className="z-50 w-48 bg-card border border-border"
             >
                 {!user ? (
                     <DropdownMenuItem 
-                        onClick={handleSignIn}
+                        onSelect={handleSignIn}
                         className="text-foreground hover:bg-accent cursor-pointer"
                     >
                         Iniciar sesión
                     </DropdownMenuItem>
                 ) : (
                     <>
-                        <DropdownMenuItem asChild>
-                            <Link 
-                                href="/profile/settings" 
-                                className="text-foreground hover:bg-accent cursor-pointer"
-                            >
-                                Perfil
-                            </Link>
+                        <DropdownMenuItem 
+                            onSelect={(e) => {
+                                e.preventDefault();
+                                setOpen(false);
+                                router.push('/profile/settings');
+                            }}
+                            className="text-foreground hover:bg-accent cursor-pointer"
+                        >
+                            Perfil
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-border" />
                         <DropdownMenuItem 
-                            onClick={handleSignOut}
+                            onSelect={handleSignOut}
                             className="text-foreground hover:bg-accent cursor-pointer"
                         >
                             Cerrar sesión

@@ -2,7 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { usePathname } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,13 +21,21 @@ const languages = [
 export function LanguageSelector({ className = "" }: { className?: string }) {
   const { i18n } = useTranslation();
   const { locale, setLocale } = useTheme();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+  
+  // Cerrar dropdown al cambiar de ruta
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const changeLanguage = (languageCode: string) => {
+    setOpen(false);
     // Use ThemeProvider to persist locale in profile and sync cookies
     setLocale(languageCode as Locale);
   };
@@ -39,12 +47,11 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
 
   return (
     <div className={className}>
-      <DropdownMenu modal={false}>
+      <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="inline-flex h-8 w-8 sm:w-auto sm:px-3 sm:min-w-[120px] p-0 sm:p-2 sm:gap-2 items-center justify-center overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" 
+          <button 
+            type="button"
+            className="inline-flex h-8 w-8 sm:w-auto sm:px-3 sm:min-w-[120px] p-0 sm:p-2 sm:gap-2 items-center justify-center overflow-hidden border border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md" 
             title={currentLanguage.name}
             aria-label={`Language: ${currentLanguage.name}`}
           >
@@ -58,16 +65,17 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
               <span className="ml-1">{currentLanguage.name}</span>
             </span>
           </div>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="end"
-        className=""
-      >
+        </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent 
+           align="end"
+           sideOffset={8}
+           className="z-50"
+         >
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
-            onClick={() => changeLanguage(language.code)}
+            onSelect={() => changeLanguage(language.code)}
             className="gap-2"
             aria-current={i18n.language === language.code ? 'true' : undefined}
           >
