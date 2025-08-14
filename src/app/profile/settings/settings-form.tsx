@@ -5,7 +5,7 @@ import type { ProfileFormData, ThemeScheme, ThemeColor, Locale } from '@/lib/db.
 import { validateThemeValues } from '@/lib/secure-cookies';
 import { useToast } from '@/hooks/use-toast';
 import { log } from '@/lib/logger';
-import { useTheme } from '@/hooks/use-theme';
+import { useTheme } from '@/components/theme-provider';
 
 interface SettingsFormProps {
   initial: Partial<ProfileFormData> | null;
