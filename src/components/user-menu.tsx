@@ -61,9 +61,29 @@ export function UserMenu() {
         return () => subscription.unsubscribe();
     }, []);
     
-    // Cerrar dropdown al cambiar de ruta
+    // Cerrar dropdown al cambiar de ruta con limpieza agresiva
     useEffect(() => {
         setOpen(false);
+        
+        // Limpieza adicional para overlays persistentes
+        const cleanup = () => {
+            // Forzar cierre de cualquier dropdown abierto
+            const dropdownTrigger = document.querySelector('[data-testid="usermenu-trigger"]');
+            if (dropdownTrigger) {
+                dropdownTrigger.setAttribute('data-state', 'closed');
+                dropdownTrigger.setAttribute('aria-expanded', 'false');
+            }
+            
+            // Remover contenido del dropdown si existe
+            const dropdownContent = document.querySelector('[data-radix-dropdown-menu-content]');
+            if (dropdownContent && dropdownContent.getAttribute('data-state') === 'closed') {
+                dropdownContent.remove();
+            }
+        };
+        
+        // Ejecutar limpieza después de un pequeño delay
+        const timeoutId = setTimeout(cleanup, 50);
+        return () => clearTimeout(timeoutId);
     }, [pathname]);
     
     useEffect(() => {
@@ -172,7 +192,7 @@ export function UserMenu() {
                 align="end"
                 side="bottom"
                 sideOffset={8}
-                className="z-[200] w-48 bg-card border border-border"
+                className="z-60 w-48 bg-card border border-border"
             >
                 {!user ? (
                     <DropdownMenuItem 

@@ -2,6 +2,7 @@ import './globals.css';
 import { I18nProvider } from '@/components/i18n-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
+import { OverlayCleanup } from '@/components/overlay-cleanup';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { supabaseServer } from '@/lib/supabase/server';
@@ -75,6 +76,7 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider initialScheme={themeData.scheme} initialColor={themeData.color} initialLocale={themeData.locale}>
           <I18nProvider>
+            <OverlayCleanup />
             {children}
             <Toaster />
           </I18nProvider>
