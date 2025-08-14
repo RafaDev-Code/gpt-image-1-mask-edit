@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
-import { logger } from '@/lib/logger';
+import { log } from '@/lib/logger';
 import { isError } from '@/lib/utils';
 
 export const runtime = 'nodejs';
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
             // Image deleted successfully
             deletionResults.push({ filename, success: true });
         } catch (err: unknown) {
-            logger.error('Error deleting image', {
+            log.error('Error deleting image', {
                 component: 'ImageDeleteAPI',
                 filepath,
                 error: isError(err) ? err.message : String(err)

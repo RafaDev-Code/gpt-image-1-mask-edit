@@ -14,7 +14,7 @@ import { db, type ImageRecord } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
 import * as React from 'react';
-import { logger, isError } from '@/lib/logger';
+import { log } from '@/lib/logger';
 import { getErrorMessage } from '@/lib/utils';
 
 type HistoryImage = {
@@ -166,7 +166,7 @@ export default function HomePage() {
                 }
             }
         } catch (err: unknown) {
-            logger.warn('Failed to load history from localStorage', {
+            log.warn('Failed to load history from localStorage', {
                 component: 'home-page',
                 error: isError(err) ? err.message : String(err)
             });
@@ -185,7 +185,7 @@ export default function HomePage() {
                 const data = await response.json();
                 setIsPasswordRequiredByBackend(data.passwordRequired);
             } catch (err: unknown) {
-                logger.warn('Error fetching auth status', {
+                log.warn('Error fetching auth status', {
                     component: 'home-page',
                     error: isError(err) ? err.message : String(err)
                 });
@@ -205,7 +205,7 @@ export default function HomePage() {
             try {
                 localStorage.setItem('openaiImageHistory', JSON.stringify(history));
             } catch (err: unknown) {
-                logger.warn('Failed to save history to localStorage', {
+                log.warn('Failed to save history to localStorage', {
                     component: 'home-page',
                     error: isError(err) ? err.message : String(err)
                 });
@@ -434,7 +434,7 @@ export default function HomePage() {
                                 const blobUrl = URL.createObjectURL(blob);
                                 return { filename: img.filename, path: blobUrl, blobUrl };
                             } catch (err: unknown) {
-                                logger.error('Error saving blob to IndexedDB', {
+                                log.error('Error saving blob to IndexedDB', {
                                     component: 'home-page',
                                     filename: img.filename,
                                     error: isError(err) ? err.message : String(err)
@@ -684,7 +684,7 @@ export default function HomePage() {
                 setLatestImageBatch(null); // Clear current view if it contained deleted images
             }
         } catch (err: unknown) {
-            logger.error('Error during item deletion', {
+            log.error('Error during item deletion', {
                 component: 'home-page',
                 timestamp,
                 error: isError(err) ? err.message : String(err)

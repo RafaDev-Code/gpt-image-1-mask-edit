@@ -196,7 +196,7 @@ export async function listUserImages(userId: string) {
     }
 
   } catch (err: unknown) {
-    logger.error('Unexpected error in listUserImages', {
+    log.error('Unexpected error in listUserImages', {
       component: 'SupabaseStorage',
       error: isError(err) ? err.message : String(err)
     })

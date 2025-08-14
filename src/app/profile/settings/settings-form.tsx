@@ -4,7 +4,7 @@ import { supabaseBrowser } from '@/lib/supabase/client';
 import type { ProfileFormData, ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
 import { setClientThemeCookies, validateThemeValues } from '@/lib/secure-cookies';
 import { useToast } from '@/hooks/use-toast';
-import { logger, isError } from '@/lib/logger';
+import { log } from '@/lib/logger';
 
 interface SettingsFormProps {
   initial: Partial<ProfileFormData> | null;
@@ -75,10 +75,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
       });
       
     } catch (err: unknown) {
-      logger.error('Settings save failed', {
-        component: 'settings-form',
-        error: isError(err) ? err.message : String(err)
-      });
+      log.error('Settings save failed:', err);
       toast({
         variant: "destructive",
         title: "Error inesperado",

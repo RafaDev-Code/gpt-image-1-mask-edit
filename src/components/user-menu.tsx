@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import { logger, isError } from '@/lib/logger';
+import { log } from '@/lib/logger';
 
 export function UserMenu() {
     const router = useRouter();

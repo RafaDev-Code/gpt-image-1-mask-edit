@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import { lookup } from 'mime-types';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
-import { logger } from '@/lib/logger';
+import { log } from '@/lib/logger';
 import { isError } from '@/lib/utils';
 
 export const runtime = 'nodejs';

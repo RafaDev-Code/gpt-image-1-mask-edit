@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabaseBrowser } from '@/lib/supabase/client';
-import { logger } from '@/lib/logger';
+import { log } from '@/lib/logger';
 import { isError } from '@/lib/utils';
 
 export default function AuthCallbackPage() {

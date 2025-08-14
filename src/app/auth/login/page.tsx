@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import { validateRedirectUrl } from '@/lib/secure-cookies';
 import { AuthError } from '@/components/auth-error';
-import { logger, isError } from '@/lib/logger';
+import { log } from '@/lib/logger';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();

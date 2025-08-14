@@ -6,7 +6,7 @@ import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/lib/db.types';
 import type { User } from '@supabase/supabase-js';
 import { validateThemeValues } from '@/lib/secure-cookies';
-import { logger, isError } from '@/lib/logger';
+import { log } from '@/lib/logger';
 
 export type Scheme = 'light' | 'dark';
 export type Color = 'default' | 'purple' | 'blue' | 'olive' | 'tangerine';

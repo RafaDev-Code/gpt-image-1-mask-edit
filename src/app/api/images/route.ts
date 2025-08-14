@@ -6,7 +6,7 @@ import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import path from 'path';
-import { logger } from '@/lib/logger';
+import { log } from '@/lib/logger';
 import { isError } from '@/lib/utils';
 
 export const runtime = 'nodejs';
@@ -45,9 +45,9 @@ async function ensureOutputDirExists() {
         if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'ENOENT') {
             try {
                 await fs.mkdir(outputDir, { recursive: true });
-                logger.info('Created output directory', { component: 'ImagesAPI', outputDir });
+                log.info('Created output directory', { component: 'ImagesAPI', outputDir });
             } catch (mkdirErr: unknown) {
-                logger.error('Error creating output directory', {
+                log.error('Error creating output directory', {
                     component: 'ImagesAPI',
                     outputDir,
                     error: isError(mkdirErr) ? mkdirErr.message : String(mkdirErr)

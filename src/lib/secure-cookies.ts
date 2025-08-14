@@ -3,7 +3,8 @@
 // =====================================================
 
 import type { ThemeScheme, ThemeColor, Locale } from '@/lib/db.types';
-import { logger, isError } from './logger';
+import { log } from './logger';
+import { isError } from './utils';
 
 // Configuración de cookies seguras
 export const COOKIE_OPTIONS = {
