@@ -21,6 +21,7 @@ export function UserMenu() {
     const [user, setUser] = useState<SupabaseUser | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [open, setOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
     
     useEffect(() => {
         const supabase = supabaseBrowser();
@@ -65,6 +66,15 @@ export function UserMenu() {
         setOpen(false);
     }, [pathname]);
     
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+    
+    useEffect(() => {
+        const el = document.querySelector('[data-testid="usermenu-trigger"]') as HTMLElement | null;
+        console.log('UserMenu trigger present:', !!el, 'classes:', el?.className);
+    }, [mounted]);
+    
     // Debug logging para análisis
     useEffect(() => {
         console.log('UserMenu render', { pathname, open, user: !!user, isLoading });
@@ -96,6 +106,8 @@ export function UserMenu() {
             }
         }
     }, [user, isLoading]);
+    
+    if (!mounted) return null;
     
     const handleSignOut = async (e: Event) => {
         e.preventDefault();
@@ -144,25 +156,23 @@ export function UserMenu() {
                 <button
                     type="button"
                     data-testid="usermenu-trigger"
-                    aria-label="Cuenta"
                     className="
-                        inline-flex h-8 w-8 items-center justify-center rounded-full
-                        p-0 leading-none
+                        inline-flex size-8 items-center justify-center
+                        rounded-full p-0 leading-none outline-none border border-border
                         bg-transparent text-foreground
-                        hover:bg-accent
-                        focus-visible:outline-none
-                        focus-visible:ring-2 focus-visible:ring-ring
-                        focus-visible:ring-offset-2 ring-offset-background
-                        data-[state=open]:bg-accent
+                        focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                        focus-visible:ring-offset-background
                     "
                 >
-                    <User className="h-4 w-4 block" aria-hidden="true" />
+                    <User className="block size-4 shrink-0" aria-hidden="true" />
+                    <span className="sr-only">Cuenta</span>
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent 
-                align="end" 
+            <DropdownMenuContent
+                align="end"
+                side="bottom"
                 sideOffset={8}
-                className="z-50 w-48 bg-card border border-border"
+                className="z-[200] w-48 bg-card border border-border"
             >
                 {!user ? (
                     <DropdownMenuItem 
@@ -177,7 +187,7 @@ export function UserMenu() {
                             onSelect={(e) => {
                                 e.preventDefault();
                                 setOpen(false);
-                                router.push('/profile/settings');
+                                router.push('/profile');
                             }}
                             className="text-foreground hover:bg-accent cursor-pointer"
                         >

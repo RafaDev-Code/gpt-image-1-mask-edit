@@ -732,7 +732,7 @@ export default function HomePage() {
             />
             
             {/* Header */}
-            <header className="relative z-50 border-b bg-background">
+            <header className="relative z-[100] pointer-events-auto border-b bg-background">
                 <div className="mx-auto w-full max-w-6xl px-2 sm:px-4 lg:px-6">
                     {/* 1 fila, sin wrap, optimizado para 320px+ */}
                     <div className="flex flex-nowrap items-center gap-1 sm:gap-2 py-3 sm:py-4 min-w-0">
