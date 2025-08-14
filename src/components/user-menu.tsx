@@ -65,6 +65,38 @@ export function UserMenu() {
         setOpen(false);
     }, [pathname]);
     
+    // Debug logging para análisis
+    useEffect(() => {
+        console.log('UserMenu render', { pathname, open, user: !!user, isLoading });
+    }, [pathname, open, user, isLoading]);
+    
+    // Debug del trigger después de montar
+    useEffect(() => {
+        const el = document.querySelector('[data-testid="usermenu-trigger"]') as HTMLElement | null;
+        console.log('UserMenu trigger classes:', el?.className);
+        if (el) {
+            const computedStyles = window.getComputedStyle(el);
+            console.log('UserMenu trigger computed styles:', {
+                display: computedStyles.display,
+                alignItems: computedStyles.alignItems,
+                justifyContent: computedStyles.justifyContent,
+                height: computedStyles.height,
+                width: computedStyles.width,
+                padding: computedStyles.padding,
+                lineHeight: computedStyles.lineHeight
+            });
+            
+            const svg = el.querySelector('svg');
+            if (svg) {
+                const svgStyles = window.getComputedStyle(svg);
+                console.log('UserMenu SVG computed styles:', {
+                    display: svgStyles.display,
+                    verticalAlign: svgStyles.verticalAlign
+                });
+            }
+        }
+    }, [user, isLoading]);
+    
     const handleSignOut = async (e: Event) => {
         e.preventDefault();
         setOpen(false);
@@ -111,6 +143,7 @@ export function UserMenu() {
             <DropdownMenuTrigger asChild>
                 <button
                     type="button"
+                    data-testid="usermenu-trigger"
                     aria-label="Cuenta"
                     className="
                         inline-flex h-8 w-8 items-center justify-center rounded-full
