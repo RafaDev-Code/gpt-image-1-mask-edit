@@ -24,9 +24,9 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
   });
   
   const [displayName, setDisplayName] = useState(initial?.display_name || '');
-  const [locale, setLocale] = useState<Locale>(validatedInitial.locale);
-  const [scheme, setScheme] = useState<ThemeScheme>(validatedInitial.scheme);
-  const [color, setColor] = useState<ThemeColor>(validatedInitial.color);
+  const [locale, setLocalLocale] = useState<Locale>(validatedInitial.locale);
+  const [scheme, setLocalScheme] = useState<ThemeScheme>(validatedInitial.scheme);
+  const [color, setLocalColor] = useState<ThemeColor>(validatedInitial.color);
   const [pending, start] = useTransition();
 
   const onSave = () => start(async () => {
@@ -42,7 +42,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
       }
 
       // Validar datos antes de enviar
-      const validatedData = validateThemeValues({ scheme, color, locale });
+      const validatedData = validateThemeValues({ scheme: scheme, color: color, locale: locale });
       
       const { error: dbError } = await supabase.from('profiles').upsert({
         id: user.id,
@@ -101,7 +101,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
         <select 
           className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring" 
           value={locale} 
-          onChange={e => setLocale(e.target.value as Locale)}
+          onChange={e => setLocalLocale(e.target.value as Locale)}
           disabled={pending}
         >
           <option value="en">English</option>
@@ -114,7 +114,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
         <select 
           className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring" 
           value={scheme} 
-          onChange={e => setScheme(e.target.value as ThemeScheme)}
+          onChange={e => setLocalScheme(e.target.value as ThemeScheme)}
           disabled={pending}
         >
           <option value="light">☀️ Light / Claro</option>
@@ -127,7 +127,7 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
         <select 
            className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring" 
           value={color} 
-          onChange={e => setColor(e.target.value as ThemeColor)}
+          onChange={e => setLocalColor(e.target.value as ThemeColor)}
           disabled={pending}
         >
           <option value="default">🔵 Default / Por defecto</option>
