@@ -155,7 +155,7 @@ export function UserMenu() {
             <DropdownMenuTrigger asChild>
                 <button
                     type="button"
-                    data-testid="UserMenu-trigger"
+                    data-testid="userMenu-trigger"
                     className="
                         inline-flex size-8 items-center justify-center
                         rounded-full p-0 leading-none outline-none border border-border
