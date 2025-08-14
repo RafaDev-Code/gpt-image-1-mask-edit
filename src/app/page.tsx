@@ -15,7 +15,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
 import * as React from 'react';
 import { log } from '@/lib/logger';
-import { getErrorMessage } from '@/lib/utils';
+import { getErrorMessage, isError } from '@/lib/utils';
 
 type HistoryImage = {
     filename: string;
@@ -300,7 +300,7 @@ export default function HomePage() {
                 await handleApiCall(...lastApiCallArgs);
             }
         } catch (err: unknown) {
-            logger.error('Error hashing password', {
+            log.error('Error hashing password', {
                 component: 'HomePage',
                 error: isError(err) ? err.message : String(err)
             });
@@ -485,7 +485,7 @@ export default function HomePage() {
             }
         } catch (err: unknown) {
             durationMs = Date.now() - startTime;
-            logger.error('API call failed', {
+            log.error('API call failed', {
                 component: 'home-page',
                 durationMs,
                 error: isError(err) ? err.message : String(err)
@@ -558,7 +558,7 @@ export default function HomePage() {
                     setBlobUrlCache({});
                 }
             } catch (err: unknown) {
-                logger.error('Failed during history clearing', {
+                log.error('Failed during history clearing', {
                     component: 'HomePage',
                     error: isError(err) ? err.message : String(err)
                 });
@@ -629,7 +629,7 @@ export default function HomePage() {
 
             // Image successfully added to edit form
         } catch (err: unknown) {
-            logger.error('Error sending image to edit', {
+            log.error('Error sending image to edit', {
                 component: 'home-page',
                 filename,
                 error: isError(err) ? err.message : String(err)

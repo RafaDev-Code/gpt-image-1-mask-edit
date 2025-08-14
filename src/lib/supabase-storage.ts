@@ -13,7 +13,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from './db.types'
-import { logger } from './logger'
+import { log } from './logger'
 import { isError } from './utils'
 
 // Cliente de Supabase para operaciones de storage
@@ -81,7 +81,7 @@ export async function uploadImage(
     }
 
   } catch (err: unknown) {
-    logger.error('Unexpected error in uploadImage', {
+    log.error('Unexpected error in uploadImage', {
       component: 'SupabaseStorage',
       error: isError(err) ? err.message : String(err)
     })
@@ -118,7 +118,7 @@ export async function getSignedUrl(filePath: string): Promise<StorageResult> {
     }
 
   } catch (err: unknown) {
-    logger.error('Unexpected error in getSignedUrl', {
+    log.error('Unexpected error in getSignedUrl', {
       component: 'SupabaseStorage',
       error: isError(err) ? err.message : String(err)
     })
@@ -154,7 +154,7 @@ export async function deleteImage(filePath: string): Promise<StorageResult> {
     }
 
   } catch (err: unknown) {
-    logger.error('Unexpected error in deleteImage', {
+    log.error('Unexpected error in deleteImage', {
       component: 'SupabaseStorage',
       error: isError(err) ? err.message : String(err)
     })

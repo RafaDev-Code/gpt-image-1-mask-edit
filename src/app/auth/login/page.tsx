@@ -8,6 +8,7 @@ import { supabaseBrowser } from '@/lib/supabase/client';
 import { validateRedirectUrl } from '@/lib/secure-cookies';
 import { AuthError } from '@/components/auth-error';
 import { log } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
@@ -32,7 +33,7 @@ export default function LoginPage() {
             });
             
             if (error) {
-                logger.auth('error', undefined, { 
+                log.error('Google login error', { 
                     provider: 'google', 
                     error: error.message,
                     code: error.status 
@@ -42,7 +43,7 @@ export default function LoginPage() {
                 }
             }
         } catch (err: unknown) {
-            logger.auth('error', undefined, { 
+            log.error('Unexpected Google login error', { 
                 provider: 'google', 
                 error: isError(err) ? err.message : String(err),
                 type: 'unexpected' 

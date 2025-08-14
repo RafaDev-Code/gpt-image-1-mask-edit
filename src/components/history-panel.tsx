@@ -6,7 +6,6 @@ import { Card, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { log } from '@/lib/logger';
 import {
     Dialog,
     DialogContent,
@@ -17,7 +16,8 @@ import {
     DialogFooter,
     DialogClose
 } from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
+import { cn, isError } from '@/lib/utils';
+import { log } from '@/lib/logger';
 import {
     Copy,
     Check,
@@ -110,7 +110,7 @@ export function HistoryPanel({
             setCopiedTimestamp(timestamp);
             setTimeout(() => setCopiedTimestamp(null), 1500);
         } catch (err: unknown) {
-            logger.warn('Failed to copy text', {
+            log.warn('Failed to copy text', {
                 component: 'HistoryPanel',
                 error: isError(err) ? err.message : String(err)
             });

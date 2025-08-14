@@ -7,6 +7,7 @@ import type { Database } from '@/lib/db.types';
 import type { User } from '@supabase/supabase-js';
 import { validateThemeValues } from '@/lib/secure-cookies';
 import { log } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 
 export type Scheme = 'light' | 'dark';
 export type Color = 'default' | 'purple' | 'blue' | 'olive' | 'tangerine';
@@ -154,7 +155,7 @@ export function ThemeProvider({
       setLocaleState(validated.locale as Locale);
       
     } catch (err: unknown) {
-      logger.warn('Theme initialization failed', {
+      log.warn('Theme initialization failed', {
         component: 'theme-provider',
         error: isError(err) ? err.message : String(err)
       });
@@ -216,10 +217,10 @@ export function ThemeProvider({
           });
 
         if (error) {
-          logger.supabase('save_theme_preferences', error, { userId: user.id });
+          log.error('save_theme_preferences error', { error: error.message, userId: user.id });
           console.error('Error saving theme preferences:', error);
         } else {
-          logger.supabase('save_theme_preferences', null, { userId: user.id });
+          log.info('save_theme_preferences success', { userId: user.id });
           // Update local profile data
           setProfileData(prev => prev ? {
             ...prev,
@@ -229,7 +230,7 @@ export function ThemeProvider({
           } : null);
         }
       } catch (err: unknown) {
-        logger.supabase('debounced_save', err, { userId: user?.id });
+        log.error('debounced_save error', { error: isError(err) ? err.message : String(err), userId: user?.id });
       }
     }, SAVE_DEBOUNCE_MS);
   }, [isAuthenticated, user, profileData, supabase]);
@@ -240,7 +241,7 @@ export function ThemeProvider({
     setSchemeState(newScheme);
     
     // Log theme change
-    logger.theme('scheme_change', user?.id, { 
+    log.info('scheme_change', { userId: user?.id, 
       from: scheme, 
       to: newScheme 
     });
@@ -262,7 +263,7 @@ export function ThemeProvider({
     setColorState(newColor);
     
     // Log theme change
-    logger.theme('color_change', user?.id, { 
+    log.info('color_change', { userId: user?.id, 
       from: color, 
       to: newColor 
     });
@@ -284,7 +285,7 @@ export function ThemeProvider({
     setLocaleState(newLocale);
     
     // Log locale change
-    logger.theme('locale_change', user?.id, { 
+    log.info('locale_change', { userId: user?.id, 
       from: locale, 
       to: newLocale 
     });

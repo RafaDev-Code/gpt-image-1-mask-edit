@@ -26,7 +26,7 @@ export default function AuthCallbackPage() {
                 const next = searchParams.get('next') || '/';
                 router.push(next);
             } catch (err: unknown) {
-                logger.error('Unexpected error in auth callback', {
+                log.error('Unexpected error in auth callback', {
                     component: 'AuthCallbackClient',
                     error: isError(err) ? err.message : String(err)
                 });

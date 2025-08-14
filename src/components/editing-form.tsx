@@ -2,7 +2,6 @@
 
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { log } from '@/lib/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -30,6 +29,8 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';
+import { log } from '@/lib/logger';
+import { isError } from '@/lib/utils';
 
 type DrawnPoint = {
     x: number;
@@ -318,7 +319,7 @@ export function EditingForm({
             const dataUrl = offscreenCanvas.toDataURL('image/png');
             setEditMaskPreviewUrl(dataUrl);
         } catch (err: unknown) {
-            logger.error('Error generating mask preview data URL', {
+            log.error('Error generating mask preview data URL', {
                 component: 'EditingForm',
                 error: isError(err) ? err.message : String(err)
             });
@@ -370,7 +371,7 @@ export function EditingForm({
                     setSourceImagePreviewUrls((prevUrls) => [...prevUrls, ...newUrls]);
                 })
                 .catch((err: unknown) => {
-                    logger.error('Error reading new image files', {
+                    log.error('Error reading new image files', {
                         component: 'EditingForm',
                         error: isError(err) ? err.message : String(err)
                     });

@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         // Now read the original request body for processing
         requestBody = await request.json();
     } catch (err: unknown) {
-        logger.error('Error parsing request body for /api/image-delete', {
+        log.error('Error parsing request body for /api/image-delete', {
             component: 'ImageDeleteAPI',
             error: isError(err) ? err.message : String(err)
         });

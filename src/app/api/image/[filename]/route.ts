@@ -39,7 +39,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             }
         });
     } catch (err: unknown) {
-        logger.error('Error serving image', {
+        log.error('Error serving image', {
             component: 'ImageAPI',
             filename,
             error: isError(err) ? err.message : String(err)

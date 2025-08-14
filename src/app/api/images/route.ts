@@ -265,7 +265,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ images: savedImagesData, usage: result.usage });
     } catch (err: unknown) {
-        logger.error('Error in /api/images', {
+        log.error('Error in /api/images', {
             component: 'ImagesAPI',
             error: isError(err) ? err.message : String(err)
         });
